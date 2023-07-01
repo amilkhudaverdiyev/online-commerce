@@ -1,0 +1,54 @@
+server:
+  error:
+    include-message: always
+    include-binding-errors: always
+  port: 2020
+
+spring:
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: amil.xudaverdiyev30@gmail.com
+    password: tvfwbmexlzwcfsou
+    properties:
+      mail:
+        smtp:
+            ssl:
+                trust: "*"
+            auth: true
+            starttls.enable: true
+            connectiontimeout: 5000
+            timeout: 3000
+            writetimeout: 5000
+  datasource:
+   url: jdbc:postgresql://localhost:5432/online_food_commerce_ms
+   username: postgres
+   password: amil4477
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        default_schema: public
+  liquibase:
+    change-log: classpath:liquibase/changelog-master.xml
+    default-schema: public
+    enabled: true
+    database-change-log-table: onlinefoodcommerce_DBLOG
+    database-change-log-lock-table: onlinefoodcommerce_DBLOCK
+
+#logging:
+#  level:
+#    root: debug
+#application:
+#  security:
+#    jwt:
+#    secret-key: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
+#    expiration: 86400000 # a day
+#    refresh-token:
+#      expiration: 604800000 # 7 days
+shedLock:
+  shedTableName: bank_schedule
+  checkTime: 0 00 13 * * *
+
