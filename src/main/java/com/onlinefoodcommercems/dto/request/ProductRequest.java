@@ -1,8 +1,12 @@
 package com.onlinefoodcommercems.dto.request;
 
+import com.onlinefoodcommercems.dto.response.DiscountResponse;
 import com.onlinefoodcommercems.entity.Category;
+import com.onlinefoodcommercems.enums.Status;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -16,6 +20,6 @@ public class ProductRequest {
     Integer currentQuantity;
     Double unitPrice;
     Long categoryId;
-    Boolean activated=true;
-    Boolean deleted=false;
+    //DiscountRequest discountRequest;
+    Status status=Status.ACTIVE;
 }

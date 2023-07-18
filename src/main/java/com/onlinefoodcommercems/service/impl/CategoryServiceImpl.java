@@ -4,9 +4,13 @@ import com.onlinefoodcommercems.constants.CakeHouseConstants;
 import com.onlinefoodcommercems.dto.CategoryDto;
 import com.onlinefoodcommercems.dto.request.CategoryRequest;
 import com.onlinefoodcommercems.dto.response.CategoryResponse;
+import com.onlinefoodcommercems.entity.Product;
+import com.onlinefoodcommercems.enums.Status;
 import com.onlinefoodcommercems.exception.NotDataFound;
 import com.onlinefoodcommercems.mapper.CategoryMapper;
+import com.onlinefoodcommercems.mapper.ProductMapper;
 import com.onlinefoodcommercems.repository.CategoryRepository;
+import com.onlinefoodcommercems.repository.ProductRepository;
 import com.onlinefoodcommercems.service.CategoryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +24,9 @@ import java.util.Optional;
 @Slf4j
 public class CategoryServiceImpl implements CategoryService {
     private final CategoryRepository categoryRepository;
+    private final ProductRepository productRepository;
     private final CategoryMapper categoryMapper;
+
     @Override
     public CategoryResponse save(CategoryRequest category) {
         var created = categoryMapper.fromDTO(category);
@@ -54,17 +60,22 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public void deleteById(Long id) {
         var category = categoryRepository.getById(id);
-        category.setActivated(false);
-        category.setDeleted(true);
+        category.setStatus(Status.DEACTIVE);
         categoryRepository.save(category);
+        List<Product> deletedProducts=productRepository.findProductStatusInActiveByCategoryId(category.getId());
+        deletedProducts.forEach((product) ->
+            product.setStatus(Status.DEACTIVE));
+            productRepository.saveAll(deletedProducts);
     }
 
     @Override
     public void enableById(Long id) {
         var category = categoryRepository.getById(id);
-        category.setActivated(true);
-        category.setDeleted(false);
+        category.setStatus(Status.ACTIVE);
         categoryRepository.save(category);
+        List<Product> deletedProducts=productRepository.findProductStatusInDeactiveByCategoryId(category.getId());
+        deletedProducts.forEach((product) ->{product.setStatus(Status.ACTIVE); });
+        productRepository.saveAll(deletedProducts);
     }
 
 }

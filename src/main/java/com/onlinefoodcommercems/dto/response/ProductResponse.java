@@ -14,7 +14,8 @@ public class ProductResponse {
     String description;
     Integer currentQuantity;
     Double unitPrice;
+    Double costPrice;
     CategoryResponse category;
-    Boolean activated;
-    Boolean deleted;
+    //DiscountResponse discount;
+
 }

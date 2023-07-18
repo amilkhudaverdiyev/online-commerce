@@ -7,11 +7,12 @@
 
   <include file="/liquibase/1.0/category-1.0.sql"/>
   <include file="/liquibase/2.0/products-2.0.sql"/>
-<!--  <include file="/liquibase/3.0/customer-3.0.sql"/>-->
-<!--  <include file="/liquibase/7.0/shopping_cart-7.0.sql"/>-->
-<!--  <include file="/liquibase/11.0/cart_item-11.0.sql"/>-->
-<!--    <include file="/liquibase/5.0/userCreate-5.0.sql"/>-->
-<!--    <include file="/liquibase/5.0/userRoleCreate-5.0.sql"/>-->
+  <include file="/liquibase/3.0/discount-3.0.sql"/>
+  <include file="/liquibase/4.0/address-4.0.sql"/>
+  <include file="/liquibase/5.0/customer-5.0.sql"/>
+  <include file="/liquibase/6.0/cartItem-6.0.sql"/>
+  <include file="liquibase/shedlock/changelog-4.0.yml"/>
+
 
 
 

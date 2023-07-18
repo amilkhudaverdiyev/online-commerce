@@ -1,4 +1,4 @@
-package com.onlinefoodcommercems.dto.response;
+package com.onlinefoodcommercems.dto.request;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -8,8 +8,11 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class CategoryResponse {
+public class AddressRequest {
     Integer id;
-    String name;
-
+    String area;
+    String city;
+    String state;
+    String country;
+    String pinCode;
 }

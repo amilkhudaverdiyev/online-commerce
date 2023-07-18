@@ -3,5 +3,4 @@
 create table categories (
                            category_id serial primary key ,
                            name varchar(25) unique,
-                           is_activated boolean,
-                           is_deleted boolean);
+                           status varchar(25));

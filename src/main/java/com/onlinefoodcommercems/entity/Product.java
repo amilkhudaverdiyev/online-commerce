@@ -1,4 +1,6 @@
 package com.onlinefoodcommercems.entity;
+
+import com.onlinefoodcommercems.enums.Status;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -10,24 +12,35 @@ import java.util.List;
 @Entity
 @Table(name = "products", uniqueConstraints = @UniqueConstraint(columnNames = "name"))
 @Builder
-public class Product {
+public class Product  {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "product_id")
     private Long id;
+
     private String name;
+
     private String description;
+
     private int currentQuantity;
+
     private double unitPrice;
-//    @Lob
-//    @Column(columnDefinition = "MEDIUMBLOB")
-//    private String image;
+
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "category_id", referencedColumnName = "category_id")
     private Category category;
-    @Column(name = "is_activated")
-    private boolean activated;
-    @Column(name = "is_deleted")
-    private boolean deleted;
 
+    @Enumerated(EnumType.STRING)
+    private Status status;
+
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "product")
+    private List<Discount> discount;
+
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "product")
+    List<CartItem> cartItems;
 }

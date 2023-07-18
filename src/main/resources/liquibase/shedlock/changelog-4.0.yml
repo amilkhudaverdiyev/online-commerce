@@ -1,0 +1,31 @@
+databaseChangeLog:
+  - changeSet:
+      id: Create food_schedule table
+      author: Amil Xudaverdiyev
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  name: name
+                  type: varchar(64)
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: lock_until
+                  type: timestamp(3)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: locked_at
+                  type: timestamp(3)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: locked_by
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+            remarks: Table to store information about miles schedlock info
+            schemaName: public
+            tableName: food_schedule

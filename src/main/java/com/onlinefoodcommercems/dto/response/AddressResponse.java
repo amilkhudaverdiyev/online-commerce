@@ -8,8 +8,11 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class CategoryResponse {
+public class AddressResponse {
     Integer id;
-    String name;
-
+    String area;
+    String city;
+    String state;
+    String country;
+    String pinCode;
 }

@@ -9,9 +9,12 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class CategoryRequest {
+public class CartItemRequest {
     Integer id;
-    String name;
+    Integer quantity;
+    Double price;
+    Double totalPrice;
+    CustomerRequest customerRequest;
+    ProductRequest productRequest;
     Status status=Status.ACTIVE;
-
 }

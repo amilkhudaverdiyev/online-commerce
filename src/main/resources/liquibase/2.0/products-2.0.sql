@@ -8,5 +8,4 @@ create table products (
                             unit_price decimal,
                         category_id  int not null,
                         constraint category_fk foreign key (category_id) references categories (category_id),
-                            is_activated boolean,
-                            is_deleted boolean);
+                            status varchar(25));

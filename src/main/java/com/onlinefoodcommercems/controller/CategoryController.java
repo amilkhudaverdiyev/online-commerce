@@ -3,7 +3,6 @@ package com.onlinefoodcommercems.controller;
 import com.onlinefoodcommercems.constants.CakeHouseConstants;
 import com.onlinefoodcommercems.dto.CategoryDto;
 import com.onlinefoodcommercems.dto.request.CategoryRequest;
-import com.onlinefoodcommercems.dto.response.CategoryResponse;
 import com.onlinefoodcommercems.service.CategoryService;
 import com.onlinefoodcommercems.utils.CakeHouseUtils;
 import lombok.RequiredArgsConstructor;
@@ -11,10 +10,8 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/category")
@@ -32,13 +29,10 @@ public class CategoryController {
 
     @PostMapping
     public ResponseEntity<String> createCategory(@RequestBody CategoryRequest request) {
-        try {
             categoryService.save(request);
             return CakeHouseUtils.getResponseEntity(CakeHouseConstants.SUCCESSFULLY, HttpStatus.OK);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        return CakeHouseUtils.getResponseEntity(CakeHouseConstants.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
+
+
 
     }
     @RequestMapping(value = "/deleted-category/{id}", method = {RequestMethod.GET, RequestMethod.PUT})

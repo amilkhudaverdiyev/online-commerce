@@ -49,6 +49,6 @@ spring:
 #    refresh-token:
 #      expiration: 604800000 # 7 days
 shedLock:
-  shedTableName: bank_schedule
+  shedTableName: food_schedule
   checkTime: 0 00 13 * * *
 
