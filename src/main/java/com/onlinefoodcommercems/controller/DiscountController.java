@@ -2,7 +2,6 @@ package com.onlinefoodcommercems.controller;
 
 import com.onlinefoodcommercems.constants.Messages;
 import com.onlinefoodcommercems.dto.DiscountDto;
-import com.onlinefoodcommercems.dto.ProductDto;
 import com.onlinefoodcommercems.dto.request.DiscountRequest;
 import com.onlinefoodcommercems.service.DiscountService;
 import com.onlinefoodcommercems.utils.MessageUtils;
@@ -19,23 +18,16 @@ import java.util.List;
 
 public class DiscountController {
     private final DiscountService discountService;
+
     @PostMapping
     public ResponseEntity<String> createDiscount(@RequestBody DiscountRequest request) {
 
-            discountService.addDiscount(request);
-            return MessageUtils.getResponseEntity(Messages.SUCCESSFULLY, HttpStatus.CREATED);
-
-
-
+        discountService.addDiscount(request);
+        return MessageUtils.getResponseEntity(Messages.ADD_SUCCESSFULLY, HttpStatus.CREATED);
     }
+
     @GetMapping("/all-active")
     public List<DiscountDto> getAllProductActivated() {
         return discountService.findAllByActivated();
     }
-//    @PostMapping("/delete")
-//    public ResponseEntity<String> deleteDiscount() {
-//
-//        discountService.terminatedDiscount();
-//        return CakeHouseUtils.getResponseEntity(CakeHouseConstants.SUCCESSFULLY, HttpStatus.CREATED);
-
 }
