@@ -23,13 +23,6 @@ public interface ProductMapper {
         Product fromDTO (ProductRequest productRequest);
 
     ProductResponse toDTO(Product products);
-    default Page<ProductResponse> toDTOPage (Page<Product> products) {
-        List<ProductResponse> product=products
-                .stream()
-                .map(this::toDTO)
-                .collect(Collectors.toList());
-        return new PageImpl<>(product,products.getPageable(),products.getTotalElements());
-    }
 
     List<ProductDto> toDTOList(List<Product> products);
     List<ProductDto> fromDTOPage(Page<Product> products);

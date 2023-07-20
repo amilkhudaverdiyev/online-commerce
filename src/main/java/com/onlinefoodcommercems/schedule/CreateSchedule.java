@@ -1,15 +1,9 @@
 package com.onlinefoodcommercems.schedule;
 
-import com.onlinefoodcommercems.entity.Category;
 import com.onlinefoodcommercems.entity.Discount;
-import com.onlinefoodcommercems.entity.Product;
 import com.onlinefoodcommercems.enums.Status;
-import com.onlinefoodcommercems.repository.CategoryRepository;
 import com.onlinefoodcommercems.repository.DiscountRepository;
-import com.onlinefoodcommercems.repository.ProductRepository;
-import com.onlinefoodcommercems.service.CategoryService;
 import com.onlinefoodcommercems.service.DiscountService;
-import com.onlinefoodcommercems.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
@@ -18,13 +12,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
-import java.util.Random;
-
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class CreateAccountSchedule {
+public class CreateSchedule {
 
 
 private final DiscountRepository discountRepository;
@@ -34,13 +25,20 @@ private final DiscountService discountService;
     @SchedulerLock(name = "checkTime")
     @Scheduled(cron = "* * * * * *")
     @Transactional(propagation = Propagation.REQUIRED)
-    public void DiscountActiveStatus(){
+    public void updateDiscountLoadingStatus(){
         System.out.println("active");
-        var discount= discountService.getCustomerByStatus();
-        for ( Discount discounts:discount ){
+        var discount= discountRepository.findByLoadingStatus();
+        for ( Discount discounts:discount ) {
             discountService.activatedDiscount(discounts);
-
         }
+var activeDiscount=discountRepository.findByActiveStatus();
+        for ( Discount discounts:activeDiscount ) {
+            var unitPrice = discounts.getProduct().getUnitPrice();
+            var costPrice = unitPrice - unitPrice * discounts.getDiscount() / 100;
+            discounts.setDiscountPrice(costPrice);
+            discountRepository.save(discounts);
+        }
+
 
 
 
@@ -62,16 +60,17 @@ private final DiscountService discountService;
     //@Scheduled(cron = "* 58 15 * * *")
     @SchedulerLock(name = "checkTime")
     @Scheduled(fixedDelay = 10000)
-    public void DiscountDeactiveStatus(){
+    public void updateDiscountActiveStatus(){
         System.out.println("schedule start");
-      var discount= discountRepository.findByStatus();
-
+      var discount= discountRepository.findByActiveStatus();
         for ( Discount discounts:discount ){
             discountService.terminatedDiscount(discounts);
         }
-
-
-
+       var deactiveDiscount=discountRepository.findByDeactiveStatus();
+        for ( Discount discounts:deactiveDiscount ) {
+            discounts.setDiscountPrice(0.0);
+            discountRepository.save(discounts);
+        }
         System.out.println("schedule END");
     }
 

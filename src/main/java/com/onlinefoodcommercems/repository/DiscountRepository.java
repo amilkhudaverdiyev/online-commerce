@@ -13,11 +13,14 @@ public interface DiscountRepository extends JpaRepository<Discount,Long> {
     @Query(value = "select * from discount where status = 'ACTIVE'", nativeQuery = true)
     List<Discount> findAllByActivated();
     @Query(value = "select * from discount where status = 'ACTIVE'", nativeQuery = true)
-    List<Discount> findByStatus();
+    List<Discount> findByActiveStatus();
     @Query(value = "select * from discount where status = 'DEACTIVE'", nativeQuery = true)
     List<Discount> findByDeactiveStatus();
+    @Query(value = "select * from discount where status = 'LOADING'", nativeQuery = true)
+    List<Discount> findByLoadingStatus();
     @Query(value = "select * from discount where id=:id and status = 'ACTIVE' ",nativeQuery = true)
     Optional<Discount> findProductStatusActivity(Long id);
+
 
 
 

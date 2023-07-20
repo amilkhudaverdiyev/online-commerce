@@ -22,5 +22,5 @@ public class DiscountRequest {
     private LocalDateTime discountDate;
     private LocalDateTime endDate;
     private ProductRequest product;
-    private Status status=Status.DEACTIVE;
+    private Status status=Status.LOADING;
 }

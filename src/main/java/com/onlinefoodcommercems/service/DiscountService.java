@@ -1,5 +1,6 @@
 package com.onlinefoodcommercems.service;
 
+import com.onlinefoodcommercems.dto.DiscountDto;
 import com.onlinefoodcommercems.dto.ProductDto;
 import com.onlinefoodcommercems.dto.request.DiscountRequest;
 import com.onlinefoodcommercems.dto.response.DiscountResponse;
@@ -11,8 +12,6 @@ import java.util.List;
 public interface DiscountService {
      DiscountResponse addDiscount(DiscountRequest discountRequest);
      void terminatedDiscount(Discount discount);
-      List<Discount> getCustomerByStatus();
      void activatedDiscount(Discount discount);
-     //void updateProductUnitPrice(Discount discount);
-
+     List<DiscountDto> findAllByActivated();
 }

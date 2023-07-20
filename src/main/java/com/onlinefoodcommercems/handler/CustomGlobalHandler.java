@@ -1,7 +1,7 @@
 package com.onlinefoodcommercems.handler;
 
 
-import com.onlinefoodcommercems.constants.CakeHouseConstants;
+import com.onlinefoodcommercems.constants.Messages;
 import com.onlinefoodcommercems.dto.ErrorDetails;
 import com.onlinefoodcommercems.exception.NotDataFound;
 import jakarta.validation.ConstraintDefinitionException;
@@ -10,7 +10,6 @@ import org.springframework.dao.InvalidDataAccessResourceUsageException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 
 import java.util.Date;
@@ -62,7 +61,7 @@ public class CustomGlobalHandler {
     public ResponseEntity<ErrorDetails> DublicateHandler(DataIntegrityViolationException exception,
                                                                 WebRequest request) {
         ErrorDetails errorDetails =
-                new ErrorDetails(new Date(), HttpStatus.INTERNAL_SERVER_ERROR, CakeHouseConstants.SOMETHING_WENT_WRONG,
+                new ErrorDetails(new Date(), HttpStatus.INTERNAL_SERVER_ERROR, Messages.SOMETHING_WENT_WRONG,
                         exception.getMessage(), request.getDescription(false));
         return new ResponseEntity<>(errorDetails, HttpStatus.INTERNAL_SERVER_ERROR);
     }

@@ -1,13 +1,9 @@
 package com.onlinefoodcommercems.dto;
-import lombok.*;
-import lombok.experimental.FieldDefaults;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
+import lombok.Builder;
+
+
 @Builder
-@FieldDefaults(level = AccessLevel.PRIVATE)
-public class CategoryDto {
-    Integer id;
-    String name;
-}
+public record CategoryDto(
+        Integer id,
+        String name) {}

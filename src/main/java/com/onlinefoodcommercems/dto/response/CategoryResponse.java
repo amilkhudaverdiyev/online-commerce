@@ -1,5 +1,6 @@
 package com.onlinefoodcommercems.dto.response;
 
+import com.onlinefoodcommercems.enums.Status;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -11,5 +12,6 @@ import lombok.experimental.FieldDefaults;
 public class CategoryResponse {
     Integer id;
     String name;
+    Status status;
 
 }

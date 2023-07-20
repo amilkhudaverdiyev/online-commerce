@@ -1,5 +1,6 @@
 package com.onlinefoodcommercems.dto.response;
 
+import com.onlinefoodcommercems.enums.Status;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -14,8 +15,7 @@ public class ProductResponse {
     String description;
     Integer currentQuantity;
     Double unitPrice;
-    Double costPrice;
     CategoryResponse category;
-    //DiscountResponse discount;
+    Status status;
 
 }

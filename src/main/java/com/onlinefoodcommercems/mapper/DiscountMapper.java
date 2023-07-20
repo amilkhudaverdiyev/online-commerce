@@ -1,6 +1,7 @@
 package com.onlinefoodcommercems.mapper;
 
 import com.onlinefoodcommercems.dto.CategoryDto;
+import com.onlinefoodcommercems.dto.DiscountDto;
 import com.onlinefoodcommercems.dto.request.CategoryRequest;
 import com.onlinefoodcommercems.dto.request.DiscountRequest;
 import com.onlinefoodcommercems.dto.response.CategoryResponse;
@@ -23,8 +24,10 @@ public interface DiscountMapper {
 
 
     DiscountResponse toDTO(Discount discount);
+    DiscountDto toDTOm(Discount discount);
 
     //CategoryDto toDTOId(Category category);
     List<DiscountResponse> toDTOs(List<Discount> discounts);
+    List<DiscountDto> toDTOList(List<Discount> discounts);
     //List<CategoryDto> toDTOList(List<Category> categories);
 }

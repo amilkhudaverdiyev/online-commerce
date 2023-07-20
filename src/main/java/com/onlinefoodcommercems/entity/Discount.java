@@ -36,6 +36,7 @@ public class Discount {
 
     @Enumerated(EnumType.STRING)
     private Status status;
+    private Double discountPrice;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "product_id", referencedColumnName = "product_id")
