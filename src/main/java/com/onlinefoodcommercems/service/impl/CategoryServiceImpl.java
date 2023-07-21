@@ -3,7 +3,6 @@ package com.onlinefoodcommercems.service.impl;
 import com.onlinefoodcommercems.constants.Messages;
 import com.onlinefoodcommercems.dto.CategoryDto;
 import com.onlinefoodcommercems.dto.request.CategoryRequest;
-import com.onlinefoodcommercems.dto.update.CategoryUpdateRequest;
 import com.onlinefoodcommercems.dto.response.CategoryResponse;
 import com.onlinefoodcommercems.entity.Product;
 import com.onlinefoodcommercems.enums.Status;
@@ -28,13 +27,13 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public CategoryResponse save(CategoryRequest category) {
-        var created = categoryMapper.fromDTO(category);
-        var createdCategory = categoryRepository.save(created);
+        var categoryEntity = categoryMapper.fromDTO(category);
+        var createdCategory = categoryRepository.save(categoryEntity);
         return categoryMapper.toDTO(createdCategory);
     }
 
     @Override
-    public void update(Long id, CategoryUpdateRequest categoryRequest) {
+    public void update(Long id, CategoryRequest categoryRequest) {
         var category=categoryRepository.findById(id).orElseThrow(() -> new NotDataFound(Messages.CATEGORY_NOT_FOUND));
         categoryMapper.toDTOmap(category,categoryRequest);
         categoryRepository.save(category);

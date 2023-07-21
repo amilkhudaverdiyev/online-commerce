@@ -29,7 +29,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Query(value = "select * from products where status = 'ACTIVE'", nativeQuery = true)
     Page<Product> findAllPagableData(Pageable pageable);
 
-    List<Product> findByStatus(Status status);
 
 
 }

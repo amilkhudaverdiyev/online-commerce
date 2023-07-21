@@ -1,7 +1,11 @@
 package com.onlinefoodcommercems.dto.response;
 
-import lombok.*;
-import lombok.experimental.FieldDefaults;
+import com.onlinefoodcommercems.enums.Roles;
+import com.onlinefoodcommercems.enums.Status;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
@@ -12,12 +16,11 @@ public class CustomerResponse {
     private Long id;
     private String name;
     private String surname;
-    private String email;
+    private String username;
+    private String password;
     private Integer age;
     private String phoneNumber;
     private AddressResponse address;
-
-    private boolean activated=true;
-
-    private boolean deleted=false;
+    private Roles role;
+    private Status status;
 }

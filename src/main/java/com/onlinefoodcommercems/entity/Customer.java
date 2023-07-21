@@ -1,5 +1,6 @@
 package com.onlinefoodcommercems.entity;
 
+import com.onlinefoodcommercems.enums.Roles;
 import com.onlinefoodcommercems.enums.Status;
 import jakarta.persistence.*;
 import lombok.*;
@@ -10,7 +11,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "customer", uniqueConstraints = @UniqueConstraint(columnNames = {"email", "phoneNumber"}))
+@Table(name = "customer")
 @Builder
 public class Customer {
     @Id
@@ -19,17 +20,26 @@ public class Customer {
     private Long id;
     private String name;
     private String surname;
-    private String email;
-    private Integer age;
+    private String username;
+    private String password;
     private String phoneNumber;
+    private Integer age;
+
     @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     @JoinColumn(name = "address_id", referencedColumnName = "id")
     private Address address;
 
     @Enumerated(EnumType.STRING)
+    private Roles role;
+    @Enumerated(EnumType.STRING)
     private Status status;
+
+
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "customer")
     List<CartItem> cartItems;
+
+
+
 }

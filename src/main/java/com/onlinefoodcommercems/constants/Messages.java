@@ -12,6 +12,7 @@ public class Messages {
     public static final String CATEGORY_NOT_FOUND = "Category not found!";
     public static final String DISCOUNT_NOT_FOUND = "Discount not found!";
     public static final String CUSTOMER_NOT_FOUND = "Customer not found!";
+    public static final String ADDRESS_NOT_FOUND = "Address not found!";
     public static final String ADMIN_NOT_FOUND = "Admin not found!";
     public static final String USER_NOT_FOUND = "User not found!";
     public static final String ACTIVE_COUNT = "Active Count: ";

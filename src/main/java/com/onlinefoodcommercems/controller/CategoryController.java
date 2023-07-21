@@ -4,7 +4,6 @@ import com.onlinefoodcommercems.constants.Messages;
 import com.onlinefoodcommercems.dto.CategoryDto;
 import com.onlinefoodcommercems.dto.request.CategoryRequest;
 import com.onlinefoodcommercems.dto.response.CategoryResponse;
-import com.onlinefoodcommercems.dto.update.CategoryUpdateRequest;
 import com.onlinefoodcommercems.service.CategoryService;
 import com.onlinefoodcommercems.utils.MessageUtils;
 import lombok.RequiredArgsConstructor;
@@ -43,7 +42,7 @@ public class CategoryController {
 
     @PutMapping("/{id}")
     public ResponseEntity<String> updateCategory(@PathVariable Long id,
-                                                 @RequestBody CategoryUpdateRequest request) {
+                                                 @RequestBody CategoryRequest request) {
         categoryService.update(id, request);
         return MessageUtils.getResponseEntity(Messages.UPDATE_SUCCESSFULLY, HttpStatus.OK);
     }

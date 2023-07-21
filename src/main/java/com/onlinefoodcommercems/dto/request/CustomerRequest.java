@@ -1,5 +1,7 @@
 package com.onlinefoodcommercems.dto.request;
 
+import com.onlinefoodcommercems.enums.Roles;
+import com.onlinefoodcommercems.enums.Status;
 import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -18,12 +20,12 @@ public class CustomerRequest {
     private Long id;
     private String name;
     private String surname;
-    private String email;
+    private String username;
+    private String password;
     private Integer age;
     private String phoneNumber;
-    private String address;
+    private AddressRequest address;
+    private Roles role= Roles.USER;
 
-    private boolean activated=true;
-
-    private boolean deleted=false;
+    private Status status= Status.ACTIVE;
 }

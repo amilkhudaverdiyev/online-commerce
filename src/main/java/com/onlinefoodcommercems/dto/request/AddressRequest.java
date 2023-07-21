@@ -1,5 +1,7 @@
 package com.onlinefoodcommercems.dto.request;
 
+import com.onlinefoodcommercems.constants.Messages;
+import com.onlinefoodcommercems.enums.Status;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -9,10 +11,11 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class AddressRequest {
-    Integer id;
-    String area;
-    String city;
-    String state;
+    Long id;
     String country;
-    String pinCode;
+    String city;
+    String district;
+    String street;
+    String apartmentNumber;
+    Status status=Status.ACTIVE;
 }
