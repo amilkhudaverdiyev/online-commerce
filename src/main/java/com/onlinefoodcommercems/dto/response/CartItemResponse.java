@@ -13,6 +13,6 @@ public class CartItemResponse {
     Integer quantity;
     Double price;
     Double totalPrice;
-    CustomerResponse customerResponse;
-    ProductResponse productResponse;
+    CustomerResponse customer;
+    ProductResponse product;
 }

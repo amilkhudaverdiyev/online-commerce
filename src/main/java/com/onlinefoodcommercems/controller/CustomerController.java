@@ -19,22 +19,22 @@ public class CustomerController {
     private final CustomerService customerService;
 
     @GetMapping("/all")
-    public List<CustomerResponse> getAllCategory() {
+    public List<CustomerResponse> getAllCustomer() {
         return customerService.findAll();
     }
 
     @GetMapping("/count")
-    public String getAllCategoryCount() {
+    public String getAllCustomerCount() {
         return customerService.getAllCustomerCount();
     }
 
     @GetMapping("/all-active")
-    public List<CustomerResponse> getAllCategoryActivated() {
+    public List<CustomerResponse> getAllCustomerActivated() {
         return customerService.findAllByActivated();
     }
 
     @PostMapping
-    public ResponseEntity<String> createCategory(@RequestBody CustomerRequest request) {
+    public ResponseEntity<String> createCustomer(@RequestBody CustomerRequest request) {
         customerService.save(request);
         return MessageUtils.getResponseEntity(Messages.ADD_SUCCESSFULLY, HttpStatus.CREATED);
     }
@@ -54,7 +54,7 @@ public class CustomerController {
     }
 
     @RequestMapping(value = "/enable/{id}", method = {RequestMethod.GET, RequestMethod.PUT})
-    public ResponseEntity<String> enabledustomer(@PathVariable Long id) {
+    public ResponseEntity<String> enabledCustomer(@PathVariable Long id) {
         customerService.enableById(id);
         return MessageUtils.getResponseEntity(Messages.ENABLED_SUCCESSFULLY, HttpStatus.OK);
     }

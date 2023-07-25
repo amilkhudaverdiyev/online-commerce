@@ -41,6 +41,6 @@ public class Product  {
 
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "product")
+    @OneToMany(mappedBy = "product")
     List<CartItem> cartItems;
 }
