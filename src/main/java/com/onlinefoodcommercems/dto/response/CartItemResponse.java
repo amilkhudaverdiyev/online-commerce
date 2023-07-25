@@ -1,5 +1,6 @@
 package com.onlinefoodcommercems.dto.response;
 
+import com.onlinefoodcommercems.dto.ItemResponse;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -13,6 +14,7 @@ public class CartItemResponse {
     Integer quantity;
     Double price;
     Double totalPrice;
-    CustomerResponse customer;
-    ProductResponse product;
+    ItemResponse product;
+
+
 }

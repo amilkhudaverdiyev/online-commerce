@@ -1,6 +1,6 @@
 package com.onlinefoodcommercems.constants;
 
-public class Messages {
+public class Responses {
     public static final String SOMETHING_WENT_WRONG = "error,Duplicate name, please check again!";
     public static final String INVALID_DATA = "Invalid Data.";
     public static final String ADD_SUCCESSFULLY = "Add successfully!";

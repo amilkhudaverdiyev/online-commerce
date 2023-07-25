@@ -1,9 +1,8 @@
 package com.onlinefoodcommercems.service.impl;
 
-import com.onlinefoodcommercems.constants.Messages;
+import com.onlinefoodcommercems.constants.Responses;
 import com.onlinefoodcommercems.dto.request.AddressRequest;
 import com.onlinefoodcommercems.dto.response.AddressResponse;
-import com.onlinefoodcommercems.entity.Product;
 import com.onlinefoodcommercems.enums.Status;
 import com.onlinefoodcommercems.exception.NotDataFound;
 import com.onlinefoodcommercems.mapper.AddressMapper;
@@ -19,6 +18,7 @@ import java.util.List;
 public class AddressServiceImpl implements AddressService {
     private final AddressMapper addressMapper;
     private final AddressRepository addressRepository;
+
     @Override
     public AddressResponse save(AddressRequest request) {
         var addressEntity = addressMapper.fromDTO(request);
@@ -28,8 +28,8 @@ public class AddressServiceImpl implements AddressService {
 
     @Override
     public void update(Long id, AddressRequest addressRequest) {
-        var address=addressRepository.findById(id).orElseThrow(() -> new NotDataFound(Messages.ADDRESS_NOT_FOUND));
-        addressMapper.toDTOmap(address,addressRequest);
+        var address = addressRepository.findById(id).orElseThrow(() -> new NotDataFound(Responses.ADDRESS_NOT_FOUND));
+        addressMapper.toDTOmap(address, addressRequest);
         addressRepository.save(address);
 
     }
@@ -48,7 +48,7 @@ public class AddressServiceImpl implements AddressService {
 
     @Override
     public AddressResponse findById(Long id) {
-        var address = addressRepository.findById(id).orElseThrow(() -> new NotDataFound(Messages.ADDRESS_NOT_FOUND));
+        var address = addressRepository.findById(id).orElseThrow(() -> new NotDataFound(Responses.ADDRESS_NOT_FOUND));
         return addressMapper.toDTO(address);
     }
 
@@ -57,10 +57,6 @@ public class AddressServiceImpl implements AddressService {
         var address = addressRepository.getById(id);
         address.setStatus(Status.DEACTIVE);
         addressRepository.save(address);
-//        List<Product> deletedProducts = productRepository.findProductStatusInActiveByCategoryId(category.getId());
-//        deletedProducts.forEach((product) ->
-//                product.setStatus(Status.DEACTIVE));
-//        productRepository.saveAll(deletedProducts);
     }
 
     @Override

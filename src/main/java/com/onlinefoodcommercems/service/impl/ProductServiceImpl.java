@@ -1,6 +1,7 @@
 package com.onlinefoodcommercems.service.impl;
 
-import com.onlinefoodcommercems.constants.Messages;
+import com.onlinefoodcommercems.constants.Responses;
+import com.onlinefoodcommercems.dto.ItemResponse;
 import com.onlinefoodcommercems.dto.ProductDto;
 import com.onlinefoodcommercems.dto.request.ProductRequest;
 import com.onlinefoodcommercems.dto.response.ProductResponse;
@@ -37,15 +38,9 @@ public class ProductServiceImpl implements ProductService {
         }
         var product = productMapper.fromDTO(productRequest);
         var category = categoryRepository.findByIdAndActivated(productRequest.getCategoryId())
-                .orElseThrow(() -> new NotDataFound(Messages.CATEGORY_NOT_FOUND));
+                .orElseThrow(() -> new NotDataFound(Responses.CATEGORY_NOT_FOUND));
         product.setCategory(category);
         return productMapper.toDTO(productRepository.save(product));
-    }
-
-    @Override
-    public List<ProductDto> findAllByActivated() {
-        var active = productRepository.findAllByActivated();
-        return productMapper.toDTOList(active);
     }
 
     @Override
@@ -58,7 +53,6 @@ public class ProductServiceImpl implements ProductService {
         var product = productRepository.getById(id);
         product.setStatus(Status.DEACTIVE);
         productRepository.save(product);
-
     }
 
     @Override
@@ -68,10 +62,10 @@ public class ProductServiceImpl implements ProductService {
         productRepository.save(product);
     }
 
-    public List<ProductDto> findByCategoryId(Long id) {
-        id = categoryRepository.findById(id).orElseThrow(() -> new NotDataFound(Messages.CATEGORY_NOT_FOUND)).getId();
-        var product = productRepository.findProductStatusInActiveByCategoryId(id);
-        return productMapper.toDTOList(product);
+    public List<ItemResponse> findByCategoryId(Long id) {
+        var category = categoryRepository.findById(id).orElseThrow(() -> new NotDataFound(Responses.CATEGORY_NOT_FOUND)).getId();
+        var product = productRepository.findProductStatusInActiveByCategoryId(category);
+        return productMapper.toDTOs(product);
 
     }
 

@@ -1,15 +1,11 @@
 package com.onlinefoodcommercems.controller;
 
-import com.onlinefoodcommercems.constants.Messages;
+import com.onlinefoodcommercems.constants.Responses;
 import com.onlinefoodcommercems.dto.request.CartItemRequest;
 import com.onlinefoodcommercems.dto.response.CartItemResponse;
-import com.onlinefoodcommercems.dto.response.CustomerResponse;
-import com.onlinefoodcommercems.exception.NotDataFound;
-import com.onlinefoodcommercems.repository.CartItemRepository;
 import com.onlinefoodcommercems.repository.CustomerRepository;
 import com.onlinefoodcommercems.repository.ProductRepository;
 import com.onlinefoodcommercems.service.CartItemService;
-import com.onlinefoodcommercems.service.ProductService;
 import com.onlinefoodcommercems.utils.MessageUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -25,32 +21,35 @@ public class CartController {
     private final CartItemService cartItemService;
     private final CustomerRepository customerRepository;
     private final ProductRepository productRepository;
+
     @GetMapping("/all")
     public List<CartItemResponse> getAllCart() {
         return cartItemService.findAll();
     }
+    @GetMapping("/alls")
+    public List<CartItemResponse> getAllCarts(@RequestParam Long id)
+    {
+        return cartItemService.getCart(id);
+    }
+    @PutMapping("/{id}")
+    public ResponseEntity<String> updateCart(@PathVariable Long id,
+                                                 @RequestBody CartItemRequest request) {
+        cartItemService.update(id, request);
+        return MessageUtils.getResponseEntity(Responses.UPDATE_SUCCESSFULLY, HttpStatus.OK);
+    }
+
     @PostMapping
     public ResponseEntity<String> createCart(@RequestParam("id") Long id,
-                                                 @RequestParam(value = "quantity",required = false, defaultValue = "1") int quantity,
-                                                 @RequestParam Long userId) {
-        cartItemService.save(quantity,id,userId);
-        return MessageUtils.getResponseEntity(Messages.ADD_SUCCESSFULLY, HttpStatus.CREATED);
+                                             @RequestParam(value = "quantity", required = false, defaultValue = "1") int quantity,
+                                             @RequestParam Long userId) {
+        cartItemService.save(quantity, id, userId);
+        return MessageUtils.getResponseEntity(Responses.ADD_SUCCESSFULLY, HttpStatus.CREATED);
     }
+
     @DeleteMapping("/delete")
-    public void deleteItem(@RequestParam Long id
+    public ResponseEntity<String> deleteItem(@RequestParam Long id
     ) {
-
-            cartItemService.deleteCart(id);
-    }
-    @RequestMapping(value = "/delete/{id}", method = {RequestMethod.GET, RequestMethod.PUT})
-    public ResponseEntity<String> deletedAddress(@PathVariable Long id) {
-        cartItemService.deleteById(id);
-        return MessageUtils.getResponseEntity(Messages.DELETE_SUCCESSFULLY, HttpStatus.OK);
-    }
-
-    @RequestMapping(value = "/enable/{id}", method = {RequestMethod.GET, RequestMethod.PUT})
-    public ResponseEntity<String> enabledAddress(@PathVariable Long id) {
-        cartItemService.enableById(id);
-        return MessageUtils.getResponseEntity(Messages.ENABLED_SUCCESSFULLY, HttpStatus.OK);
+        cartItemService.deleteCart(id);
+        return MessageUtils.getResponseEntity(Responses.DELETE_SUCCESSFULLY, HttpStatus.OK);
     }
 }

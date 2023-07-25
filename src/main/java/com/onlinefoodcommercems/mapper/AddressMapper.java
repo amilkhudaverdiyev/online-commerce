@@ -16,11 +16,10 @@ nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface AddressMapper {
     Address fromDTO (AddressRequest addressRequest);
 
-
     AddressResponse toDTO(Address address);
-    //CategoryDto toDTOId(Category category);
+
     List<AddressResponse> toDTOs(List<Address> addresses);
+
     Address toDTOmap(@MappingTarget Address address, AddressRequest addressRequest);
-   // List<CategoryDto> toDTOList(List<Category> categories);
 
 }

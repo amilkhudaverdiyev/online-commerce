@@ -19,7 +19,9 @@ public interface DiscountRepository extends JpaRepository<Discount,Long> {
     @Query(value = "select * from discount where status = 'LOADING'", nativeQuery = true)
     List<Discount> findByLoadingStatus();
     @Query(value = "select * from discount where id=:id and status = 'ACTIVE' ",nativeQuery = true)
-    Optional<Discount> findProductStatusActivity(Long id);
+    Optional<Discount> findDiscountStatusActivity(Long id);
+    @Query(value = "select * from discount where product_id=:id",nativeQuery = true)
+    Optional<Discount> findDiscountProductStatusActivity(Long id);
 
 
 

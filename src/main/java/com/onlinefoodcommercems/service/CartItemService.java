@@ -1,10 +1,7 @@
 package com.onlinefoodcommercems.service;
 
 import com.onlinefoodcommercems.dto.request.CartItemRequest;
-import com.onlinefoodcommercems.dto.request.CategoryRequest;
-import com.onlinefoodcommercems.dto.response.AddressResponse;
 import com.onlinefoodcommercems.dto.response.CartItemResponse;
-import com.onlinefoodcommercems.dto.response.CategoryResponse;
 
 import java.util.List;
 
@@ -13,9 +10,7 @@ public interface CartItemService {
 
     void update(Long id, CartItemRequest cartItemRequest);
      List<CartItemResponse> findAll();
+     List<CartItemResponse> getCart(Long id);
 
      void deleteCart(Long id);
-    void deleteById(Long id);
-
-    void enableById(Long id);
 }

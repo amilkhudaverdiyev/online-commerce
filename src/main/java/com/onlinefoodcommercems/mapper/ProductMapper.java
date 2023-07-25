@@ -1,5 +1,6 @@
 package com.onlinefoodcommercems.mapper;
 
+import com.onlinefoodcommercems.dto.ItemResponse;
 import com.onlinefoodcommercems.dto.ProductDto;
 import com.onlinefoodcommercems.dto.request.ProductRequest;
 import com.onlinefoodcommercems.dto.response.ProductResponse;
@@ -22,5 +23,6 @@ public interface ProductMapper {
     ProductResponse toDTO(Product products);
 
     List<ProductDto> toDTOList(List<Product> products);
+    List<ItemResponse> toDTOs(List<Product> products);
 
 }

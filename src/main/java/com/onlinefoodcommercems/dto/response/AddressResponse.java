@@ -16,5 +16,4 @@ public class AddressResponse {
     String district;
     String street;
     String apartmentNumber;
-    Status status;
 }

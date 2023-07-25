@@ -28,7 +28,5 @@ public class CartItem {
     private Double price;
     private Double totalPrice;
 
-    @Enumerated(EnumType.STRING)
-    private Status status;
 
 }

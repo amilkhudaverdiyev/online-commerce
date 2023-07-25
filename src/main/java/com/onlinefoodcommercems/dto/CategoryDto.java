@@ -5,5 +5,5 @@ import lombok.Builder;
 
 @Builder
 public record CategoryDto(
-        Integer id,
+       // Integer id,
         String name) {}

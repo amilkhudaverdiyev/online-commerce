@@ -1,5 +1,6 @@
 package com.onlinefoodcommercems.service;
 
+import com.onlinefoodcommercems.dto.ItemResponse;
 import com.onlinefoodcommercems.dto.ProductDto;
 import com.onlinefoodcommercems.dto.request.ProductRequest;
 import com.onlinefoodcommercems.dto.response.ProductResponse;
@@ -13,17 +14,17 @@ public interface ProductService {
 
     ProductResponse update(ProductRequest productRequest);
 
-    List<ProductDto> findAllByActivated();
+    Page<ProductDto> getAllProducts(Pageable pageable);
 
     public void deleteById(Long id);
 
     public void enableById(Long id);
 
-    List<ProductDto> findByCategoryId(Long id);
+    List<ItemResponse> findByCategoryId(Long id);
 
     List<ProductDto> searchProducts(String keyword);
 
     //    List<ProductDto> findAllPagableData(Pageable pageable);
-    Page<ProductDto> getAllProducts(Pageable pageable);
+
 
 }

@@ -1,6 +1,6 @@
 package com.onlinefoodcommercems.controller;
 
-import com.onlinefoodcommercems.constants.Messages;
+import com.onlinefoodcommercems.constants.Responses;
 import com.onlinefoodcommercems.dto.CategoryDto;
 import com.onlinefoodcommercems.dto.request.CategoryRequest;
 import com.onlinefoodcommercems.dto.response.CategoryResponse;
@@ -37,26 +37,26 @@ public class CategoryController {
     @PostMapping
     public ResponseEntity<String> createCategory(@RequestBody CategoryRequest request) {
         categoryService.save(request);
-        return MessageUtils.getResponseEntity(Messages.ADD_SUCCESSFULLY, HttpStatus.CREATED);
+        return MessageUtils.getResponseEntity(Responses.ADD_SUCCESSFULLY, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<String> updateCategory(@PathVariable Long id,
                                                  @RequestBody CategoryRequest request) {
         categoryService.update(id, request);
-        return MessageUtils.getResponseEntity(Messages.UPDATE_SUCCESSFULLY, HttpStatus.OK);
+        return MessageUtils.getResponseEntity(Responses.UPDATE_SUCCESSFULLY, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/deleted-category/{id}", method = {RequestMethod.GET, RequestMethod.PUT})
     public ResponseEntity<String> deletedCategory(@PathVariable Long id) {
         categoryService.deleteById(id);
-        return MessageUtils.getResponseEntity(Messages.DELETE_SUCCESSFULLY, HttpStatus.OK);
+        return MessageUtils.getResponseEntity(Responses.DELETE_SUCCESSFULLY, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/enabled-category/{id}", method = {RequestMethod.GET, RequestMethod.PUT})
     public ResponseEntity<String> enabledCategory(@PathVariable Long id) {
         categoryService.enableById(id);
-        return MessageUtils.getResponseEntity(Messages.ENABLED_SUCCESSFULLY, HttpStatus.OK);
+        return MessageUtils.getResponseEntity(Responses.ENABLED_SUCCESSFULLY, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/findById/{id}", method = {RequestMethod.PUT, RequestMethod.GET})

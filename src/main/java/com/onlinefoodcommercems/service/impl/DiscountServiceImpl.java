@@ -1,6 +1,6 @@
 package com.onlinefoodcommercems.service.impl;
 
-import com.onlinefoodcommercems.constants.Messages;
+import com.onlinefoodcommercems.constants.Responses;
 import com.onlinefoodcommercems.dto.DiscountDto;
 import com.onlinefoodcommercems.dto.request.DiscountRequest;
 import com.onlinefoodcommercems.dto.response.DiscountResponse;
@@ -29,7 +29,7 @@ public class DiscountServiceImpl implements DiscountService {
     public DiscountResponse addDiscount(DiscountRequest discountRequest) {
         var discountEntity = discountMapper.fromDTO(discountRequest);
         var product = productRepository.findProductStatusActivity(discountRequest.getProduct().getId())
-                .orElseThrow(() -> new NotDataFound(Messages.PRODUCT_NOT_FOUND));
+                .orElseThrow(() -> new NotDataFound(Responses.PRODUCT_NOT_FOUND));
         discountEntity.setProduct(product);
         return discountMapper.toDTO(discountRepository.save(discountEntity));
     }

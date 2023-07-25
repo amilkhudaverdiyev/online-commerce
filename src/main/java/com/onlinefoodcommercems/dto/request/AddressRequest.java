@@ -1,6 +1,5 @@
 package com.onlinefoodcommercems.dto.request;
 
-import com.onlinefoodcommercems.constants.Messages;
 import com.onlinefoodcommercems.enums.Status;
 import lombok.*;
 import lombok.experimental.FieldDefaults;

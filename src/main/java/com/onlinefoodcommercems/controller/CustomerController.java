@@ -1,6 +1,6 @@
 package com.onlinefoodcommercems.controller;
 
-import com.onlinefoodcommercems.constants.Messages;
+import com.onlinefoodcommercems.constants.Responses;
 import com.onlinefoodcommercems.dto.request.CustomerRequest;
 import com.onlinefoodcommercems.dto.response.CustomerResponse;
 import com.onlinefoodcommercems.service.CustomerService;
@@ -36,7 +36,7 @@ public class CustomerController {
     @PostMapping
     public ResponseEntity<String> createCustomer(@RequestBody CustomerRequest request) {
         customerService.save(request);
-        return MessageUtils.getResponseEntity(Messages.ADD_SUCCESSFULLY, HttpStatus.CREATED);
+        return MessageUtils.getResponseEntity(Responses.ADD_SUCCESSFULLY, HttpStatus.CREATED);
     }
 
 
@@ -44,19 +44,19 @@ public class CustomerController {
     public ResponseEntity<String> updateCustomer(@PathVariable Long id,
                                                  @RequestBody CustomerRequest request) {
         customerService.update(id, request);
-        return MessageUtils.getResponseEntity(Messages.UPDATE_SUCCESSFULLY, HttpStatus.OK);
+        return MessageUtils.getResponseEntity(Responses.UPDATE_SUCCESSFULLY, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/delete/{id}", method = {RequestMethod.GET, RequestMethod.PUT})
     public ResponseEntity<String> deletedCustomer(@PathVariable Long id) {
         customerService.deleteById(id);
-        return MessageUtils.getResponseEntity(Messages.DELETE_SUCCESSFULLY, HttpStatus.OK);
+        return MessageUtils.getResponseEntity(Responses.DELETE_SUCCESSFULLY, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/enable/{id}", method = {RequestMethod.GET, RequestMethod.PUT})
     public ResponseEntity<String> enabledCustomer(@PathVariable Long id) {
         customerService.enableById(id);
-        return MessageUtils.getResponseEntity(Messages.ENABLED_SUCCESSFULLY, HttpStatus.OK);
+        return MessageUtils.getResponseEntity(Responses.ENABLED_SUCCESSFULLY, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/findById/{id}", method = {RequestMethod.PUT, RequestMethod.GET})
