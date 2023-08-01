@@ -1,6 +1,6 @@
 package com.onlinefoodcommercems.service.impl;
 
-import com.onlinefoodcommercems.constants.Responses;
+import com.onlinefoodcommercems.constants.ResponseMessage;
 import com.onlinefoodcommercems.dto.CategoryDto;
 import com.onlinefoodcommercems.dto.request.CategoryRequest;
 import com.onlinefoodcommercems.dto.response.CategoryResponse;
@@ -34,7 +34,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public void update(Long id, CategoryRequest categoryRequest) {
-        var category=categoryRepository.findById(id).orElseThrow(() -> new NotDataFound(Responses.CATEGORY_NOT_FOUND));
+        var category=categoryRepository.findById(id).orElseThrow(() -> new NotDataFound(ResponseMessage.CATEGORY_NOT_FOUND));
         categoryMapper.toDTOmap(category,categoryRequest);
         categoryRepository.save(category);
 
@@ -54,7 +54,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public CategoryDto findById(Long id) {
-        var category = categoryRepository.findById(id).orElseThrow(() -> new NotDataFound(Responses.CATEGORY_NOT_FOUND));
+        var category = categoryRepository.findById(id).orElseThrow(() -> new NotDataFound(ResponseMessage.CATEGORY_NOT_FOUND));
         return categoryMapper.toDTOId(category);
     }
 
@@ -83,9 +83,9 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public String getAllCategoryCount() {
-        return Responses.ACTIVE_COUNT + getActiveCount() + "\n"
-                + Responses.DEACTIVE_COUNT + getDeactiveCount() + "\n"
-                + Responses.ALL_COUNT + getCount();
+        return ResponseMessage.ACTIVE_COUNT + getActiveCount() + "\n"
+                + ResponseMessage.DEACTIVE_COUNT + getDeactiveCount() + "\n"
+                + ResponseMessage.ALL_COUNT + getCount();
     }
 
     private int getActiveCount() {

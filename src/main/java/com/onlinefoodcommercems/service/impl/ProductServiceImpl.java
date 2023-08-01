@@ -1,6 +1,6 @@
 package com.onlinefoodcommercems.service.impl;
 
-import com.onlinefoodcommercems.constants.Responses;
+import com.onlinefoodcommercems.constants.ResponseMessage;
 import com.onlinefoodcommercems.dto.ItemResponse;
 import com.onlinefoodcommercems.dto.ProductDto;
 import com.onlinefoodcommercems.dto.request.ProductRequest;
@@ -38,7 +38,7 @@ public class ProductServiceImpl implements ProductService {
         }
         var product = productMapper.fromDTO(productRequest);
         var category = categoryRepository.findByIdAndActivated(productRequest.getCategoryId())
-                .orElseThrow(() -> new NotDataFound(Responses.CATEGORY_NOT_FOUND));
+                .orElseThrow(() -> new NotDataFound(ResponseMessage.CATEGORY_NOT_FOUND));
         product.setCategory(category);
         return productMapper.toDTO(productRepository.save(product));
     }
@@ -62,8 +62,18 @@ public class ProductServiceImpl implements ProductService {
         productRepository.save(product);
     }
 
+    @Override
+    public void increaseAllPrice(Double percent) {
+        productRepository.increaseAll(percent);
+
+    }
+    @Override
+    public void decreaseAllPrice(Double percent) {
+        productRepository.decreaseAll(percent);
+    }
+
     public List<ItemResponse> findByCategoryId(Long id) {
-        var category = categoryRepository.findById(id).orElseThrow(() -> new NotDataFound(Responses.CATEGORY_NOT_FOUND)).getId();
+        var category = categoryRepository.findById(id).orElseThrow(() -> new NotDataFound(ResponseMessage.CATEGORY_NOT_FOUND)).getId();
         var product = productRepository.findProductStatusInActiveByCategoryId(category);
         return productMapper.toDTOs(product);
 

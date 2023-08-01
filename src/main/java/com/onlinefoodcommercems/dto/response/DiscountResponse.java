@@ -1,6 +1,7 @@
 package com.onlinefoodcommercems.dto.response;
 
 import com.onlinefoodcommercems.entity.Product;
+import com.onlinefoodcommercems.enums.DiscountStatus;
 import com.onlinefoodcommercems.enums.Status;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,7 +23,7 @@ public class DiscountResponse {
     private double discountPrice;
     private LocalDateTime discountDate;
     private LocalDateTime endDate;
-    private Status status;
+    private DiscountStatus status;
     //private ProductResponse productResponse;
 
 }

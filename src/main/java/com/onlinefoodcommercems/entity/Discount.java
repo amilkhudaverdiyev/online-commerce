@@ -1,6 +1,7 @@
 package com.onlinefoodcommercems.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.onlinefoodcommercems.enums.DiscountStatus;
 import com.onlinefoodcommercems.enums.Status;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -35,7 +36,7 @@ public class Discount {
     private LocalDateTime endDate;
 
     @Enumerated(EnumType.STRING)
-    private Status status;
+    private DiscountStatus status;
     private Double discountPrice;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)

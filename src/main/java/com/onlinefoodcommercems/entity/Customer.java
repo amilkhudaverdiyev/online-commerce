@@ -6,7 +6,6 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.List;
-import java.util.Set;
 
 @Data
 @AllArgsConstructor
@@ -40,6 +39,16 @@ public class Customer {
     @EqualsAndHashCode.Exclude
     @OneToMany( mappedBy = "customer")
     List<CartItem> cartItems;
+
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    @OneToMany( mappedBy = "customer")
+    List<Order> orders;
+
+//    @ToString.Exclude
+//    @EqualsAndHashCode.Exclude
+//    @OneToMany( mappedBy = "customer")
+//    List<Attachment> pdf;
 
 
 

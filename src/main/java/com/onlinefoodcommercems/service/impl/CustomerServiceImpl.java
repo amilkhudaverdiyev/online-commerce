@@ -1,6 +1,6 @@
 package com.onlinefoodcommercems.service.impl;
 
-import com.onlinefoodcommercems.constants.Responses;
+import com.onlinefoodcommercems.constants.ResponseMessage;
 import com.onlinefoodcommercems.dto.request.CustomerRequest;
 import com.onlinefoodcommercems.dto.response.CustomerResponse;
 import com.onlinefoodcommercems.enums.Status;
@@ -33,7 +33,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public void update(Long id, CustomerRequest customerRequest) {
-        var customer = customerRepository.findById(id).orElseThrow(() -> new NotDataFound(Responses.CUSTOMER_NOT_FOUND));
+        var customer = customerRepository.findById(id).orElseThrow(() -> new NotDataFound(ResponseMessage.CUSTOMER_NOT_FOUND));
         customerMapper.toDTOmap(customer, customerRequest);
         customerRepository.save(customer);
     }
@@ -52,13 +52,13 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public CustomerResponse findById(Long id) {
-        var customer = customerRepository.findById(id).orElseThrow(() -> new NotDataFound(Responses.CUSTOMER_NOT_FOUND));
+        var customer = customerRepository.findById(id).orElseThrow(() -> new NotDataFound(ResponseMessage.CUSTOMER_NOT_FOUND));
         return customerMapper.toDTO(customer);
     }
 
     @Override
     public CustomerResponse findByUsername(String username) {
-        var customer = customerRepository.findByUsername(username).orElseThrow(() -> new NotDataFound(Responses.CUSTOMER_NOT_FOUND));
+        var customer = customerRepository.findByUsername(username).orElseThrow(() -> new NotDataFound(ResponseMessage.CUSTOMER_NOT_FOUND));
         return customerMapper.toDTO(customer);
     }
 
@@ -79,9 +79,9 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public String getAllCustomerCount() {
-        return Responses.ACTIVE_COUNT + getActiveCount() + "\n"
-                + Responses.DEACTIVE_COUNT + getDeactiveCount() + "\n"
-                + Responses.ALL_COUNT + getCount();
+        return ResponseMessage.ACTIVE_COUNT + getActiveCount() + "\n"
+                + ResponseMessage.DEACTIVE_COUNT + getDeactiveCount() + "\n"
+                + ResponseMessage.ALL_COUNT + getCount();
     }
 
     private int getActiveCount() {

@@ -1,13 +1,12 @@
 package com.onlinefoodcommercems.constants;
 
-public class Responses {
+public class ResponseMessage {
     public static final String SOMETHING_WENT_WRONG = "error,Duplicate name, please check again!";
-    public static final String INVALID_DATA = "Invalid Data.";
+    public static final String UPLOADER_FOLDER = "C:\\Users\\Cabir\\Downloads\\";
     public static final String ADD_SUCCESSFULLY = "Add successfully!";
     public static final String UPDATE_SUCCESSFULLY = "Update successfully!";
     public static final String DELETE_SUCCESSFULLY = "Deleted successfully!";
     public static final String ENABLED_SUCCESSFULLY = "Enabled successfully!";
-    public static final String ERROR = "ERROR";
     public static final String PRODUCT_NOT_FOUND = "Product not found!";
     public static final String CATEGORY_NOT_FOUND = "Category not found!";
     public static final String DISCOUNT_NOT_FOUND = "Discount not found!";

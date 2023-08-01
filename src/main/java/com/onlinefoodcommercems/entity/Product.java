@@ -42,5 +42,11 @@ public class Product  {
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     @OneToMany(mappedBy = "product")
-    List<CartItem> cartItems;
+    private List<CartItem> cartItems;
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    @OneToMany(mappedBy = "product")
+    private List<OrderDetail> orderDetails;
+
+
 }

@@ -1,6 +1,6 @@
 package com.onlinefoodcommercems.controller;
 
-import com.onlinefoodcommercems.constants.Responses;
+import com.onlinefoodcommercems.constants.ResponseMessage;
 import com.onlinefoodcommercems.dto.request.CartItemRequest;
 import com.onlinefoodcommercems.dto.response.CartItemResponse;
 import com.onlinefoodcommercems.repository.CustomerRepository;
@@ -25,17 +25,21 @@ public class CartController {
     @GetMapping("/all")
     public List<CartItemResponse> getAllCart() {
         return cartItemService.findAll();
+
     }
     @GetMapping("/alls")
     public List<CartItemResponse> getAllCarts(@RequestParam Long id)
     {
+//        var customer = customerRepository.findById(id).orElseThrow();
+//        var carts = customer.getCartItems();
         return cartItemService.getCart(id);
+
     }
     @PutMapping("/{id}")
     public ResponseEntity<String> updateCart(@PathVariable Long id,
                                                  @RequestBody CartItemRequest request) {
         cartItemService.update(id, request);
-        return MessageUtils.getResponseEntity(Responses.UPDATE_SUCCESSFULLY, HttpStatus.OK);
+        return MessageUtils.getResponseEntity(ResponseMessage.UPDATE_SUCCESSFULLY, HttpStatus.OK);
     }
 
     @PostMapping
@@ -43,13 +47,13 @@ public class CartController {
                                              @RequestParam(value = "quantity", required = false, defaultValue = "1") int quantity,
                                              @RequestParam Long userId) {
         cartItemService.save(quantity, id, userId);
-        return MessageUtils.getResponseEntity(Responses.ADD_SUCCESSFULLY, HttpStatus.CREATED);
+        return MessageUtils.getResponseEntity(ResponseMessage.ADD_SUCCESSFULLY, HttpStatus.CREATED);
     }
 
     @DeleteMapping("/delete")
     public ResponseEntity<String> deleteItem(@RequestParam Long id
     ) {
         cartItemService.deleteCart(id);
-        return MessageUtils.getResponseEntity(Responses.DELETE_SUCCESSFULLY, HttpStatus.OK);
+        return MessageUtils.getResponseEntity(ResponseMessage.DELETE_SUCCESSFULLY, HttpStatus.OK);
     }
 }

@@ -1,10 +1,11 @@
 package com.onlinefoodcommercems.service.impl;
 
-import com.onlinefoodcommercems.constants.Responses;
+import com.onlinefoodcommercems.constants.ResponseMessage;
 import com.onlinefoodcommercems.dto.request.CartItemRequest;
 import com.onlinefoodcommercems.dto.response.CartItemResponse;
 import com.onlinefoodcommercems.entity.CartItem;
 import com.onlinefoodcommercems.entity.Discount;
+import com.onlinefoodcommercems.enums.DiscountStatus;
 import com.onlinefoodcommercems.enums.Status;
 import com.onlinefoodcommercems.exception.NotDataFound;
 import com.onlinefoodcommercems.mapper.CartItemMapper;
@@ -31,14 +32,13 @@ public class CartItemServiceImpl implements CartItemService {
     public CartItemResponse save(int quantity, Long id, Long userId) {
         var availableQuantity = 0;
         var customer = customerRepository.findById(userId)
-                .orElseThrow(() -> new NotDataFound(Responses.CUSTOMER_NOT_FOUND));
+                .orElseThrow(() -> new NotDataFound(ResponseMessage.CUSTOMER_NOT_FOUND));
         var product = productRepository.findProductStatusActivity(id)
-                .orElseThrow(() -> new NotDataFound(Responses.PRODUCT_NOT_FOUND));
+                .orElseThrow(() -> new NotDataFound(ResponseMessage.PRODUCT_NOT_FOUND));
         List<Discount> discounts = product.getDiscount();
         for (Discount discount : discounts
         ) {
-            if (discount.getStatus() == Status.ACTIVE) {
-                //var totalPrice = quantity * discount.getDiscountPrice();
+            if (discount.getStatus() == DiscountStatus.ACTIVE) {
                 double unitPrice = discount.getDiscountPrice();
                 var cartItem = CartItem.builder()
                         .customer(customer)
@@ -86,9 +86,9 @@ public class CartItemServiceImpl implements CartItemService {
 
     @Override
     public void update(Long id, CartItemRequest cartItemRequest) {
-        var cart = cartRepository.findByIdAndActivated(cartItemRequest.getId(),id).orElseThrow();
+        var cart = cartRepository.findByIdAndActivated(cartItemRequest.getId(), id).orElseThrow();
         cart.setQuantity(cartItemRequest.getQuantity());
-        cart.setTotalPrice(cart.getQuantity()*cart.getPrice());
+        cart.setTotalPrice(cart.getQuantity() * cart.getPrice());
         cartRepository.save(cart);
 
     }
@@ -98,20 +98,21 @@ public class CartItemServiceImpl implements CartItemService {
         var addressAll = cartRepository.findAll();
         return cartItemMapper.toDTOs(addressAll);
     }
+
     @Override
     public List<CartItemResponse> getCart(Long id) {
         var customer = customerRepository.findById(id).orElseThrow();
-       var carts = customer.getCartItems();
-        return  cartItemMapper.toDTOs(carts);
+        var carts = customer.getCartItems();
+        return cartItemMapper.toDTOs(carts);
     }
 
     @Override
     public void deleteCart(Long id) {
         cartRepository.deleteById(id);
+    }
 
     }
 
-}
 
 
 

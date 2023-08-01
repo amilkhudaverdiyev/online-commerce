@@ -1,6 +1,8 @@
 package com.onlinefoodcommercems.dto.response;
 
 import com.onlinefoodcommercems.dto.ItemResponse;
+import com.onlinefoodcommercems.entity.Customer;
+import com.onlinefoodcommercems.service.CartItemService;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -11,10 +13,12 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CartItemResponse {
     Long id;
+    ItemResponse product;
     Integer quantity;
     Double price;
     Double totalPrice;
-    ItemResponse product;
+
+
 
 
 }

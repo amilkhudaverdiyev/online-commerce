@@ -1,6 +1,7 @@
 package com.onlinefoodcommercems.dto.request;
 
 import com.onlinefoodcommercems.entity.Product;
+import com.onlinefoodcommercems.enums.DiscountStatus;
 import com.onlinefoodcommercems.enums.Status;
 import jakarta.persistence.*;
 import lombok.*;
@@ -22,5 +23,5 @@ public class DiscountRequest {
     private LocalDateTime discountDate;
     private LocalDateTime endDate;
     private ProductRequest product;
-    private Status status=Status.LOADING;
+    private DiscountStatus status= DiscountStatus.LOADING;
 }

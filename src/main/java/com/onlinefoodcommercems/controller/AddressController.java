@@ -1,6 +1,6 @@
 package com.onlinefoodcommercems.controller;
 
-import com.onlinefoodcommercems.constants.Responses;
+import com.onlinefoodcommercems.constants.ResponseMessage;
 import com.onlinefoodcommercems.dto.request.AddressRequest;
 import com.onlinefoodcommercems.dto.response.AddressResponse;
 import com.onlinefoodcommercems.service.AddressService;
@@ -31,25 +31,25 @@ public class AddressController {
     @PostMapping
     public ResponseEntity<String> createAddress(@RequestBody AddressRequest request) {
         addressService.save(request);
-        return MessageUtils.getResponseEntity(Responses.ADD_SUCCESSFULLY, HttpStatus.CREATED);
+        return MessageUtils.getResponseEntity(ResponseMessage.ADD_SUCCESSFULLY, HttpStatus.CREATED);
     }
     @PutMapping("/{id}")
     public ResponseEntity<String> updateAddress(@PathVariable Long id,
                                                  @RequestBody AddressRequest request) {
         addressService.update(id, request);
-        return MessageUtils.getResponseEntity(Responses.UPDATE_SUCCESSFULLY, HttpStatus.OK);
+        return MessageUtils.getResponseEntity(ResponseMessage.UPDATE_SUCCESSFULLY, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/delete/{id}", method = {RequestMethod.GET, RequestMethod.PUT})
     public ResponseEntity<String> deletedAddress(@PathVariable Long id) {
         addressService.deleteById(id);
-        return MessageUtils.getResponseEntity(Responses.DELETE_SUCCESSFULLY, HttpStatus.OK);
+        return MessageUtils.getResponseEntity(ResponseMessage.DELETE_SUCCESSFULLY, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/enable/{id}", method = {RequestMethod.GET, RequestMethod.PUT})
     public ResponseEntity<String> enabledAddress(@PathVariable Long id) {
         addressService.enableById(id);
-        return MessageUtils.getResponseEntity(Responses.ENABLED_SUCCESSFULLY, HttpStatus.OK);
+        return MessageUtils.getResponseEntity(ResponseMessage.ENABLED_SUCCESSFULLY, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/findById/{id}", method = {RequestMethod.PUT, RequestMethod.GET})

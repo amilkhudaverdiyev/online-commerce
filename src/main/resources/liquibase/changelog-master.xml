@@ -10,9 +10,12 @@
   <include file="/liquibase/3.0/discount-3.0.sql"/>
   <include file="liquibase/shedlock/changelog-4.0.yml"/>
   <include file="/liquibase/4.0/address-4.0.sql"/>
-<!--  <include file="/liquibase/7.0/role-7.0.sql"/>-->
   <include file="/liquibase/5.0/customer-5.0.sql"/>
   <include file="/liquibase/6.0/cartItem-6.0.sql"/>
+  <include file="/liquibase/7.0/order-7.0.sql"/>
+  <include file="/liquibase/8.0/orderDetail-8.0.sql"/>
+  <include file="/liquibase/9.0/attachment-9.0.sql"/>
+
 
 
 

@@ -1,6 +1,6 @@
 package com.onlinefoodcommercems.service.impl;
 
-import com.onlinefoodcommercems.constants.Responses;
+import com.onlinefoodcommercems.constants.ResponseMessage;
 import com.onlinefoodcommercems.dto.request.AddressRequest;
 import com.onlinefoodcommercems.dto.response.AddressResponse;
 import com.onlinefoodcommercems.enums.Status;
@@ -28,7 +28,7 @@ public class AddressServiceImpl implements AddressService {
 
     @Override
     public void update(Long id, AddressRequest addressRequest) {
-        var address = addressRepository.findById(id).orElseThrow(() -> new NotDataFound(Responses.ADDRESS_NOT_FOUND));
+        var address = addressRepository.findById(id).orElseThrow(() -> new NotDataFound(ResponseMessage.ADDRESS_NOT_FOUND));
         addressMapper.toDTOmap(address, addressRequest);
         addressRepository.save(address);
 
@@ -48,7 +48,7 @@ public class AddressServiceImpl implements AddressService {
 
     @Override
     public AddressResponse findById(Long id) {
-        var address = addressRepository.findById(id).orElseThrow(() -> new NotDataFound(Responses.ADDRESS_NOT_FOUND));
+        var address = addressRepository.findById(id).orElseThrow(() -> new NotDataFound(ResponseMessage.ADDRESS_NOT_FOUND));
         return addressMapper.toDTO(address);
     }
 
@@ -64,10 +64,5 @@ public class AddressServiceImpl implements AddressService {
         var address = addressRepository.getById(id);
         address.setStatus(Status.ACTIVE);
         addressRepository.save(address);
-//        List<Product> deletedProducts = productRepository.findProductStatusInDeactiveByCategoryId(category.getId());
-//        deletedProducts.forEach((product) -> {
-//            product.setStatus(Status.ACTIVE);
-//        });
-//        productRepository.saveAll(deletedProducts);
     }
 }

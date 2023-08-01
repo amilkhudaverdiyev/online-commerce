@@ -1,10 +1,11 @@
 package com.onlinefoodcommercems.service.impl;
 
-import com.onlinefoodcommercems.constants.Responses;
+import com.onlinefoodcommercems.constants.ResponseMessage;
 import com.onlinefoodcommercems.dto.DiscountDto;
 import com.onlinefoodcommercems.dto.request.DiscountRequest;
 import com.onlinefoodcommercems.dto.response.DiscountResponse;
 import com.onlinefoodcommercems.entity.Discount;
+import com.onlinefoodcommercems.enums.DiscountStatus;
 import com.onlinefoodcommercems.enums.Status;
 import com.onlinefoodcommercems.exception.NotDataFound;
 import com.onlinefoodcommercems.mapper.DiscountMapper;
@@ -29,7 +30,7 @@ public class DiscountServiceImpl implements DiscountService {
     public DiscountResponse addDiscount(DiscountRequest discountRequest) {
         var discountEntity = discountMapper.fromDTO(discountRequest);
         var product = productRepository.findProductStatusActivity(discountRequest.getProduct().getId())
-                .orElseThrow(() -> new NotDataFound(Responses.PRODUCT_NOT_FOUND));
+                .orElseThrow(() -> new NotDataFound(ResponseMessage.PRODUCT_NOT_FOUND));
         discountEntity.setProduct(product);
         return discountMapper.toDTO(discountRepository.save(discountEntity));
     }
@@ -37,7 +38,7 @@ public class DiscountServiceImpl implements DiscountService {
     public void terminatedDiscount(Discount discount) {
 
         if (LocalDateTime.now().isAfter(discount.getEndDate())) {
-            discount.setStatus(Status.DEACTIVE);
+            discount.setStatus(DiscountStatus.DEACTIVE);
         }
         discountRepository.save(discount);
 
@@ -46,7 +47,7 @@ public class DiscountServiceImpl implements DiscountService {
     @Override
     public void activatedDiscount(Discount discount) {
         if (LocalDateTime.now().isAfter(discount.getDiscountDate()) && LocalDateTime.now().isBefore(discount.getEndDate())) {
-            discount.setStatus(Status.ACTIVE);
+            discount.setStatus(DiscountStatus.ACTIVE);
         }
         discountRepository.save(discount);
     }

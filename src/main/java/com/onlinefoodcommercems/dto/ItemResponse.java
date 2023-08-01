@@ -12,8 +12,5 @@ import java.util.List;
 public record ItemResponse(
         Long id,
         String name,
-        String description,
-        Integer currentQuantity,
-        Double unitPrice,
         CategoryDto category
         ) {}

@@ -6,10 +6,7 @@ import com.onlinefoodcommercems.dto.request.CategoryRequest;
 import com.onlinefoodcommercems.dto.request.CustomerRequest;
 import com.onlinefoodcommercems.dto.response.AddressResponse;
 import com.onlinefoodcommercems.dto.response.CartItemResponse;
-import com.onlinefoodcommercems.entity.Address;
-import com.onlinefoodcommercems.entity.CartItem;
-import com.onlinefoodcommercems.entity.Category;
-import com.onlinefoodcommercems.entity.Customer;
+import com.onlinefoodcommercems.entity.*;
 import org.mapstruct.*;
 import org.springframework.stereotype.Component;
 
@@ -27,6 +24,11 @@ public interface CartItemMapper {
     CartItemResponse toDTO(CartItem cartItem);
     //CategoryDto toDTOId(Category category);
     List<CartItemResponse> toDTOs(List<CartItem> cartItems);
+    //List<CartItemResponse> toDTOz(List<CartItem> cartItems, double cartItem);
     CartItem toDTOmap(@MappingTarget CartItem cartItem, CartItemRequest cartItemRequest);
     // List<CategoryDto> toDTOList(List<Category> categories);
+
+
+
+   // OrderDetail cartToOrderDetail(CartItem cartItems);
 }

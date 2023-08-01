@@ -1,7 +1,7 @@
 package com.onlinefoodcommercems.handler;
 
 
-import com.onlinefoodcommercems.constants.Responses;
+import com.onlinefoodcommercems.constants.ResponseMessage;
 import com.onlinefoodcommercems.dto.ErrorDetails;
 import com.onlinefoodcommercems.exception.NotDataFound;
 import jakarta.validation.ConstraintDefinitionException;
@@ -61,7 +61,7 @@ public class CustomGlobalHandler {
     public ResponseEntity<ErrorDetails> DublicateHandler(DataIntegrityViolationException exception,
                                                                 WebRequest request) {
         ErrorDetails errorDetails =
-                new ErrorDetails(new Date(), HttpStatus.INTERNAL_SERVER_ERROR, Responses.SOMETHING_WENT_WRONG,
+                new ErrorDetails(new Date(), HttpStatus.INTERNAL_SERVER_ERROR, ResponseMessage.SOMETHING_WENT_WRONG,
                         exception.getMessage(), request.getDescription(false));
         return new ResponseEntity<>(errorDetails, HttpStatus.INTERNAL_SERVER_ERROR);
     }

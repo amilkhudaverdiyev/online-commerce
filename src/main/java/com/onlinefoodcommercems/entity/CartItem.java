@@ -1,11 +1,7 @@
 package com.onlinefoodcommercems.entity;
 
-import com.onlinefoodcommercems.enums.Status;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Data
 @AllArgsConstructor
@@ -27,6 +23,7 @@ public class CartItem {
     private Integer quantity;
     private Double price;
     private Double totalPrice;
-
+//    @Enumerated(EnumType.STRING)
+//    private CartStatus status;
 
 }

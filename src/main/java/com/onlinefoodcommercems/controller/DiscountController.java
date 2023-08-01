@@ -1,6 +1,6 @@
 package com.onlinefoodcommercems.controller;
 
-import com.onlinefoodcommercems.constants.Responses;
+import com.onlinefoodcommercems.constants.ResponseMessage;
 import com.onlinefoodcommercems.dto.DiscountDto;
 import com.onlinefoodcommercems.dto.request.DiscountRequest;
 import com.onlinefoodcommercems.service.DiscountService;
@@ -23,7 +23,7 @@ public class DiscountController {
     public ResponseEntity<String> createDiscount(@RequestBody DiscountRequest request) {
 
         discountService.addDiscount(request);
-        return MessageUtils.getResponseEntity(Responses.ADD_SUCCESSFULLY, HttpStatus.CREATED);
+        return MessageUtils.getResponseEntity(ResponseMessage.ADD_SUCCESSFULLY, HttpStatus.CREATED);
     }
 
     @GetMapping("/all-active")
