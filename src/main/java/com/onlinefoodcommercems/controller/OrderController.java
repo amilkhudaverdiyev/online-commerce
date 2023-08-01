@@ -36,10 +36,14 @@ public class OrderController {
         return orderService.findAll();
     }
 
+    @GetMapping("/status")
+    public List<OrderResponse> getAllOrdersByStatus(@PathVariable String status) {
+        return orderService.findOrderByStatus(status);
+    }
+
     @GetMapping("/all/{id}")
     public List<OrderResponse> getAllOrdersByCustomer(@PathVariable Long id) {
         return orderService.findAllOrdersByCustomer(id);
-
     }
 
     @PostMapping(path = "/send")
@@ -52,7 +56,7 @@ public class OrderController {
                 attachment);
     }
 
-    @RequestMapping(value = "/deleted-order/{id}", method = {RequestMethod.PUT})
+    @RequestMapping(value = "/deleted-order/{id}", method = {RequestMethod.PUT, RequestMethod.GET})
     public ResponseEntity<String> DeletedOrder(@PathVariable Long id) {
         orderService.deleteById(id);
         return MessageUtils.getResponseEntity(ResponseMessage.DELETE_SUCCESSFULLY, HttpStatus.OK);

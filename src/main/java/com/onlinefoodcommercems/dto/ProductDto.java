@@ -1,10 +1,7 @@
 package com.onlinefoodcommercems.dto;
 
 import com.onlinefoodcommercems.dto.response.CategoryResponse;
-import com.onlinefoodcommercems.dto.response.DiscountResponse;
 import lombok.Builder;
-
-import java.util.List;
 
 @Builder
 public record ProductDto(
@@ -13,6 +10,7 @@ public record ProductDto(
         String description,
         Integer currentQuantity,
         Double unitPrice,
-        CategoryResponse category,
-       List<DiscountResponse> discount
-) {}
+        CategoryResponse category
+
+) {
+}

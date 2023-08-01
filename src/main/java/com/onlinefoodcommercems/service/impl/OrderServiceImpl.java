@@ -3,7 +3,6 @@ package com.onlinefoodcommercems.service.impl;
 import com.onlinefoodcommercems.dto.response.OrderResponse;
 import com.onlinefoodcommercems.entity.Order;
 import com.onlinefoodcommercems.entity.OrderDetail;
-import com.onlinefoodcommercems.enums.OrderAcceptStatus;
 import com.onlinefoodcommercems.enums.OrderStatus;
 import com.onlinefoodcommercems.mapper.OrderDetailMapper;
 import com.onlinefoodcommercems.mapper.OrderMapper;
@@ -24,6 +23,7 @@ import java.util.Random;
 @Service
 @RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
+    private Integer availableQuantity;
     private final OrderDetailMapper orderDetailMapper;
     private final EmailSender emailSender;
     private final OrderMapper orderMapper;
@@ -34,8 +34,13 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<OrderResponse> findAll() {
-        var accounts = orderRepository.findAll();
-        return orderMapper.toDTOs(accounts);
+        var order = orderRepository.findAll();
+        return orderMapper.toDTOs(order);
+    }
+    @Override
+    public List<OrderResponse> findOrderByStatus(String status) {
+        var order = orderRepository.findOrderByStatus(status);
+        return orderMapper.toDTOs(order);
     }
 
     @Override
@@ -48,7 +53,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public void deleteById(Long id) {
         var order = orderRepository.findById(id).orElseThrow();
-        order.setAcceptStatus(OrderAcceptStatus.CANCELED);
+        order.setStatus(OrderStatus.CANCELED);
         orderRepository.save(order);
     }
 
@@ -59,8 +64,7 @@ public class OrderServiceImpl implements OrderService {
         var order = Order.builder()
                 .totalAmount(MessageUtils.totalPrice(carts))
                 .customer(customer)
-                .acceptStatus(OrderAcceptStatus.LOADING)
-                .orderStatus(OrderStatus.LOADING)
+                .status(OrderStatus.LOADING)
                 .build();
         orderRepository.save(order);
         var orderEntity = orderDetailMapper.cartToOrderDetail(carts);
@@ -68,6 +72,8 @@ public class OrderServiceImpl implements OrderService {
         ) {
             orderDetail.setId(new Random().nextLong());
             orderDetail.setOrder(order);
+            availableQuantity=orderDetail.getProduct().getCurrentQuantity()-orderDetail.getQuantity();
+            orderDetail.getProduct().setCurrentQuantity(availableQuantity);
             orderDetailRepository.save(orderDetail);
             cartItemRepository.deleteCartItemByCustomer(id);
         }

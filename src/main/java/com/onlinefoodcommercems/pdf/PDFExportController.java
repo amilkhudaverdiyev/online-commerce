@@ -3,6 +3,7 @@ package com.onlinefoodcommercems.pdf;
 
 import com.lowagie.text.DocumentException;
 import com.onlinefoodcommercems.entity.Order;
+import com.onlinefoodcommercems.repository.CustomerRepository;
 import com.onlinefoodcommercems.repository.OrderDetailRepository;
 import com.onlinefoodcommercems.repository.OrderRepository;
 import jakarta.servlet.http.HttpServletResponse;
@@ -21,15 +22,17 @@ import java.util.Date;
 public class PDFExportController {
     private final PDFGenerateService pdfGenerateService;
  private final OrderDetailRepository orderDetailRepository;
+ private final CustomerRepository customerRepository;
  private final OrderRepository orderRepository;
 
     @GetMapping("/pdf/generate/{id}")
     public void generatePDF(@PathVariable  Long id, HttpServletResponse httpServletResponse)  throws DocumentException,IOException {
+        var customer=customerRepository.findById(id).orElseThrow();
         httpServletResponse.setContentType("application/pdf");
         DateFormat dateFormat= new SimpleDateFormat("yyyy-MM-dd:hh:mm:ss");
         String currentDateTime=dateFormat.format(new Date());
         String headerKey="Content-Disposition";
-        String headerValue= "attachment; filename=pdf_" +currentDateTime + ".pdf";
+        String headerValue= "attachment; filename=" +customer.getUsername() + ".pdf";
         httpServletResponse.setHeader(headerKey,headerValue);
         var  orderList= orderRepository.findCustomerInOrder(id);
         for (Order order: orderList

@@ -45,10 +45,7 @@ public class Customer {
     @OneToMany( mappedBy = "customer")
     List<Order> orders;
 
-//    @ToString.Exclude
-//    @EqualsAndHashCode.Exclude
-//    @OneToMany( mappedBy = "customer")
-//    List<Attachment> pdf;
+
 
 
 

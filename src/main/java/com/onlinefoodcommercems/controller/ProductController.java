@@ -54,13 +54,15 @@ public class ProductController {
         productService.enableById(id);
         return MessageUtils.getResponseEntity(ResponseMessage.ENABLED_SUCCESSFULLY, HttpStatus.OK);
     }
+
     @RequestMapping(value = "/update-increaseAll", method = {RequestMethod.GET, RequestMethod.PUT})
-    public ResponseEntity<String> increaseAllPriceWithPercentage(@RequestParam Double percent){
+    public ResponseEntity<String> increaseAllPriceWithPercentage(@RequestParam Double percent) {
         productService.increaseAllPrice(percent);
         return MessageUtils.getResponseEntity(ResponseMessage.UPDATE_SUCCESSFULLY, HttpStatus.OK);
     }
+
     @RequestMapping(value = "/update-decreaseAll", method = {RequestMethod.GET, RequestMethod.PUT})
-    public ResponseEntity<String> decreaseAllPriceWithPercentage(@RequestParam Double percent){
+    public ResponseEntity<String> decreaseAllPriceWithPercentage(@RequestParam Double percent) {
         productService.decreaseAllPrice(percent);
         return MessageUtils.getResponseEntity(ResponseMessage.UPDATE_SUCCESSFULLY, HttpStatus.OK);
     }

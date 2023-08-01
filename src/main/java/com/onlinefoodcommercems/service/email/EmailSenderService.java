@@ -1,9 +1,10 @@
 package com.onlinefoodcommercems.service.email;
 
 import com.onlinefoodcommercems.entity.Order;
-import com.onlinefoodcommercems.enums.OrderAcceptStatus;
+import com.onlinefoodcommercems.enums.OrderStatus;
 import com.onlinefoodcommercems.repository.CustomerRepository;
 import com.onlinefoodcommercems.repository.OrderRepository;
+import com.onlinefoodcommercems.utils.LinkUtils;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
@@ -35,19 +36,20 @@ public class EmailSenderService implements EmailSender {
         var orders = orderRepository.findCustomerInOrder(customer.getId());
         for (Order order : orders
         ) {
-            order.setAcceptStatus(OrderAcceptStatus.ACCEPTED);
+            order.setStatus(OrderStatus.ACCEPTED);
             orderRepository.save(order);
         }
     }
     @Override
     public void sendMailToAdmin(String username) throws MessagingException {
         var customer = customerRepository.findByUsername(username).orElseThrow();
+        var link = LinkUtils.downloadPDFLink(customer.getId());
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
         mimeMessageHelper.setFrom(customer.getUsername());
         mimeMessageHelper.setTo("amil.xudaverdiyev30@gmail.com");
         mimeMessageHelper.setText("<html> <body> <p><h1> Order came from a user named " + customer.getUsername()
-                + " " + "</body></html>", true);
+                + "<br>" + link + "</body></html>", true);
         javaMailSender.send(mimeMessage);
     }
 

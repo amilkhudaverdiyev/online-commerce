@@ -30,7 +30,6 @@ public class CartItemServiceImpl implements CartItemService {
 
     @Override
     public CartItemResponse save(int quantity, Long id, Long userId) {
-        var availableQuantity = 0;
         var customer = customerRepository.findById(userId)
                 .orElseThrow(() -> new NotDataFound(ResponseMessage.CUSTOMER_NOT_FOUND));
         var product = productRepository.findProductStatusActivity(id)
@@ -52,12 +51,12 @@ public class CartItemServiceImpl implements CartItemService {
                     cartItem.setQuantity(product.getCurrentQuantity());
                 } else {
                     cartItem.setTotalPrice(quantity * unitPrice);
-                    availableQuantity = product.getCurrentQuantity() - quantity;
+                    //availableQuantity = product.getCurrentQuantity() - quantity;
                 }
-                product.setCurrentQuantity(availableQuantity);
-                if (product.getCurrentQuantity() == 0) {
-                    product.setStatus(Status.DEACTIVE);
-                }
+               // product.setCurrentQuantity(availableQuantity);
+//                if (product.getCurrentQuantity() == 0) {
+//                    product.setStatus(Status.DEACTIVE);
+//                }
                 return cartItemMapper.toDTO(cartRepository.save(cartItem));
             }
         }
@@ -74,12 +73,12 @@ public class CartItemServiceImpl implements CartItemService {
             cartItem.setQuantity(product.getCurrentQuantity());
         } else {
             cartItem.setTotalPrice(quantity * product.getUnitPrice());
-            availableQuantity = product.getCurrentQuantity() - quantity;
+           // availableQuantity = product.getCurrentQuantity() - quantity;
         }
-        product.setCurrentQuantity(availableQuantity);
-        if (product.getCurrentQuantity() == 0) {
-            product.setStatus(Status.DEACTIVE);
-        }
+//        product.setCurrentQuantity(availableQuantity);
+//        if (product.getCurrentQuantity() == 0) {
+//            product.setStatus(Status.DEACTIVE);
+//        }
         return cartItemMapper.toDTO(cartRepository.save(cartItem));
     }
 

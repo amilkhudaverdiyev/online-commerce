@@ -1,8 +1,6 @@
 package com.onlinefoodcommercems.entity;
 
-import com.onlinefoodcommercems.enums.OrderAcceptStatus;
 import com.onlinefoodcommercems.enums.OrderStatus;
-import com.onlinefoodcommercems.enums.PaymentMethod;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -24,14 +22,10 @@ public class Order {
    @UpdateTimestamp
     private Date orderDate;
     private Date deliveryDate;
-    @Enumerated(EnumType.STRING)
-    private OrderStatus orderStatus;
     private Double totalAmount;
-    @Enumerated(EnumType.STRING)
-    private PaymentMethod paymentMethod;
 
     @Enumerated(EnumType.STRING)
-    private OrderAcceptStatus acceptStatus;
+    private OrderStatus status;
 
     @ToString.Exclude
     @EqualsAndHashCode.Exclude

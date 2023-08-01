@@ -21,13 +21,9 @@ public class Attachment {
 
     private String fileName;
     private String fileType;
-
     private byte[]   data;
-
 
     }
 
-//    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-//    @JoinColumn(name = "customer_id", referencedColumnName = "id")
-//    private Customer customer;
+
 

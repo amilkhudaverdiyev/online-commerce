@@ -1,14 +1,8 @@
 package com.onlinefoodcommercems.schedule;
 
-import com.onlinefoodcommercems.entity.CartItem;
 import com.onlinefoodcommercems.entity.Discount;
-import com.onlinefoodcommercems.entity.OrderDetail;
-import com.onlinefoodcommercems.repository.CartItemRepository;
 import com.onlinefoodcommercems.repository.DiscountRepository;
-import com.onlinefoodcommercems.repository.OrderDetailRepository;
-import com.onlinefoodcommercems.service.CartItemService;
 import com.onlinefoodcommercems.service.DiscountService;
-import com.onlinefoodcommercems.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
@@ -16,8 +10,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Random;
 
 @Component
 @RequiredArgsConstructor
@@ -27,11 +19,6 @@ public class CreateSchedule {
 
     private final DiscountRepository discountRepository;
     private final DiscountService discountService;
-    private final CartItemService cartItemService;
-    private final OrderDetailRepository orderDetailRepository;
-    private final CartItemRepository cartItemRepository;
-    private final ProductService productService;
-
 
     @SchedulerLock(name = "checkTime")
     @Scheduled(cron = "* * * * * *")
@@ -67,23 +54,4 @@ public class CreateSchedule {
         }
         System.out.println("schedule END");
     }
-
-//    @Scheduled(cron = "* * * * * *")
-//    public void checkCustomerStatus() {
-//
-//        System.out.println("schedule start");
-//        var carts = cartItemService.getCustomerByStatus();
-//        for (CartItem cartItem : carts) {
-//            cartItemService.updateCustomerStatus(cartItem);
-//            var orderDetail = OrderDetail.builder()
-//                    .id(new Random().nextLong())
-//                    .customer(cartItem.getCustomer())
-//                    .product(cartItem.getProduct())
-//                    .price(cartItem.getPrice())
-//                    .quantity(cartItem.getQuantity())
-//                    .totalPrice(cartItem.getTotalPrice()).build();
-//            orderDetailRepository.save(orderDetail);
-//           // cartItemRepository.deleteCartItemByCustomer(cartItem.getCustomer().getId());
-//        }
- //   }
 }
