@@ -11,15 +11,20 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/product")
+@RequestMapping("/admin")
 @RequiredArgsConstructor
+
 public class ProductController {
     private final ProductService productService;
+
 
 
     @GetMapping("/all")
@@ -27,7 +32,10 @@ public class ProductController {
         return productService.getAllProducts(pageable);
     }
 
-    @PostMapping
+
+
+    @PostMapping("/create")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<String> createProduct(@RequestBody ProductRequest request) {
         productService.createProduct(request);
         return MessageUtils.getResponseEntity(ResponseMessage.ADD_SUCCESSFULLY, HttpStatus.CREATED);
@@ -44,6 +52,7 @@ public class ProductController {
     }
 
     @RequestMapping(value = "/deleted-product/{id}", method = {RequestMethod.GET, RequestMethod.PUT})
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<String> deletedProduct(@PathVariable Long id) {
         productService.deleteById(id);
         return MessageUtils.getResponseEntity(ResponseMessage.DELETE_SUCCESSFULLY, HttpStatus.OK);

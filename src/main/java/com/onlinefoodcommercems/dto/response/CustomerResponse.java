@@ -7,6 +7,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+import java.util.Set;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -18,9 +21,9 @@ public class CustomerResponse {
     private String surname;
     private String username;
     private String password;
-    private Integer age;
+    private String activationCode;
+    private LocalDate birthDate;
     private String phoneNumber;
     private AddressResponse address;
-    private Roles role;
     private Status status;
 }

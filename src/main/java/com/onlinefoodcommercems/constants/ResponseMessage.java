@@ -4,6 +4,7 @@ public class ResponseMessage {
     public static final String SOMETHING_WENT_WRONG = "error,Duplicate name, please check again!";
     public static final String UPLOADER_FOLDER = "C:\\Users\\Cabir\\Downloads\\";
     public static final String ADD_SUCCESSFULLY = "Add successfully!";
+    public static final String EMAIL_NOT_ACTIVATED = "Email not activated!";
     public static final String UPDATE_SUCCESSFULLY = "Update successfully!";
     public static final String DELETE_SUCCESSFULLY = "Deleted successfully!";
     public static final String ENABLED_SUCCESSFULLY = "Enabled successfully!";

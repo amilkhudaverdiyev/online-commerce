@@ -10,6 +10,7 @@ import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -64,7 +65,22 @@ public class EmailSenderService implements EmailSender {
                 + " " + "</body></html>", true);
         javaMailSender.send(mimeMessage);
     }
-
+    @Override
+    @Async
+    public void send(String to, String email) {
+        try {
+            MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+            MimeMessageHelper helper =
+                    new MimeMessageHelper(mimeMessage, "utf-8");
+            helper.setText(email, true);
+            helper.setTo(to);
+            helper.setSubject("Confirm your email");
+            helper.setFrom("gultekin398@gmail.com");
+            javaMailSender.send(mimeMessage);
+        } catch (MessagingException e) {
+            throw new IllegalStateException("failed to send email");
+        }
+    }
 
 }
 

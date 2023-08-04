@@ -11,4 +11,5 @@ public interface EmailSender {
     void sendMailToAdmin(String username) throws MessagingException;
 
     void sendMailToCancelOrder(String username) throws MessagingException;
+     void send(String to, String email);
 }

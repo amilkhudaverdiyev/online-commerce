@@ -5,15 +5,31 @@ import com.onlinefoodcommercems.enums.Status;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.List;
+import org.springframework.security.core.userdetails.UserDetails;
 
-@Data
-@AllArgsConstructor
+import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+@Getter
+@Setter
 @NoArgsConstructor
 @Entity
 @Table(name = "customer")
-@Builder
-public class Customer {
+public class Customer implements UserDetails {
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    @OneToMany(mappedBy = "customer")
+    List<CartItem> cartItems;
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    @OneToMany(mappedBy = "customer")
+    List<Order> orders;
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    @OneToMany(mappedBy = "customer")
+    List<ConfirmationToken> token;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -23,30 +39,32 @@ public class Customer {
     private String username;
     private String password;
     private String phoneNumber;
-    private Integer age;
-
-    @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+    private LocalDate birthDate;
+    private String activationCode;
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "address_id", referencedColumnName = "id")
     private Address address;
-
-    @Enumerated(EnumType.STRING)
-    private Roles role;
     @Enumerated(EnumType.STRING)
     private Status status;
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
+    private Set<UserAuthority> authorities = new HashSet<>();
+    private boolean accountNonExpired;
 
+    private boolean accountNonLocked = false;
 
-    @ToString.Exclude
-    @EqualsAndHashCode.Exclude
-    @OneToMany( mappedBy = "customer")
-    List<CartItem> cartItems;
+    private boolean credentialsNonExpired;
 
-    @ToString.Exclude
-    @EqualsAndHashCode.Exclude
-    @OneToMany( mappedBy = "customer")
-    List<Order> orders;
+    private boolean enabled = false;
+    public Customer(Customer user) {
+        this.name = user.getName();
+        this.surname = user.getSurname();
+        this.username = user.getUsername();
+        this.password = user.getPassword();
+        this.authorities = user.getAuthorities();
+    }
 
-
-
-
-
+    public void addAuthority(UserAuthority authority) {
+        this.authorities.add(authority);
+        authority.setCustomer(this);
+    }
 }

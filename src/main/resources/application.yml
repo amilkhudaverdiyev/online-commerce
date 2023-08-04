@@ -48,13 +48,11 @@ spring:
 #logging:
 #  level:
 #    root: debug
-#application:
-#  security:
-#    jwt:
-#    secret-key: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
-#    expiration: 86400000 # a day
-#    refresh-token:
-#      expiration: 604800000 # 7 days
+jwt:
+  header: Authorization
+  prefix: Bearer
+  expiration: 80000
+  secretKey: 65hgfhDFSF!@!@33wdq3r3tsdGsf22VXv343&3l071&65hgfhDFSF!@!@33wdq3r3tsdGsf22VXv343&3l071&
 shedLock:
   shedTableName: food_schedule
   checkTime: 0 00 13 * * *

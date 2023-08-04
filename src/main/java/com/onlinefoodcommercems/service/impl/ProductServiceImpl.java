@@ -11,10 +11,12 @@ import com.onlinefoodcommercems.mapper.ProductMapper;
 import com.onlinefoodcommercems.repository.CategoryRepository;
 import com.onlinefoodcommercems.repository.ProductRepository;
 import com.onlinefoodcommercems.service.ProductService;
+import jakarta.annotation.security.RolesAllowed;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -31,6 +33,7 @@ public class ProductServiceImpl implements ProductService {
         List<ProductDto> productResponses = productMapper.toDTOList(productPage.getContent());
         return new PageImpl<>(productResponses, pageable, productPage.getTotalElements());
     }
+
 
     public ProductResponse createProduct(ProductRequest productRequest) {
         if (productRequest.getCurrentQuantity() == 0) {
