@@ -1,5 +1,6 @@
 package com.onlinefoodcommercems.service.impl;
 
+import com.onlinefoodcommercems.config.ApplicationConfig;
 import com.onlinefoodcommercems.constants.ResponseMessage;
 import com.onlinefoodcommercems.dto.request.CartItemRequest;
 import com.onlinefoodcommercems.dto.response.CartItemResponse;
@@ -9,11 +10,13 @@ import com.onlinefoodcommercems.enums.DiscountStatus;
 import com.onlinefoodcommercems.enums.Status;
 import com.onlinefoodcommercems.exception.NotDataFound;
 import com.onlinefoodcommercems.mapper.CartItemMapper;
+import com.onlinefoodcommercems.mapper.CustomerMapper;
 import com.onlinefoodcommercems.repository.CartItemRepository;
 import com.onlinefoodcommercems.repository.CustomerRepository;
 import com.onlinefoodcommercems.repository.DiscountRepository;
 import com.onlinefoodcommercems.repository.ProductRepository;
 import com.onlinefoodcommercems.service.CartItemService;
+import com.onlinefoodcommercems.service.CustomerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -25,13 +28,16 @@ public class CartItemServiceImpl implements CartItemService {
     private final CartItemRepository cartRepository;
     private final CartItemMapper cartItemMapper;
     private final CustomerRepository customerRepository;
+    private final CustomerService customerService;
+    private final CustomerMapper customerMapper;
+    private final ApplicationConfig applicationConfig;
     private final ProductRepository productRepository;
     private final DiscountRepository discountRepository;
 
     @Override
-    public CartItemResponse save(int quantity, Long id, Long userId) {
-        var customer = customerRepository.findById(userId)
-                .orElseThrow(() -> new NotDataFound(ResponseMessage.CUSTOMER_NOT_FOUND));
+    public CartItemResponse save(int quantity, Long id, String userId) {
+        var customer = customerMapper.toDTOm(customerService.findByUsername(userId));
+
         var product = productRepository.findProductStatusActivity(id)
                 .orElseThrow(() -> new NotDataFound(ResponseMessage.PRODUCT_NOT_FOUND));
         List<Discount> discounts = product.getDiscount();
@@ -99,8 +105,8 @@ public class CartItemServiceImpl implements CartItemService {
     }
 
     @Override
-    public List<CartItemResponse> getCart(Long id) {
-        var customer = customerRepository.findById(id).orElseThrow();
+    public List<CartItemResponse> getCart(String username) {
+        var customer = customerRepository.findByUsername(username).orElseThrow();
         var carts = customer.getCartItems();
         return cartItemMapper.toDTOs(carts);
     }

@@ -3,9 +3,9 @@ package com.onlinefoodcommercems.service.impl;
 import com.onlinefoodcommercems.constants.ResponseMessage;
 import com.onlinefoodcommercems.dto.request.CustomerRequest;
 import com.onlinefoodcommercems.dto.response.CustomerResponse;
+import com.onlinefoodcommercems.entity.Customer;
 import com.onlinefoodcommercems.enums.Status;
 import com.onlinefoodcommercems.exception.NotDataFound;
-import com.onlinefoodcommercems.mapper.AddressMapper;
 import com.onlinefoodcommercems.mapper.CustomerMapper;
 import com.onlinefoodcommercems.repository.CustomerRepository;
 import com.onlinefoodcommercems.service.CustomerService;
@@ -18,17 +18,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CustomerServiceImpl implements CustomerService {
     private final CustomerMapper customerMapper;
-    private final AddressMapper addressMapper;
     private final CustomerRepository customerRepository;
-
-    @Override
-    public CustomerResponse save(CustomerRequest customerRequest) {
-        var customer = customerMapper.fromDTO(customerRequest);
-        var address = addressMapper.fromDTO(customerRequest.getAddress());
-        customer.setAddress(address);
-        var createdCustomer = customerRepository.save(customer);
-        return customerMapper.toDTO(createdCustomer);
-    }
 
 
     @Override
@@ -58,7 +48,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public CustomerResponse findByUsername(String username) {
-        var customer = customerRepository.findByUsername(username).orElseThrow(() -> new NotDataFound(ResponseMessage.CUSTOMER_NOT_FOUND));
+        var customer = customerRepository.findByUsername(username).orElseThrow(() -> new NotDataFound(ResponseMessage.ALL_COUNT));
         return customerMapper.toDTO(customer);
     }
 

@@ -3,7 +3,7 @@ package com.onlinefoodcommercems.service.impl;
 import com.onlinefoodcommercems.dto.request.CustomerRequest;
 import com.onlinefoodcommercems.entity.ConfirmationToken;
 import com.onlinefoodcommercems.entity.UserAuthority;
-import com.onlinefoodcommercems.enums.Roles;
+import com.onlinefoodcommercems.enums.Status;
 import com.onlinefoodcommercems.mapper.AddressMapper;
 import com.onlinefoodcommercems.mapper.CustomerMapper;
 import com.onlinefoodcommercems.repository.CustomerRepository;
@@ -29,38 +29,38 @@ public class RegisterServiceImpl implements RegisterService {
 
     @Override
     public String register(CustomerRequest request) {
-            boolean isValidEmail = emailValidator.test(request.getUsername());
-            if (!isValidEmail) {
-                throw new IllegalStateException("email not valid");
-            }
-            var customer = customerMapper.fromDTO(request);
-            var address = addressMapper.fromDTO(request.getAddress());
-            customer.setAddress(address);
-            customer.setName(request.getName());
-            customer.setSurname(request.getSurname());
-            customer.setPassword(request.getPassword());
-            customer.setUsername(request.getUsername());
-            customer.setBirthDate(request.getBirthDate());
-            //var createdCustomer = customerRepository.save(customer);
-            customer.setAccountNonExpired(true);
-            customer.setAccountNonLocked(true);
-            customer.setCredentialsNonExpired(true);
+        boolean isValidEmail = emailValidator.test(request.getUsername());
+        if (!isValidEmail) {
+            throw new IllegalStateException("email not valid");
+        }
+        var customer = customerMapper.fromDTO(request);
+        var address = addressMapper.fromDTO(request.getAddress());
+        customer.setAddress(address);
+        customer.setName(request.getName());
+        customer.setSurname(request.getSurname());
+        customer.setPassword(request.getPassword());
+        customer.setUsername(request.getUsername());
+        customer.setBirthDate(request.getBirthDate());
+        //var createdCustomer = customerRepository.save(customer);
+        customer.setAccountNonExpired(true);
+        customer.setAccountNonLocked(true);
+        customer.setCredentialsNonExpired(true);
 
-            var authority = new UserAuthority();
-                 authority.setAuthority("USER");
-                 authority.setCustomer(customer);
-                 customer.addAuthority(authority);
+        var authority = new UserAuthority();
+        authority.setAuthority("USER");
+        authority.setCustomer(customer);
+        customer.addAuthority(authority);
 
 
-            String token = userDetailsServiceImp.signUpUser(customer);
+        String token = userDetailsServiceImp.signUpUser(customer);
 
-            String link = "http://localhost:2020/registration/confirm?token=" + token;
-            emailSender.send(request.getUsername(), buildEmail(request.getName() + " " + request.getSurname(), link));
-            return "success";
+        String link = "http://localhost:2020/registration/confirm?token=" + token;
+        emailSender.send(request.getUsername(), buildEmail(request.getName() + " " + request.getSurname(), link));
+        return "success";
 
     }
 
- @Transactional
+    @Transactional
     public String confirmToken(String token) {
         ConfirmationToken confirmationToken = confirmationTokenService
                 .getToken(token)

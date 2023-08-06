@@ -9,6 +9,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.CacheControl;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -21,6 +22,7 @@ public class AttachmentController {
     private final AttachmentService attachmentService;
 
     @PostMapping("/file/db/upload")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public FileDetails upload(@RequestPart MultipartFile file) {
         try {
             var image = attachmentService.saves(file);
@@ -35,6 +37,7 @@ public class AttachmentController {
     }
 
     @GetMapping("/file/db/{filename}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Resource> retrieve(@PathVariable String filename) throws IOException {
         var image = attachmentService.getImage(filename);
         var body = new ByteArrayResource(image.getData());

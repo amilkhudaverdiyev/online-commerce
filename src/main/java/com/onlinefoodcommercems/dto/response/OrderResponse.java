@@ -4,6 +4,8 @@ import com.onlinefoodcommercems.enums.OrderStatus;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -14,7 +16,7 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class OrderResponse {
     private Long orderId;
-     Date orderDate;
+     LocalDateTime orderDate;
      Date deliveryDate;
     Double totalAmount;
      OrderStatus status;

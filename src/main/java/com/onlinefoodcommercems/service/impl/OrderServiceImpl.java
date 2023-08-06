@@ -44,8 +44,8 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<OrderResponse> findAllOrdersByCustomer(Long id) {
-        var customer = customerRepository.findById(id).orElseThrow();
+    public List<OrderResponse> findAllOrdersByCustomer(String username) {
+        var customer = customerRepository.findByUsername(username).orElseThrow();
         var orders = customer.getOrders();
         return orderMapper.toDTOs(orders);
     }

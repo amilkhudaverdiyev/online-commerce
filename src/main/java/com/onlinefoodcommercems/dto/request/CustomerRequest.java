@@ -1,6 +1,7 @@
 package com.onlinefoodcommercems.dto.request;
 
 import com.onlinefoodcommercems.constraints.AgeValidation;
+import com.onlinefoodcommercems.enums.Roles;
 import com.onlinefoodcommercems.enums.Status;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -34,5 +35,6 @@ public class CustomerRequest {
     @Size(min = 10, max = 15, message = "Phone number contains 10-15 characters")
     private String phoneNumber;
     private AddressRequest address;
+    private Roles roles=Roles.USER;
     private Status status = Status.DEACTIVE;
 }

@@ -1,10 +1,14 @@
 package com.onlinefoodcommercems.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.onlinefoodcommercems.enums.OrderStatus;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.format.annotation.DateTimeFormat;
 
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -20,7 +24,9 @@ public class Order {
     @Column(name = "order_id")
     private Long orderId;
    @UpdateTimestamp
-    private Date orderDate;
+   @DateTimeFormat
+  // @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    private LocalDateTime orderDate;
     private Date deliveryDate;
     private Double totalAmount;
 

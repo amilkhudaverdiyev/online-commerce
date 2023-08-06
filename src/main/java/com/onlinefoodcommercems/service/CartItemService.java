@@ -8,11 +8,11 @@ import java.util.List;
 import java.util.Map;
 
 public interface CartItemService {
-    CartItemResponse save(int quantity,Long id,Long userId);
+    CartItemResponse save(int quantity,Long id,String userId);
 
     void update(Long id, CartItemRequest cartItemRequest);
      List<CartItemResponse> findAll();
-     List<CartItemResponse> getCart(Long id);
+     List<CartItemResponse> getCart(String username);
      void deleteCart(Long id);
 
 }

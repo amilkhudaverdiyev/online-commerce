@@ -22,7 +22,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Query(value = "select * from products where products.category_id=:id and status = 'DEACTIVE' ", nativeQuery = true)
     List<Product> findProductStatusInDeactiveByCategoryId(Long id);
 
-    @Query("SELECT u FROM Product u WHERE lower( u.name) LIKE %?1%")
+    @Query("SELECT u FROM Product u WHERE  u.name  LIKE %?1% AND u.status='ACTIVE'")
     List<Product> searchProducts(String keyword);
 
     @Query(value = "select * from products where status = 'ACTIVE'", nativeQuery = true)

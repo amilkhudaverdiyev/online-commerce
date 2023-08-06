@@ -17,7 +17,7 @@ import java.util.Date;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
-@RestControllerAdvice
+//@RestControllerAdvice
 public class CustomGlobalHandler {
 
 @ExceptionHandler

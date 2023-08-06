@@ -10,7 +10,7 @@ public interface OrderService {
     List<OrderResponse> findAll();
     List<OrderResponse> findOrderByStatus(String status);
 
-    List<OrderResponse> findAllOrdersByCustomer(Long id);
+    List<OrderResponse> findAllOrdersByCustomer(String  username);
 
     void deleteById(Long id);
 

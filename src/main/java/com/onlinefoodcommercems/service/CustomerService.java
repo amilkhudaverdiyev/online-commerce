@@ -2,11 +2,12 @@ package com.onlinefoodcommercems.service;
 
 import com.onlinefoodcommercems.dto.request.CustomerRequest;
 import com.onlinefoodcommercems.dto.response.CustomerResponse;
+import com.onlinefoodcommercems.entity.Customer;
 
 import java.util.List;
 
 public interface CustomerService {
-    CustomerResponse save(CustomerRequest customerRequest);
+
 
 
     void update(Long id, CustomerRequest customerRequest);
@@ -18,6 +19,7 @@ public interface CustomerService {
     CustomerResponse findById(Long id);
 
     CustomerResponse findByUsername(String username);
+
 
     void deleteById(Long id);
 

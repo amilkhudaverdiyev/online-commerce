@@ -11,6 +11,7 @@ import com.onlinefoodcommercems.utils.MessageUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -31,18 +32,16 @@ public class CategoryController {
         return categoryService.getAllCategoryCount();
     }
 
-    @GetMapping("/all-active")
-    public List<CategoryDto> getAllCategoryActivated() {
-        return categoryService.findAllByActivated();
-    }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<String> createCategory(@RequestBody CategoryRequest request) {
         categoryService.save(request);
         return MessageUtils.getResponseEntity(ResponseMessage.ADD_SUCCESSFULLY, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<String> updateCategory(@PathVariable Long id,
                                                  @RequestBody CategoryRequest request) {
         categoryService.update(id, request);
@@ -50,19 +49,22 @@ public class CategoryController {
     }
 
     @RequestMapping(value = "/deleted-category/{id}", method = {RequestMethod.GET, RequestMethod.PUT})
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<String> deletedCategory(@PathVariable Long id) {
         categoryService.deleteById(id);
         return MessageUtils.getResponseEntity(ResponseMessage.DELETE_SUCCESSFULLY, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/enabled-category/{id}", method = {RequestMethod.GET, RequestMethod.PUT})
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<String> enabledCategory(@PathVariable Long id) {
         categoryService.enableById(id);
         return MessageUtils.getResponseEntity(ResponseMessage.ENABLED_SUCCESSFULLY, HttpStatus.OK);
     }
-
-    @RequestMapping(value = "/findById/{id}", method = {RequestMethod.PUT, RequestMethod.GET})
-    public CategoryDto findById(@PathVariable Long id) {
-        return categoryService.findById(id);
-    }
 }
+
+//    @RequestMapping(value = "/findById/{id}", method = {RequestMethod.PUT, RequestMethod.GET})
+//    public CategoryDto findById(@PathVariable Long id) {
+//        return categoryService.findById(id);
+//    }
+//}
