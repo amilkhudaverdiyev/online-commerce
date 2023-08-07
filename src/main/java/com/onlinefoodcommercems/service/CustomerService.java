@@ -8,8 +8,6 @@ import java.util.List;
 
 public interface CustomerService {
 
-
-
     void update(Long id, CustomerRequest customerRequest);
 
     List<CustomerResponse> findAllByActivated();
@@ -19,7 +17,6 @@ public interface CustomerService {
     CustomerResponse findById(Long id);
 
     CustomerResponse findByUsername(String username);
-
 
     void deleteById(Long id);
 

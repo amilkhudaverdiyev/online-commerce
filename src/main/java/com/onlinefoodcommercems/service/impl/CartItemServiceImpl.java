@@ -30,9 +30,7 @@ public class CartItemServiceImpl implements CartItemService {
     private final CustomerRepository customerRepository;
     private final CustomerService customerService;
     private final CustomerMapper customerMapper;
-    private final ApplicationConfig applicationConfig;
     private final ProductRepository productRepository;
-    private final DiscountRepository discountRepository;
 
     @Override
     public CartItemResponse save(int quantity, Long id, String userId) {
@@ -57,12 +55,7 @@ public class CartItemServiceImpl implements CartItemService {
                     cartItem.setQuantity(product.getCurrentQuantity());
                 } else {
                     cartItem.setTotalPrice(quantity * unitPrice);
-                    //availableQuantity = product.getCurrentQuantity() - quantity;
                 }
-               // product.setCurrentQuantity(availableQuantity);
-//                if (product.getCurrentQuantity() == 0) {
-//                    product.setStatus(Status.DEACTIVE);
-//                }
                 return cartItemMapper.toDTO(cartRepository.save(cartItem));
             }
         }
@@ -79,12 +72,7 @@ public class CartItemServiceImpl implements CartItemService {
             cartItem.setQuantity(product.getCurrentQuantity());
         } else {
             cartItem.setTotalPrice(quantity * product.getUnitPrice());
-           // availableQuantity = product.getCurrentQuantity() - quantity;
         }
-//        product.setCurrentQuantity(availableQuantity);
-//        if (product.getCurrentQuantity() == 0) {
-//            product.setStatus(Status.DEACTIVE);
-//        }
         return cartItemMapper.toDTO(cartRepository.save(cartItem));
     }
 

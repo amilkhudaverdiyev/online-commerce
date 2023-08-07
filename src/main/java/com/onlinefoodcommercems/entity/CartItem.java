@@ -23,7 +23,5 @@ public class CartItem {
     private Integer quantity;
     private Double price;
     private Double totalPrice;
-//    @Enumerated(EnumType.STRING)
-//    private CartStatus status;
 
 }

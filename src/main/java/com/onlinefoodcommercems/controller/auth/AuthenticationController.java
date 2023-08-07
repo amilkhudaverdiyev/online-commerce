@@ -1,12 +1,15 @@
 package com.onlinefoodcommercems.controller.auth;
 
+import com.onlinefoodcommercems.constants.ResponseMessage;
 import com.onlinefoodcommercems.dto.request.CustomerRequest;
 import com.onlinefoodcommercems.dto.user.AuthenticationRequest;
-import com.onlinefoodcommercems.dto.user.LoginResponse;
+import com.onlinefoodcommercems.dto.user.AuthenticationResponse;
 import com.onlinefoodcommercems.service.RegisterService;
 import com.onlinefoodcommercems.service.impl.UserDetailsServiceImpl;
+import com.onlinefoodcommercems.utils.MessageUtils;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -20,17 +23,18 @@ public class AuthenticationController {
     private final UserDetailsServiceImpl userDetailsService;
 
     @PostMapping("/register")
-    public String register(@RequestBody @Valid CustomerRequest request) {
-        return registerService.register(request);
+    public ResponseEntity<String> register(@RequestBody @Valid CustomerRequest request) {
+        registerService.register(request);
+        return MessageUtils.getResponseEntity(ResponseMessage.ADD_SUCCESSFULLY, HttpStatus.CREATED);
     }
 
     @GetMapping("/confirm")
     public String confirm(@RequestParam("token") String token) {
         return registerService.confirmToken(token);
     }
-    @GetMapping(path = "/login")
-    public ResponseEntity<LoginResponse> login(@RequestBody AuthenticationRequest request) {
-        return ResponseEntity.ok(userDetailsService.loadUserByUsernameAndPassword(request.getUsername(), request.getPassword()));
-    }
 
+    @PostMapping(path = "/login")
+    public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request) {
+        return ResponseEntity.ok(registerService.login(request));
+    }
 }

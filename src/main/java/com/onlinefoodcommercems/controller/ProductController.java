@@ -21,15 +21,23 @@ public class ProductController {
     @PostMapping("/create")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<String> createProduct(@RequestBody ProductRequest request) {
-        productService.createProduct(request);
-        return MessageUtils.getResponseEntity(ResponseMessage.ADD_SUCCESSFULLY, HttpStatus.CREATED);
+        try {
+            productService.createProduct(request);
+            return MessageUtils.getResponseEntity(ResponseMessage.ADD_SUCCESSFULLY, HttpStatus.CREATED);
+        } catch (Exception e) {
+            return MessageUtils.getResponseEntity(ResponseMessage.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @RequestMapping(value = "/deleted-product/{id}", method = {RequestMethod.GET, RequestMethod.PUT})
-    @PreAuthorize(value = "hasAuthority(Roles.ADMIN)")
+    @PreAuthorize(value = "hasAuthority('ADMIN')")
     public ResponseEntity<String> deletedProduct(@PathVariable Long id) {
-        productService.deleteById(id);
-        return MessageUtils.getResponseEntity(ResponseMessage.DELETE_SUCCESSFULLY, HttpStatus.OK);
+        try {
+            productService.deleteById(id);
+            return MessageUtils.getResponseEntity(ResponseMessage.DELETE_SUCCESSFULLY, HttpStatus.OK);
+        }catch (Exception e) {
+            return MessageUtils.getResponseEntity(ResponseMessage.PRODUCT_NOT_FOUND, HttpStatus.NOT_FOUND);
+        }
     }
 
     @RequestMapping(value = "/enabled-product/{id}", method = {RequestMethod.GET, RequestMethod.PUT})

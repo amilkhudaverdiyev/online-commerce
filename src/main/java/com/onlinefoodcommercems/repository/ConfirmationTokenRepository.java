@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 public interface ConfirmationTokenRepository extends JpaRepository<ConfirmationToken, Long> {
@@ -19,4 +20,6 @@ public interface ConfirmationTokenRepository extends JpaRepository<ConfirmationT
             "SET c.confirmedAt =:confirmedAt " +
             "WHERE c.token =:token")
     int updateConfirmedAt(String token, LocalDateTime confirmedAt);
+
+
 }

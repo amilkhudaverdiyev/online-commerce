@@ -1,11 +1,11 @@
 package com.onlinefoodcommercems.dto.user;
 
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
-@Getter
-@Setter
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class AuthenticationRequest {
     private String username;
     private String password;

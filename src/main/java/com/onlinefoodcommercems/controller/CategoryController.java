@@ -63,8 +63,3 @@ public class CategoryController {
     }
 }
 
-//    @RequestMapping(value = "/findById/{id}", method = {RequestMethod.PUT, RequestMethod.GET})
-//    public CategoryDto findById(@PathVariable Long id) {
-//        return categoryService.findById(id);
-//    }
-//}

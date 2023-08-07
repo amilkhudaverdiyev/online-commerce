@@ -37,4 +37,5 @@ public class CustomerRequest {
     private AddressRequest address;
     private Roles roles=Roles.USER;
     private Status status = Status.DEACTIVE;
+
 }

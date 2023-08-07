@@ -1,9 +1,11 @@
 package com.onlinefoodcommercems.service.impl;
 
 import com.onlinefoodcommercems.dto.request.CustomerRequest;
+import com.onlinefoodcommercems.dto.user.AuthenticationRequest;
+import com.onlinefoodcommercems.dto.user.AuthenticationResponse;
 import com.onlinefoodcommercems.entity.ConfirmationToken;
 import com.onlinefoodcommercems.entity.UserAuthority;
-import com.onlinefoodcommercems.enums.Status;
+import com.onlinefoodcommercems.jwt.JwtService;
 import com.onlinefoodcommercems.mapper.AddressMapper;
 import com.onlinefoodcommercems.mapper.CustomerMapper;
 import com.onlinefoodcommercems.repository.CustomerRepository;
@@ -11,6 +13,8 @@ import com.onlinefoodcommercems.service.RegisterService;
 import com.onlinefoodcommercems.service.email.EmailSender;
 import com.onlinefoodcommercems.service.email.EmailValidator;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,9 +30,21 @@ public class RegisterServiceImpl implements RegisterService {
     private final CustomerMapper customerMapper;
     private final CustomerRepository customerRepository;
     private final AddressMapper addressMapper;
+    private final AuthenticationManager authenticationManager;
+    private final JwtService jwtService;
 
     @Override
-    public String register(CustomerRequest request) {
+    public AuthenticationResponse login(AuthenticationRequest request) {
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
+        var user = customerRepository.findByUsername(request.getUsername()).orElseThrow();
+        var token = jwtService.generateToken(user);
+        return AuthenticationResponse.builder().username(request.getUsername()).token(token).build();
+    }
+
+
+    @Override
+    public void register(CustomerRequest request) {
         boolean isValidEmail = emailValidator.test(request.getUsername());
         if (!isValidEmail) {
             throw new IllegalStateException("email not valid");
@@ -41,7 +57,6 @@ public class RegisterServiceImpl implements RegisterService {
         customer.setPassword(request.getPassword());
         customer.setUsername(request.getUsername());
         customer.setBirthDate(request.getBirthDate());
-        //var createdCustomer = customerRepository.save(customer);
         customer.setAccountNonExpired(true);
         customer.setAccountNonLocked(true);
         customer.setCredentialsNonExpired(true);
@@ -56,7 +71,6 @@ public class RegisterServiceImpl implements RegisterService {
 
         String link = "http://localhost:2020/registration/confirm?token=" + token;
         emailSender.send(request.getUsername(), buildEmail(request.getName() + " " + request.getSurname(), link));
-        return "success";
 
     }
 
