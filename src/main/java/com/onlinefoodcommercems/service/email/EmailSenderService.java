@@ -14,6 +14,9 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.text.DecimalFormat;
+import java.util.Random;
+
 
 @Service
 @RequiredArgsConstructor
@@ -75,11 +78,28 @@ public class EmailSenderService implements EmailSender {
             helper.setText(email, true);
             helper.setTo(to);
             helper.setSubject("Confirm your email");
-            helper.setFrom("gultekin398@gmail.com");
+            helper.setFrom("amil.xudaverdiyev30@gmail.com");
             javaMailSender.send(mimeMessage);
         } catch (MessagingException e) {
             throw new IllegalStateException("failed to send email");
         }
+    }
+
+    @Override
+    public void sendOtpEmail(String email) throws MessagingException {
+        var otp=  new DecimalFormat("000000")
+                .format(new Random().nextInt(999999));
+        var customer = customerRepository.findByUsername(email).orElseThrow();
+        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+        MimeMessageHelper helper =
+                new MimeMessageHelper(mimeMessage, "utf-8");
+        helper.setTo(email);
+        helper.setSubject("Verify OTP");
+        helper.setText(" wants to cancel the order"
+                +otp+ "</body></html>", true);
+        customer.setActivationCode(Integer.valueOf(otp));
+        customerRepository.save(customer);
+        javaMailSender.send(mimeMessage);
     }
 
 }

@@ -14,6 +14,9 @@ public interface CustomerRepository extends JpaRepository<Customer,Long> {
     @EntityGraph(attributePaths = {"authorities"})
     Optional<Customer> findByUsername(String username);
 
+@Query(value = "select * from customer where activation_code=:code",nativeQuery = true)
+    Customer findByActivationCode(String code);
+
     @Transactional
     @Modifying
     @Query("UPDATE Customer a " +

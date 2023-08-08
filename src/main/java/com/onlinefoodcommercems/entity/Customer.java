@@ -40,6 +40,7 @@ public class Customer implements UserDetails {
     private String password;
     private String phoneNumber;
     private LocalDate birthDate;
+    private Integer activationCode;
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "address_id", referencedColumnName = "id")
     private Address address;

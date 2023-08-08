@@ -16,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 public class CreateSchedule {
 
-
     private final DiscountRepository discountRepository;
     private final DiscountService discountService;
 

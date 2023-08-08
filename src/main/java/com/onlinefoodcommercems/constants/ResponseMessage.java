@@ -8,9 +8,19 @@ public class ResponseMessage {
     public static final String ADD_SUCCESSFULLY = "Add successfully!";
     public static final String EMAIL_NOT_ACTIVATED = "Email not activated!";
     public static final String EMAIL_ALREADY_TAKEN = "Email already taken";
+    public static final String EMAIL_ALREADY_CONFIRMED = "Email already confirmed";
+    public static final String EMAIL_NOT_VALID = "Email not valid";
+    public static final String TOKEN_NOT_FOUND = "Token not found";
+    public static final String TOKEN_EXPIRED = "Token expired";
+    public static final String CONFIRMED = "Confirmed";
+
+    public static final String PASSWORD_SUCCESSFULLY_CHANGED = "Your password is successfully changed";
+    public static final String WRONG_OLD_PASSWORD = "Wrong old password!";
+    public static final String PASSWORDS_DO_NOT_MATCH = "Passwords do not match.";
     public static final String UPDATE_SUCCESSFULLY = "Update successfully!";
     public static final String DELETE_SUCCESSFULLY = "Deleted successfully!";
     public static final String ENABLED_SUCCESSFULLY = "Enabled successfully!";
+    public static final String PASSWORD_NOT_EMPTY = "Old password and New password  cannot be empty.";
     public static final String PRODUCT_NOT_FOUND = "Product not found!";
     public static final String CATEGORY_NOT_FOUND = "Category not found!";
     public static final String DISCOUNT_NOT_FOUND = "Discount not found!";

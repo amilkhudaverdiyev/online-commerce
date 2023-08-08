@@ -38,6 +38,8 @@ dependencies {
     implementation group: 'org.springframework.boot', name: 'spring-boot-configuration-processor', version: '2.7.5'
     annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
     implementation group: 'com.github.librepdf', name: 'openpdf', version: '1.3.26'
+    implementation 'org.springframework:spring-messaging:6.0.3'
+    implementation 'org.springframework:spring-websocket:6.0.3'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
 }

@@ -10,7 +10,8 @@ public class SecurityConfigConstants {
             "/swagger-resources/**"
 
     };
-    public static final String REGISTRATION="/registration/**";
+    public static final String API_AUTH="/api/v1/auth/**";
+    public static final String MESSAGE="/message/**";
     public static final String API_HOME="/api/home/**";
     public static final String PDF_GENERATE="/pdf/generate/**";
     public static final String DELETE_COOKIES="JSESSIONID";

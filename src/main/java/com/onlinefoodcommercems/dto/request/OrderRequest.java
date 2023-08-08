@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 @Data
 @NoArgsConstructor
@@ -13,7 +14,7 @@ import java.util.Date;
 @Builder
 public class OrderRequest {
     private Long id;
-     Date deliveryDate;
+     LocalDateTime deliveryDate;
      Double totalAmount;
      CustomerRequest customer;
      OrderStatus status= OrderStatus.LOADING;

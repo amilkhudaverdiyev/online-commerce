@@ -2,25 +2,31 @@ package com.onlinefoodcommercems.controller.auth;
 
 import com.onlinefoodcommercems.constants.ResponseMessage;
 import com.onlinefoodcommercems.dto.request.CustomerRequest;
+import com.onlinefoodcommercems.dto.request.PasswordResetRequest;
 import com.onlinefoodcommercems.dto.user.AuthenticationRequest;
 import com.onlinefoodcommercems.dto.user.AuthenticationResponse;
+import com.onlinefoodcommercems.entity.Customer;
+import com.onlinefoodcommercems.exception.InputFieldException;
 import com.onlinefoodcommercems.service.RegisterService;
-import com.onlinefoodcommercems.service.impl.UserDetailsServiceImpl;
+import com.onlinefoodcommercems.storage.UserStorage;
 import com.onlinefoodcommercems.utils.MessageUtils;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Set;
+
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/registration")
+@RequestMapping("/api/v1/auth/")
 @Validated
 public class AuthenticationController {
     private final RegisterService registerService;
-    private final UserDetailsServiceImpl userDetailsService;
 
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody @Valid CustomerRequest request) {
@@ -37,4 +43,44 @@ public class AuthenticationController {
     public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request) {
         return ResponseEntity.ok(registerService.login(request));
     }
+
+    @PutMapping("/change-password")
+    public ResponseEntity<String> changePassword(@AuthenticationPrincipal Customer customer,
+                                                 @Valid @RequestBody PasswordResetRequest passwordReset,
+                                                 BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            throw new InputFieldException(bindingResult);
+        } else {
+            return ResponseEntity.ok(registerService.changePassword(customer.getUsername(), passwordReset));
+        }
+    }
+
+    @PutMapping("/forgot-password")
+    public ResponseEntity<String> changePassword(@RequestParam String username) {
+        return new ResponseEntity<>(registerService.forgotPassword(username), HttpStatus.OK);
+    }
+
+    @PutMapping("/set-password")
+    public ResponseEntity<String> setPassword(@RequestParam String username,
+                                              @RequestParam Integer code,
+                                              @RequestParam String newPassword) {
+        return new ResponseEntity<>(registerService.setPassword(username, code, newPassword), HttpStatus.OK);
+
+    }
+
+    @GetMapping("/registration/{userName}")
+    public ResponseEntity<Void> register(@PathVariable String userName) {
+        try {
+            UserStorage.getInstance().setUser(userName);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/fetchAllUsers")
+    public Set<String> fetchAll() {
+        return UserStorage.getInstance().getUsers();
+    }
 }
+

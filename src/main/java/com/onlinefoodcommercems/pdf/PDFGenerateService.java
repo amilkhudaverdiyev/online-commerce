@@ -11,7 +11,6 @@ import java.util.List;
 
 
 public interface PDFGenerateService {
-    void export(HttpServletResponse response) throws IOException;
     void generate(Order order, HttpServletResponse response) throws IOException, DocumentException;
 
 }

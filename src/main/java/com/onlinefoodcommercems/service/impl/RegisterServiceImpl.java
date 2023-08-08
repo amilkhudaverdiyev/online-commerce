@@ -1,10 +1,15 @@
 package com.onlinefoodcommercems.service.impl;
 
+import com.onlinefoodcommercems.constants.ResponseMessage;
 import com.onlinefoodcommercems.dto.request.CustomerRequest;
+import com.onlinefoodcommercems.dto.request.PasswordResetRequest;
 import com.onlinefoodcommercems.dto.user.AuthenticationRequest;
 import com.onlinefoodcommercems.dto.user.AuthenticationResponse;
 import com.onlinefoodcommercems.entity.ConfirmationToken;
 import com.onlinefoodcommercems.entity.UserAuthority;
+import com.onlinefoodcommercems.enums.Roles;
+import com.onlinefoodcommercems.exception.ApiRequestException;
+import com.onlinefoodcommercems.exception.NotDataFound;
 import com.onlinefoodcommercems.jwt.JwtService;
 import com.onlinefoodcommercems.mapper.AddressMapper;
 import com.onlinefoodcommercems.mapper.CustomerMapper;
@@ -12,13 +17,17 @@ import com.onlinefoodcommercems.repository.CustomerRepository;
 import com.onlinefoodcommercems.service.RegisterService;
 import com.onlinefoodcommercems.service.email.EmailSender;
 import com.onlinefoodcommercems.service.email.EmailValidator;
+import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -32,6 +41,52 @@ public class RegisterServiceImpl implements RegisterService {
     private final AddressMapper addressMapper;
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    @Override
+    public String changePassword(String email, PasswordResetRequest request) {
+        if (request.getPassword() != null && !request.getPassword().equals(request.getRepeatPassword())) {
+            throw new NotDataFound(ResponseMessage.PASSWORDS_DO_NOT_MATCH);
+        }
+
+        var user = customerRepository.findByUsername(email)
+                .orElseThrow(() -> new ApiRequestException(ResponseMessage.EMAIL_NOT_FOUND, HttpStatus.NOT_FOUND));
+        if (bCryptPasswordEncoder.matches(request.getOldPassword(), user.getPassword())) {
+            user.setPassword(bCryptPasswordEncoder.encode(request.getPassword()));
+            customerRepository.save(user);
+            return ResponseMessage.PASSWORD_SUCCESSFULLY_CHANGED;
+        } else {
+            return ResponseMessage.WRONG_OLD_PASSWORD;
+        }
+    }
+
+    @Override
+    public String forgotPassword(String username) {
+        customerRepository.findByUsername(username).orElseThrow(() -> new NotDataFound(ResponseMessage.USER_NOT_FOUND));
+        try {
+            emailSender.sendOtpEmail(username);
+        } catch (MessagingException e) {
+            throw new RuntimeException("Error");
+        }
+        return "Please";
+
+
+    }
+
+    @Override
+    public String setPassword(String username, Integer code, String newPassword) {
+        var user = customerRepository.findByUsername(username).orElseThrow(() -> new NotDataFound(ResponseMessage.USER_NOT_FOUND));
+        if (Objects.equals(code, user.getActivationCode())) {
+            user.setPassword(bCryptPasswordEncoder.encode(newPassword));
+            user.setActivationCode(null);
+            customerRepository.save(user);
+
+            return ResponseMessage.PASSWORD_SUCCESSFULLY_CHANGED;
+        } else {
+            return ResponseMessage.ERROR;
+        }
+
+    }
 
     @Override
     public AuthenticationResponse login(AuthenticationRequest request) {
@@ -42,12 +97,11 @@ public class RegisterServiceImpl implements RegisterService {
         return AuthenticationResponse.builder().username(request.getUsername()).token(token).build();
     }
 
-
     @Override
     public void register(CustomerRequest request) {
         boolean isValidEmail = emailValidator.test(request.getUsername());
         if (!isValidEmail) {
-            throw new IllegalStateException("email not valid");
+            throw new IllegalStateException(ResponseMessage.EMAIL_NOT_VALID);
         }
         var customer = customerMapper.fromDTO(request);
         var address = addressMapper.fromDTO(request.getAddress());
@@ -62,7 +116,7 @@ public class RegisterServiceImpl implements RegisterService {
         customer.setCredentialsNonExpired(true);
 
         var authority = new UserAuthority();
-        authority.setAuthority("USER");
+        authority.setAuthority(Roles.USER);
         authority.setCustomer(customer);
         customer.addAuthority(authority);
 
@@ -79,22 +133,22 @@ public class RegisterServiceImpl implements RegisterService {
         ConfirmationToken confirmationToken = confirmationTokenService
                 .getToken(token)
                 .orElseThrow(() ->
-                        new IllegalStateException("token not found"));
+                        new IllegalStateException(ResponseMessage.TOKEN_NOT_FOUND));
 
         if (confirmationToken.getConfirmedAt() != null) {
-            throw new IllegalStateException("email already confirmed");
+            throw new IllegalStateException(ResponseMessage.EMAIL_ALREADY_CONFIRMED);
         }
 
         LocalDateTime expiredAt = confirmationToken.getExpiresAt();
 
         if (expiredAt.isBefore(LocalDateTime.now())) {
-            throw new IllegalStateException("token expired");
+            throw new IllegalStateException(ResponseMessage.TOKEN_EXPIRED);
         }
 
         confirmationTokenService.setConfirmedAt(token);
         userDetailsServiceImp.enableUser(
                 confirmationToken.getCustomer().getUsername());
-        return "confirmed";
+        return ResponseMessage.CONFIRMED;
     }
 
     private String buildEmail(String name, String link) {

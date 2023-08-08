@@ -12,4 +12,6 @@ public interface EmailSender {
 
     void sendMailToCancelOrder(String username) throws MessagingException;
      void send(String to, String email);
+     void sendOtpEmail(String email) throws MessagingException;
+
 }

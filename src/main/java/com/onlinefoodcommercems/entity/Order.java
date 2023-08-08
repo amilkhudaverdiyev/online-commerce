@@ -24,10 +24,9 @@ public class Order {
     @Column(name = "order_id")
     private Long orderId;
    @UpdateTimestamp
-   @DateTimeFormat
-  // @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime orderDate;
-    private Date deliveryDate;
+   private LocalDateTime deliveryDate;
+
     private Double totalAmount;
 
     @Enumerated(EnumType.STRING)

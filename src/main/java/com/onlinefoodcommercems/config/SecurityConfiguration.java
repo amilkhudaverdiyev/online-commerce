@@ -37,7 +37,7 @@ public class SecurityConfiguration {
                 .csrf()
                 .disable()
                 .authorizeHttpRequests()
-                .requestMatchers(SecurityConfigConstants.REGISTRATION,SecurityConfigConstants.API_HOME,SecurityConfigConstants.PDF_GENERATE,/*"/swagger-ui.html"*/ "/")
+                .requestMatchers(SecurityConfigConstants.API_AUTH,SecurityConfigConstants.MESSAGE,SecurityConfigConstants.API_HOME,SecurityConfigConstants.PDF_GENERATE,/*"/swagger-ui.html"*/ "/")
                 .permitAll()
                 .requestMatchers(SecurityConfigConstants.AUTH_WHITE_LIST).permitAll()
                 .anyRequest()
