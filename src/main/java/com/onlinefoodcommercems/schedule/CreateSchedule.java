@@ -19,8 +19,7 @@ public class CreateSchedule {
     private final DiscountRepository discountRepository;
     private final DiscountService discountService;
 
-    @SchedulerLock(name = "checkTime")
-    @Scheduled(cron = "* * * * * *")
+    @Scheduled(cron = "${spring.quartz.scheduler-name.cron}")
     @Transactional(propagation = Propagation.REQUIRED)
     public void updateDiscountLoadingStatus() {
         System.out.println("active");

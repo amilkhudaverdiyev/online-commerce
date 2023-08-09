@@ -44,6 +44,11 @@ spring:
     enabled: true
     database-change-log-table: onlinefoodcommerce_DBLOG
     database-change-log-lock-table: onlinefoodcommerce_DBLOCK
+  quartz:
+    scheduler-name:
+      cron: '* * * * * *'
+
+
 
 #logging:
 #  level:
@@ -56,4 +61,3 @@ jwt:
 shedLock:
   shedTableName: food_schedule
   checkTime: 0 00 13 * * *
-
