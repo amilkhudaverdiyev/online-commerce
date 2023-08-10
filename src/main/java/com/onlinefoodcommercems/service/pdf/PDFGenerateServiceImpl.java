@@ -1,4 +1,4 @@
-package com.onlinefoodcommercems.pdf;
+package com.onlinefoodcommercems.service.pdf;
 
 import com.lowagie.text.Font;
 import com.lowagie.text.*;
@@ -6,14 +6,12 @@ import com.lowagie.text.pdf.CMYKColor;
 import com.lowagie.text.pdf.PdfPCell;
 import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfWriter;
-import com.onlinefoodcommercems.entity.Discount;
 import com.onlinefoodcommercems.entity.Order;
 import com.onlinefoodcommercems.entity.OrderDetail;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.awt.*;
 import java.io.IOException;
 
 @Service

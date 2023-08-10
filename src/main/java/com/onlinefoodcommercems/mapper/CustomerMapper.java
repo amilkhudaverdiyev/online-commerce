@@ -2,6 +2,7 @@ package com.onlinefoodcommercems.mapper;
 
 import com.onlinefoodcommercems.dto.request.CustomerRequest;
 import com.onlinefoodcommercems.dto.response.CustomerResponse;
+import com.onlinefoodcommercems.dto.update.CustomerUpdateReqeust;
 import com.onlinefoodcommercems.entity.Customer;
 import org.mapstruct.*;
 import org.springframework.stereotype.Component;
@@ -22,5 +23,5 @@ public interface CustomerMapper {
 
     List<CustomerResponse> toDTOs(List<Customer> customers);
 
-    Customer toDTOmap(@MappingTarget Customer customer, CustomerRequest customerRequest);
+    Customer toDTOmap(@MappingTarget Customer customer, CustomerUpdateReqeust customerRequest);
 }

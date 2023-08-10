@@ -3,6 +3,7 @@ package com.onlinefoodcommercems.service.impl;
 import com.onlinefoodcommercems.constants.ResponseMessage;
 import com.onlinefoodcommercems.dto.request.CustomerRequest;
 import com.onlinefoodcommercems.dto.response.CustomerResponse;
+import com.onlinefoodcommercems.dto.update.CustomerUpdateReqeust;
 import com.onlinefoodcommercems.entity.Customer;
 import com.onlinefoodcommercems.enums.Status;
 import com.onlinefoodcommercems.exception.NotDataFound;
@@ -22,8 +23,8 @@ public class CustomerServiceImpl implements CustomerService {
 
 
     @Override
-    public void update(Long id, CustomerRequest customerRequest) {
-        var customer = customerRepository.findById(id).orElseThrow(() -> new NotDataFound(ResponseMessage.CUSTOMER_NOT_FOUND));
+    public void update(String username, CustomerUpdateReqeust customerRequest) {
+        var customer = customerRepository.findByUsername(username).orElseThrow(() -> new NotDataFound(ResponseMessage.CUSTOMER_NOT_FOUND));
         customerMapper.toDTOmap(customer, customerRequest);
         customerRepository.save(customer);
     }

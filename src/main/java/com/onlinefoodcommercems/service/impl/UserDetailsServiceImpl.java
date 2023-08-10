@@ -1,10 +1,9 @@
 package com.onlinefoodcommercems.service.impl;
 
 import com.onlinefoodcommercems.constants.ResponseMessage;
-import com.onlinefoodcommercems.dto.user.LoginResponse;
 import com.onlinefoodcommercems.entity.ConfirmationToken;
 import com.onlinefoodcommercems.entity.Customer;
-import com.onlinefoodcommercems.jwt.JwtService;
+import com.onlinefoodcommercems.service.jwt.JwtService;
 import com.onlinefoodcommercems.repository.CustomerRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,7 +14,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 
 @Service

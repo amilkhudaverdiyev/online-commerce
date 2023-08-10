@@ -47,8 +47,14 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductResponse update(ProductRequest productRequest) {
-        return null;
+    public void update(Long id,ProductRequest productRequest) {
+        var product=productRepository.findById(id).orElseThrow(() -> new NotDataFound(ResponseMessage.PRODUCT_NOT_FOUND));
+                if(productRequest.getCurrentQuantity()==0) {
+                    productRequest.setStatus(Status.DEACTIVE);
+                }
+                    productMapper.toDTOmap(product, productRequest);
+
+        productRepository.save(product);
     }
 
     @Override

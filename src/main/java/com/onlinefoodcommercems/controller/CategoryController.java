@@ -23,11 +23,13 @@ public class CategoryController {
     private final CategoryService categoryService;
 
     @GetMapping("/all")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public List<CategoryResponse> getAllCategory() {
         return categoryService.findAll();
     }
 
     @GetMapping("/count")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public String getAllCategoryCount() {
         return categoryService.getAllCategoryCount();
     }

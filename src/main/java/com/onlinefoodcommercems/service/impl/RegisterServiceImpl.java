@@ -11,7 +11,7 @@ import com.onlinefoodcommercems.enums.Roles;
 import com.onlinefoodcommercems.enums.Status;
 import com.onlinefoodcommercems.exception.ApiRequestException;
 import com.onlinefoodcommercems.exception.NotDataFound;
-import com.onlinefoodcommercems.jwt.JwtService;
+import com.onlinefoodcommercems.service.jwt.JwtService;
 import com.onlinefoodcommercems.mapper.AddressMapper;
 import com.onlinefoodcommercems.mapper.CustomerMapper;
 import com.onlinefoodcommercems.repository.CustomerRepository;
@@ -126,7 +126,7 @@ public class RegisterServiceImpl implements RegisterService {
 
         String token = userDetailsServiceImp.signUpUser(customer);
 
-        String link = "http://localhost:2020/registration/confirm?token=" + token;
+        String link = "http://localhost:2020/api/v1/auth/confirm?token=" + token;
         emailSender.send(request.getUsername(), buildEmail(request.getName() + " " + request.getSurname(), link));
 
     }
@@ -157,7 +157,7 @@ public class RegisterServiceImpl implements RegisterService {
 
         String token = userDetailsServiceImp.signUpUser(customer);
 
-        String link = "http://localhost:2020/registration/confirm?token=" + token;
+        String link = "http://localhost:2020/api/v1/auth/confirm?token=" + token;
         emailSender.send(request.getUsername(), buildEmail(request.getName() + " " + request.getSurname(), link));
 
     }

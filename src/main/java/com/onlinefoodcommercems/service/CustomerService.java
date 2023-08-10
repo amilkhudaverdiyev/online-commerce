@@ -2,13 +2,14 @@ package com.onlinefoodcommercems.service;
 
 import com.onlinefoodcommercems.dto.request.CustomerRequest;
 import com.onlinefoodcommercems.dto.response.CustomerResponse;
+import com.onlinefoodcommercems.dto.update.CustomerUpdateReqeust;
 import com.onlinefoodcommercems.entity.Customer;
 
 import java.util.List;
 
 public interface CustomerService {
 
-    void update(Long id, CustomerRequest customerRequest);
+    void update(String username, CustomerUpdateReqeust customerRequest);
 
     List<CustomerResponse> findAllByActivated();
 

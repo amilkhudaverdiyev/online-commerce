@@ -31,11 +31,6 @@ public class AddressController {
         return addressService.findAllByActivated();
     }
 
-//    @PostMapping
-//    public ResponseEntity<String> createAddress(@RequestBody AddressRequest request) {
-//        addressService.save(request);
-//        return MessageUtils.getResponseEntity(ResponseMessage.ADD_SUCCESSFULLY, HttpStatus.CREATED);
-//    }
     @PutMapping()
     @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<String> updateAddress(@AuthenticationPrincipal Customer customer,

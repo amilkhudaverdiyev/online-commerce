@@ -1,4 +1,4 @@
-package com.onlinefoodcommercems.jwt;
+package com.onlinefoodcommercems.service.jwt;
 
 import com.onlinefoodcommercems.property.JwtProperty;
 import io.jsonwebtoken.Claims;
