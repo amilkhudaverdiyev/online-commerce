@@ -12,14 +12,8 @@ import java.util.List;
 public class MessageUtils {
 
     public static ResponseEntity<String> getResponseEntity(String responseMessage, HttpStatus httpStatus) {
-        return new ResponseEntity<String>("{\"message\":\"" + responseMessage +"\"}",httpStatus);
+        return new ResponseEntity<>("{\"message\":\"" + responseMessage +"\"}",httpStatus);
     }
-    public static double totalPrice(List<CartItem> cartItemsList) {
-        double totalPrice = 0.0;
-        for (CartItem item : cartItemsList) {
-            totalPrice += item.getPrice() * item.getQuantity();
-        }
-        return totalPrice;
-    }
+
 
 }

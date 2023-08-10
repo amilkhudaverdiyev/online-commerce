@@ -22,7 +22,6 @@ import java.util.function.Function;
 @RequiredArgsConstructor
 public class JwtService {
     private final JwtProperty property;
-    //private static final String SECRET_KEY =
 
     public String extractUsername(String token) {
         return extractClaims(token,Claims::getSubject);
@@ -44,9 +43,8 @@ public class JwtService {
                 .setClaims(extraClaims)
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24))
+                .setExpiration(new Date(System.currentTimeMillis() + property.getExpiration()))
                 .signWith(SignatureAlgorithm.HS512, property.getSecretKey().getBytes(StandardCharsets.UTF_8))
-                //.signWith(getSignInKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
 

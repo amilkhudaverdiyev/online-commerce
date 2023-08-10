@@ -8,6 +8,7 @@ import com.onlinefoodcommercems.dto.user.AuthenticationResponse;
 import com.onlinefoodcommercems.entity.ConfirmationToken;
 import com.onlinefoodcommercems.entity.UserAuthority;
 import com.onlinefoodcommercems.enums.Roles;
+import com.onlinefoodcommercems.enums.Status;
 import com.onlinefoodcommercems.exception.ApiRequestException;
 import com.onlinefoodcommercems.exception.NotDataFound;
 import com.onlinefoodcommercems.jwt.JwtService;
@@ -22,6 +23,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -92,9 +94,41 @@ public class RegisterServiceImpl implements RegisterService {
     public AuthenticationResponse login(AuthenticationRequest request) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
-        var user = customerRepository.findByUsername(request.getUsername()).orElseThrow();
+        var user = customerRepository.findByUsername(request.getUsername()).orElseThrow(() -> new UsernameNotFoundException(ResponseMessage.USER_NOT_FOUND));
         var token = jwtService.generateToken(user);
+        user.setStatus(Status.ACTIVE);
+        customerRepository.save(user);
         return AuthenticationResponse.builder().username(request.getUsername()).token(token).build();
+    }
+    @Override
+    public void registerAdmin(CustomerRequest request) {
+        boolean isValidEmail = emailValidator.test(request.getUsername());
+        if (!isValidEmail) {
+            throw new IllegalStateException(ResponseMessage.EMAIL_NOT_VALID);
+        }
+        var customer = customerMapper.fromDTO(request);
+        var address = addressMapper.fromDTO(request.getAddress());
+        customer.setAddress(address);
+        customer.setName(request.getName());
+        customer.setSurname(request.getSurname());
+        customer.setPassword(request.getPassword());
+        customer.setUsername(request.getUsername());
+        customer.setBirthDate(request.getBirthDate());
+        customer.setAccountNonExpired(true);
+        customer.setAccountNonLocked(true);
+        customer.setCredentialsNonExpired(true);
+
+        var authority = new UserAuthority();
+        authority.setAuthority(Roles.ADMIN);
+        authority.setCustomer(customer);
+        customer.addAuthority(authority);
+
+
+        String token = userDetailsServiceImp.signUpUser(customer);
+
+        String link = "http://localhost:2020/registration/confirm?token=" + token;
+        emailSender.send(request.getUsername(), buildEmail(request.getName() + " " + request.getSurname(), link));
+
     }
 
     @Override

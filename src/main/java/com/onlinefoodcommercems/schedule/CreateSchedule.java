@@ -19,6 +19,7 @@ public class CreateSchedule {
     private final DiscountRepository discountRepository;
     private final DiscountService discountService;
 
+    @SchedulerLock(name = "updateDiscountLoadingStatus")
     @Scheduled(cron = "${spring.quartz.scheduler-name.cron}")
     @Transactional(propagation = Propagation.REQUIRED)
     public void updateDiscountLoadingStatus() {
@@ -37,7 +38,7 @@ public class CreateSchedule {
         System.out.println("schedule END");
     }
 
-    @SchedulerLock(name = "checkTime")
+    @SchedulerLock(name = "updateDiscountActiveStatus")
     @Scheduled(fixedDelay = 10000)
     public void updateDiscountActiveStatus() {
         System.out.println("schedule start");

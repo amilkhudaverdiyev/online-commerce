@@ -33,23 +33,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         log.info("username {}", username);
         return userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException(ResponseMessage.EMAIL_NOT_FOUND));
     }
-
-    public LoginResponse loadUserByUsernameAndPassword(String email, String password) throws UsernameNotFoundException {
-        var user = userRepository.findByUsername(email).orElseThrow(() -> new UsernameNotFoundException(String.format(ResponseMessage.USER_NOT_FOUND_MESSAGE, email)));
-        if (bCryptPasswordEncoder.matches(password, user.getPassword())) {
-            var token = jwtService.generateToken(user);
-            LoginResponse loginResponse = new LoginResponse();
-            loginResponse.setUsername(user.getUsername());
-            loginResponse.setName(user.getName());
-            loginResponse.setSurname(user.getSurname());
-            loginResponse.setToken(token);
-
-            return loginResponse;
-        } else {
-            throw new UsernameNotFoundException(ResponseMessage.USER_NOT_FOUND);
-        }
-    }
-
     public String signUpUser(Customer user) {
         boolean userExists = userRepository.findByUsername(user.getUsername()).isPresent();
 
@@ -63,7 +46,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         userRepository.save(user);
 
-        String token = UUID.randomUUID().toString();
+        String token= jwtService.generateToken(user);
 
         ConfirmationToken confirmationToken = new ConfirmationToken(token, LocalDateTime.now(), LocalDateTime.now().plusMinutes(15), user);
 

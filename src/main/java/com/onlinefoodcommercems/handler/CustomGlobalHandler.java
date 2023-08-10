@@ -5,6 +5,9 @@ import com.onlinefoodcommercems.constants.ResponseMessage;
 import com.onlinefoodcommercems.dto.ErrorDetails;
 import com.onlinefoodcommercems.exception.AuthenticationException;
 import com.onlinefoodcommercems.exception.NotDataFound;
+import io.jsonwebtoken.ClaimJwtException;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import jakarta.validation.ConstraintDefinitionException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.InvalidDataAccessResourceUsageException;
@@ -21,6 +24,19 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 @RestControllerAdvice
 public class CustomGlobalHandler {
+    @ExceptionHandler
+    public ResponseEntity<ErrorDetails>  jwtExpiration(ClaimJwtException ex, WebRequest webRequest){
+        System.out.println("expire");
+        var errorDetails = ErrorDetails.builder()
+                .timestamp(new Date())
+                .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                .error(HttpStatus.NOT_FOUND.getReasonPhrase())
+                .message("error")
+                .errorDetail(ex.getMessage())
+                .path(webRequest.getDescription(false))
+                .build();
+        return new ResponseEntity<>(errorDetails,HttpStatus.NOT_FOUND);
+    }
     @ExceptionHandler
     public ResponseEntity<ErrorDetails>  auth(UsernameNotFoundException ex, WebRequest webRequest){
         var errorDetails = ErrorDetails.builder()

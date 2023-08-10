@@ -23,6 +23,5 @@ public interface OrderMapper {
 
     List<OrderResponse> toDTOs(List<Order> orders);
 
-   // Address toDTOmap(@MappingTarget Address address, AddressRequest addressRequest);
 
 }

@@ -8,7 +8,6 @@ import com.onlinefoodcommercems.dto.user.AuthenticationResponse;
 import com.onlinefoodcommercems.entity.Customer;
 import com.onlinefoodcommercems.exception.InputFieldException;
 import com.onlinefoodcommercems.service.RegisterService;
-import com.onlinefoodcommercems.storage.UserStorage;
 import com.onlinefoodcommercems.utils.MessageUtils;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -19,11 +18,10 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Set;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/auth/")
+@RequestMapping("/api/v1/auth")
 @Validated
 public class AuthenticationController {
     private final RegisterService registerService;
@@ -33,7 +31,6 @@ public class AuthenticationController {
         registerService.register(request);
         return MessageUtils.getResponseEntity(ResponseMessage.ADD_SUCCESSFULLY, HttpStatus.CREATED);
     }
-
     @GetMapping("/confirm")
     public String confirm(@RequestParam("token") String token) {
         return registerService.confirmToken(token);
@@ -66,21 +63,6 @@ public class AuthenticationController {
                                               @RequestParam String newPassword) {
         return new ResponseEntity<>(registerService.setPassword(username, code, newPassword), HttpStatus.OK);
 
-    }
-
-    @GetMapping("/registration/{userName}")
-    public ResponseEntity<Void> register(@PathVariable String userName) {
-        try {
-            UserStorage.getInstance().setUser(userName);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
-        }
-        return ResponseEntity.ok().build();
-    }
-
-    @GetMapping("/fetchAllUsers")
-    public Set<String> fetchAll() {
-        return UserStorage.getInstance().getUsers();
     }
 }
 

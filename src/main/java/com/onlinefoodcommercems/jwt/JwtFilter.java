@@ -32,14 +32,6 @@ public class JwtFilter extends OncePerRequestFilter {
         log.info("Request {}", request);
         log.info("Our JWT is in action ");
         log.info("request.getServletPath() {}", request.getServletPath());
-//        if (request.getServletPath().contains("/v2/api-docs") || request.getServletPath().contains("swagger")
-//                || request.getServletPath().contains("registration")
-//                || request.getServletPath().contains("csrf") || request.getServletPath().contains("get-all")
-//                || request.getServletPath().equals("/")) {
-//            filterChain.doFilter(request, response);
-//            log.info("Our filter stop ");
-//            return;
-//        }
         String header = request.getHeader(jwtProperty.getHeader());
         final String token;
         final String userEmail;

@@ -1,6 +1,7 @@
 package com.onlinefoodcommercems.service.impl;
 
 import com.onlinefoodcommercems.dto.response.OrderResponse;
+import com.onlinefoodcommercems.entity.CartItem;
 import com.onlinefoodcommercems.entity.Order;
 import com.onlinefoodcommercems.entity.OrderDetail;
 import com.onlinefoodcommercems.enums.OrderStatus;
@@ -62,7 +63,7 @@ public class OrderServiceImpl implements OrderService {
         var customer = customerRepository.findById(id).orElseThrow();
         var carts = customer.getCartItems();
         var order = Order.builder()
-                .totalAmount(MessageUtils.totalPrice(carts))
+                .totalAmount(totalPrice(carts))
                 .customer(customer)
                 .status(OrderStatus.LOADING)
                 .build();
@@ -79,5 +80,11 @@ public class OrderServiceImpl implements OrderService {
         }
         emailSender.sendMailToAdmin(customer.getUsername());
     }
-
+    private double totalPrice(List<CartItem> cartItemsList) {
+        double totalPrice = 0.0;
+        for (CartItem item : cartItemsList) {
+            totalPrice += item.getPrice() * item.getQuantity();
+        }
+        return totalPrice;
+    }
 }

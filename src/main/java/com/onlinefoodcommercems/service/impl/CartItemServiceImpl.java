@@ -34,7 +34,7 @@ public class CartItemServiceImpl implements CartItemService {
 
     @Override
     public CartItemResponse save(int quantity, Long id, String userId) {
-        var customer = customerMapper.toDTOm(customerService.findByUsername(userId));
+        var customer = customerMapper.customerResponseToCustomer(customerService.findByUsername(userId));
 
         var product = productRepository.findProductStatusActivity(id)
                 .orElseThrow(() -> new NotDataFound(ResponseMessage.PRODUCT_NOT_FOUND));

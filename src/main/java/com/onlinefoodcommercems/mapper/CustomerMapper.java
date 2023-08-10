@@ -18,7 +18,7 @@ public interface CustomerMapper {
 
 
     CustomerResponse toDTO(Customer customer);
-    Customer toDTOm(CustomerResponse customerResponse);
+    Customer customerResponseToCustomer(CustomerResponse customerResponse);
 
     List<CustomerResponse> toDTOs(List<Customer> customers);
 

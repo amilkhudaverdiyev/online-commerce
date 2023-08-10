@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 
 public interface RegisterService {
     void register(CustomerRequest registrationRequest);
+    void registerAdmin(CustomerRequest registrationRequest);
      String confirmToken(String token);
      AuthenticationResponse login(AuthenticationRequest request);
     String changePassword(String email, PasswordResetRequest request);
