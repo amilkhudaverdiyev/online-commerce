@@ -33,6 +33,7 @@ public class ResponseMessage {
     public static final String ACTIVE_COUNT = "Active Count: ";
     public static final String DEACTIVE_COUNT = "Deactive Count: ";
     public static final String ALL_COUNT = "All Count: ";
+    public static final String PERCENT_VALID = "percent: must be greater than 0: ";
 
 
 }

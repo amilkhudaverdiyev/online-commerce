@@ -1,14 +1,14 @@
 package com.onlinefoodcommercems.controller;
 
 import com.onlinefoodcommercems.constants.ResponseMessage;
-import com.onlinefoodcommercems.dto.request.CategoryRequest;
 import com.onlinefoodcommercems.dto.request.ProductRequest;
+import com.onlinefoodcommercems.dto.response.ResponseDetail;
 import com.onlinefoodcommercems.service.ProductService;
-import com.onlinefoodcommercems.utils.MessageUtils;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -17,57 +17,85 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/products")
 @RequiredArgsConstructor
 @Validated
+@Slf4j
 public class ProductController {
     private final ProductService productService;
 
-
     @PostMapping("/create")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<String> createProduct(@RequestBody @Valid ProductRequest request) {
-        try {
-            productService.createProduct(request);
-            return MessageUtils.getResponseEntity(ResponseMessage.ADD_SUCCESSFULLY, HttpStatus.CREATED);
-        } catch (Exception e) {
-            return MessageUtils.getResponseEntity(ResponseMessage.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    public ResponseDetail createProduct(@RequestBody @Valid ProductRequest request) {
+        log.error("product  {}", request);
+        log.error("product {}", productService.createProduct(request));
+        return ResponseDetail.builder()
+                .message(ResponseMessage.ADD_SUCCESSFULLY)
+                .status(HttpStatus.CREATED.getReasonPhrase())
+                .statusCode(HttpStatus.CREATED.value())
+                .build();
     }
 
-    @RequestMapping(value = "/deleted-product/{id}", method = {RequestMethod.GET, RequestMethod.PUT})
+    @DeleteMapping(value = "/deleted-product/{id}")
     @PreAuthorize(value = "hasAuthority('ADMIN')")
-    public ResponseEntity<String> deletedProduct(@PathVariable Long id) {
-        try {
-            productService.deleteById(id);
-            return MessageUtils.getResponseEntity(ResponseMessage.DELETE_SUCCESSFULLY, HttpStatus.OK);
-        }catch (Exception e) {
-            return MessageUtils.getResponseEntity(ResponseMessage.PRODUCT_NOT_FOUND, HttpStatus.NOT_FOUND);
-        }
+    public ResponseDetail deletedProduct(@PathVariable Long id) {
+        log.error("product  {}", id);
+        productService.deleteById(id);
+        log.error("product  {}", id);
+        return ResponseDetail.builder()
+                .message(ResponseMessage.DELETE_SUCCESSFULLY)
+                .status(HttpStatus.ACCEPTED.getReasonPhrase())
+                .statusCode(HttpStatus.ACCEPTED.value())
+                .build();
     }
+
+    @PutMapping(value = "/enabled-product/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseDetail enabledProduct(@PathVariable Long id) {
+        log.error("product  {}", id);
+        productService.enableById(id);
+        log.error("product  {}", id);
+        return ResponseDetail.builder()
+                .message(ResponseMessage.ENABLED_SUCCESSFULLY)
+                .status(HttpStatus.OK.getReasonPhrase())
+                .statusCode(HttpStatus.OK.value())
+                .build();
+    }
+
     @PutMapping("/{id}")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<String> updateProduct(@PathVariable Long id,
-                                                 @RequestBody @Valid ProductRequest request) {
+    public ResponseDetail updateProduct(@PathVariable Long id,
+                                        @RequestBody @Valid ProductRequest request) {
+        log.error("id  {}, product {}", id, request);
         productService.update(id, request);
-        return MessageUtils.getResponseEntity(ResponseMessage.UPDATE_SUCCESSFULLY, HttpStatus.OK);
+        log.error("id  {}, product {}", id, request);
+        return ResponseDetail.builder()
+                .message(ResponseMessage.UPDATE_SUCCESSFULLY)
+                .status(HttpStatus.OK.getReasonPhrase())
+                .statusCode(HttpStatus.OK.value())
+                .build();
     }
 
-    @RequestMapping(value = "/enabled-product/{id}", method = {RequestMethod.GET, RequestMethod.PUT})
+    @PutMapping(value = "/update-increaseAll")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<String> enabledProduct(@PathVariable Long id) {
-        productService.enableById(id);
-        return MessageUtils.getResponseEntity(ResponseMessage.ENABLED_SUCCESSFULLY, HttpStatus.OK);
-    }
-
-    @RequestMapping(value = "/update-increaseAll", method = {RequestMethod.GET, RequestMethod.PUT})
-    @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<String> increaseAllPriceWithPercentage(@RequestParam Double percent) {
+    public ResponseDetail increaseAllPriceWithPercentage(@RequestParam @Positive Double percent) {
+        log.error("id  {}, product {}", percent);
         productService.increaseAllPrice(percent);
-        return MessageUtils.getResponseEntity(ResponseMessage.UPDATE_SUCCESSFULLY, HttpStatus.OK);
+        log.error("id  {}, product {}", percent);
+        return ResponseDetail.builder()
+                .message(ResponseMessage.UPDATE_SUCCESSFULLY)
+                .status(HttpStatus.OK.getReasonPhrase())
+                .statusCode(HttpStatus.OK.value())
+                .build();
     }
 
-    @RequestMapping(value = "/update-decreaseAll", method = {RequestMethod.GET, RequestMethod.PUT})
+    @PutMapping(value = "/update-decreaseAll")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<String> decreaseAllPriceWithPercentage(@RequestParam Double percent) {
+    public ResponseDetail decreaseAllPriceWithPercentage(@RequestParam @Positive Double percent) {
+        log.error("id  {}, product {}", percent);
         productService.decreaseAllPrice(percent);
-        return MessageUtils.getResponseEntity(ResponseMessage.UPDATE_SUCCESSFULLY, HttpStatus.OK);
+        log.error("id  {}, product {}", percent);
+        return ResponseDetail.builder()
+                .message(ResponseMessage.UPDATE_SUCCESSFULLY)
+                .status(HttpStatus.OK.getReasonPhrase())
+                .statusCode(HttpStatus.OK.value())
+                .build();
     }
 }

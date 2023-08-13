@@ -39,7 +39,8 @@ public class AddressController {
         return MessageUtils.getResponseEntity(ResponseMessage.UPDATE_SUCCESSFULLY, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/delete/{id}", method = {RequestMethod.GET, RequestMethod.PUT})
+//    @RequestMapping(value = "/delete/{id}", method = {RequestMethod.GET, RequestMethod.PUT})
+@DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deletedAddress(@PathVariable Long id) {
         addressService.deleteById(id);
         return MessageUtils.getResponseEntity(ResponseMessage.DELETE_SUCCESSFULLY, HttpStatus.OK);
@@ -52,6 +53,7 @@ public class AddressController {
     }
 
     @RequestMapping(value = "/findById/{id}", method = {RequestMethod.PUT, RequestMethod.GET})
+    @PreAuthorize("hasAuthority('ADMIN')")
     public AddressResponse findById(@PathVariable Long id) {
         return addressService.findById(id);
     }

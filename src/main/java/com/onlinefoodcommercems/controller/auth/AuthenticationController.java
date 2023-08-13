@@ -3,6 +3,7 @@ package com.onlinefoodcommercems.controller.auth;
 import com.onlinefoodcommercems.constants.ResponseMessage;
 import com.onlinefoodcommercems.dto.request.CustomerRequest;
 import com.onlinefoodcommercems.dto.request.PasswordResetRequest;
+import com.onlinefoodcommercems.dto.response.ResponseDetail;
 import com.onlinefoodcommercems.dto.user.AuthenticationRequest;
 import com.onlinefoodcommercems.dto.user.AuthenticationResponse;
 import com.onlinefoodcommercems.entity.Customer;
@@ -27,9 +28,12 @@ public class AuthenticationController {
     private final RegisterService registerService;
 
     @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody @Valid CustomerRequest request) {
+    public ResponseDetail register(@RequestBody @Valid CustomerRequest request) {
         registerService.register(request);
-        return MessageUtils.getResponseEntity(ResponseMessage.ADD_SUCCESSFULLY, HttpStatus.CREATED);
+        return ResponseDetail.builder()
+                .message(ResponseMessage.ADD_SUCCESSFULLY)
+                .status(HttpStatus.CREATED.getReasonPhrase())
+                .statusCode(HttpStatus.CREATED.value()).build();
     }
     @GetMapping("/confirm")
     public String confirm(@RequestParam("token") String token) {

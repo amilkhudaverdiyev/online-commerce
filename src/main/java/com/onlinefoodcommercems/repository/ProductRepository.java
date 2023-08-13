@@ -1,6 +1,7 @@
 package com.onlinefoodcommercems.repository;
 
 import com.onlinefoodcommercems.entity.Product;
+import com.onlinefoodcommercems.enums.Status;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -18,6 +19,10 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @Query(value = "select * from products where product_id=:id and status = 'ACTIVE' ", nativeQuery = true)
     Optional<Product> findProductStatusActivity(Long id);
+
+    @Query(value = "select * from products where product_id=:id and status = 'DEACTIVE' ", nativeQuery = true)
+    Optional<Product> findProductStatusDeactivity(Long id);
+
 
     @Query(value = "select * from products where products.category_id=:id and status = 'DEACTIVE' ", nativeQuery = true)
     List<Product> findProductStatusInDeactiveByCategoryId(Long id);

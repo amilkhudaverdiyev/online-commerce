@@ -5,10 +5,12 @@ import com.onlinefoodcommercems.dto.request.AddressRequest;
 import com.onlinefoodcommercems.dto.response.AddressResponse;
 import com.onlinefoodcommercems.enums.Status;
 import com.onlinefoodcommercems.exception.NotDataFound;
+import com.onlinefoodcommercems.exceptions.GenericException;
 import com.onlinefoodcommercems.mapper.AddressMapper;
 import com.onlinefoodcommercems.repository.AddressRepository;
 import com.onlinefoodcommercems.service.AddressService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,12 +30,11 @@ public class AddressServiceImpl implements AddressService {
 
     @Override
     public void update(Long id, AddressRequest addressRequest) {
-        var address = addressRepository.findById(id).orElseThrow(() -> new NotDataFound(ResponseMessage.ADDRESS_NOT_FOUND));
+    var address = addressRepository.findById(id).orElseThrow(() -> new NotDataFound(ResponseMessage.ADDRESS_NOT_FOUND));
         addressMapper.toDTOmap(address, addressRequest);
         addressRepository.save(address);
 
     }
-
     @Override
     public List<AddressResponse> findAllByActivated() {
         var active = addressRepository.findAllByActivated();
@@ -48,7 +49,7 @@ public class AddressServiceImpl implements AddressService {
 
     @Override
     public AddressResponse findById(Long id) {
-        var address = addressRepository.findById(id).orElseThrow(() -> new NotDataFound(ResponseMessage.ADDRESS_NOT_FOUND));
+        var address = addressRepository.findById(id).orElseThrow(() -> new GenericException(ResponseMessage.ADDRESS_NOT_FOUND,HttpStatus.BAD_REQUEST.getReasonPhrase(),404));
         return addressMapper.toDTO(address);
     }
 
