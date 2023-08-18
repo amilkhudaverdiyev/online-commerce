@@ -3,11 +3,11 @@ package com.onlinefoodcommercems.controller;
 import com.onlinefoodcommercems.constants.ResponseMessage;
 import com.onlinefoodcommercems.dto.DiscountDto;
 import com.onlinefoodcommercems.dto.request.DiscountRequest;
+import com.onlinefoodcommercems.dto.response.ResponseDetail;
+import com.onlinefoodcommercems.enums.Status;
 import com.onlinefoodcommercems.service.DiscountService;
-import com.onlinefoodcommercems.utils.MessageUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,15 +22,18 @@ public class DiscountController {
 
     @PostMapping
     @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<String> createDiscount(@RequestBody DiscountRequest request) {
+    public ResponseDetail createDiscount(@RequestBody DiscountRequest request) {
 
         discountService.addDiscount(request);
-        return MessageUtils.getResponseEntity(ResponseMessage.ADD_SUCCESSFULLY, HttpStatus.CREATED);
+        return ResponseDetail.builder()
+                .message(ResponseMessage.ADD_SUCCESSFULLY)
+                .status(HttpStatus.CREATED.getReasonPhrase())
+                .statusCode(HttpStatus.CREATED.value()).build();
     }
 
-    @GetMapping("/all-active")
+    @GetMapping("/all-active/{status}")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public List<DiscountDto> getAllProductActivated() {
-        return discountService.findAllByActivated();
+    public List<DiscountDto> getAllProductActivated (@PathVariable Status status) {
+        return discountService.findAllByActivated(status);
     }
 }

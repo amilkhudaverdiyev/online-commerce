@@ -1,16 +1,12 @@
 package com.onlinefoodcommercems.controller;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.onlinefoodcommercems.constants.ResponseMessage;
-import com.onlinefoodcommercems.dto.CategoryDto;
 import com.onlinefoodcommercems.dto.request.CategoryRequest;
 import com.onlinefoodcommercems.dto.response.CategoryResponse;
+import com.onlinefoodcommercems.dto.response.ResponseDetail;
 import com.onlinefoodcommercems.service.CategoryService;
-import com.onlinefoodcommercems.utils.MessageUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,31 +33,43 @@ public class CategoryController {
 
     @PostMapping
     @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<String> createCategory(@RequestBody CategoryRequest request) {
+    public ResponseDetail createCategory(@RequestBody CategoryRequest request) {
         categoryService.save(request);
-        return MessageUtils.getResponseEntity(ResponseMessage.ADD_SUCCESSFULLY, HttpStatus.CREATED);
+          return ResponseDetail.builder()
+                  .message(ResponseMessage.ADD_SUCCESSFULLY)
+                .status(HttpStatus.CREATED.getReasonPhrase())
+                .statusCode(HttpStatus.CREATED.value()).build();
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<String> updateCategory(@PathVariable Long id,
+    public ResponseDetail updateCategory(@PathVariable Long id,
                                                  @RequestBody CategoryRequest request) {
         categoryService.update(id, request);
-        return MessageUtils.getResponseEntity(ResponseMessage.UPDATE_SUCCESSFULLY, HttpStatus.OK);
+        return ResponseDetail.builder()
+                .message(ResponseMessage.UPDATE_SUCCESSFULLY)
+                .status(HttpStatus.OK.getReasonPhrase())
+                .statusCode(HttpStatus.OK.value()).build();
     }
 
-    @RequestMapping(value = "/deleted-category/{id}", method = {RequestMethod.GET, RequestMethod.PUT})
+    @DeleteMapping(value = "/deleted-category/{id}")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<String> deletedCategory(@PathVariable Long id) {
+    public ResponseDetail deletedCategory(@PathVariable Long id) {
         categoryService.deleteById(id);
-        return MessageUtils.getResponseEntity(ResponseMessage.DELETE_SUCCESSFULLY, HttpStatus.OK);
+        return ResponseDetail.builder()
+        .message(ResponseMessage.DELETE_SUCCESSFULLY)
+        .status(HttpStatus.NO_CONTENT.getReasonPhrase())
+        .statusCode(HttpStatus.NO_CONTENT.value()).build();
     }
 
-    @RequestMapping(value = "/enabled-category/{id}", method = {RequestMethod.GET, RequestMethod.PUT})
+    @PutMapping(value = "/enabled-category/{id}")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<String> enabledCategory(@PathVariable Long id) {
+    public ResponseDetail enabledCategory(@PathVariable Long id) {
         categoryService.enableById(id);
-        return MessageUtils.getResponseEntity(ResponseMessage.ENABLED_SUCCESSFULLY, HttpStatus.OK);
+        return ResponseDetail.builder()
+                .message(ResponseMessage.ENABLED_SUCCESSFULLY)
+                .status(HttpStatus.OK.getReasonPhrase())
+                .statusCode(HttpStatus.OK.value()).build();
     }
 }
 

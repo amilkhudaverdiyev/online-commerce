@@ -33,9 +33,8 @@ public class CartItemServiceImpl implements CartItemService {
     private final ProductRepository productRepository;
 
     @Override
-    public CartItemResponse save(int quantity, Long id, String userId) {
-        var customer = customerMapper.customerResponseToCustomer(customerService.findByUsername(userId));
-
+    public CartItemResponse save(int quantity, Long id, String username) {
+        var customer = customerMapper.customerResponseToCustomer(customerService.findByUsername(username));
         var product = productRepository.findProductStatusActivity(id)
                 .orElseThrow(() -> new NotDataFound(ResponseMessage.PRODUCT_NOT_FOUND));
         List<Discount> discounts = product.getDiscount();

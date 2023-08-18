@@ -1,6 +1,7 @@
 package com.onlinefoodcommercems.dto.request;
 
 import com.onlinefoodcommercems.enums.OrderStatus;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,11 +15,8 @@ import java.util.Date;
 @Builder
 public class OrderRequest {
     private Long id;
-     LocalDateTime deliveryDate;
-     Double totalAmount;
-     CustomerRequest customer;
-     OrderStatus status= OrderStatus.LOADING;
-     OrderDetailRequest orderDetail;
 
+ @NotNull
+    LocalDateTime deliveryDate;
 
 }

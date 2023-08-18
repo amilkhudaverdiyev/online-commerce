@@ -10,7 +10,7 @@ public record ProductDto(
         String description,
         Integer currentQuantity,
         Double unitPrice,
-        CategoryResponse category
+        CategoryDto category
 
 ) {
 }

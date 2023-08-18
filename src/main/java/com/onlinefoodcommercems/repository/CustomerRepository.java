@@ -14,9 +14,6 @@ public interface CustomerRepository extends JpaRepository<Customer,Long> {
     @EntityGraph(attributePaths = {"authorities"})
     Optional<Customer> findByUsername(String username);
 
-@Query(value = "select * from customer where activation_code=:code",nativeQuery = true)
-    Customer findByActivationCode(String code);
-
     @Transactional
     @Modifying
     @Query("UPDATE Customer a " +
@@ -26,7 +23,7 @@ public interface CustomerRepository extends JpaRepository<Customer,Long> {
     @Query(value = "SELECT c\n" +
             "FROM Customer c\n" +
             "         LEFT JOIN UserAuthority r\n" +
-            "                   ON c.id = r.customer.id where c.status='ACTIVE' and r.authority='USER'")
+            "                   ON c.id = r.customer.id where c.enabled=true and r.authority='USER'")
     List<Customer> findAllByActivated();
     @Query(value = "SELECT c\n" +
             "FROM Customer c\n" +
@@ -43,17 +40,18 @@ public interface CustomerRepository extends JpaRepository<Customer,Long> {
     @Query(value = "SELECT count(c)\n" +
             "FROM Customer c\n" +
             "         LEFT JOIN UserAuthority r\n" +
-            "                   ON c.id = r.customer.id where c.status='ACTIVE' and r.authority='USER'")
+            "                   ON c.id = r.customer.id where c.enabled=true and r.authority='USER'")
     int countActiveAllBy();
     @Query(value = "SELECT count(c)\n" +
             "FROM Customer c\n" +
             "         LEFT JOIN UserAuthority r\n" +
-            "                   ON c.id = r.customer.id where c.status='DEACTIVE' and r.authority='USER'")
+            "                   ON c.id = r.customer.id where c.enabled=false and r.authority='USER'")
     int countDeactiveAllBy();
     @Query(value = "SELECT count(c)\n" +
             "FROM Customer c\n" +
             "         LEFT JOIN UserAuthority r\n" +
             "                   ON c.id = r.customer.id where r.authority='USER'")
     int countAllBy();
+
 
 }

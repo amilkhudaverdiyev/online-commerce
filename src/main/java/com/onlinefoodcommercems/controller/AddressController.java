@@ -3,12 +3,12 @@ package com.onlinefoodcommercems.controller;
 import com.onlinefoodcommercems.constants.ResponseMessage;
 import com.onlinefoodcommercems.dto.request.AddressRequest;
 import com.onlinefoodcommercems.dto.response.AddressResponse;
+import com.onlinefoodcommercems.dto.response.ResponseDetail;
 import com.onlinefoodcommercems.entity.Customer;
+import com.onlinefoodcommercems.enums.Status;
 import com.onlinefoodcommercems.service.AddressService;
-import com.onlinefoodcommercems.utils.MessageUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -22,37 +22,50 @@ public class AddressController {
     private final AddressService addressService;
 
     @GetMapping("/all")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public List<AddressResponse> getAllAddress() {
         return addressService.findAll();
     }
 
-    @GetMapping("/all-active")
-    public List<AddressResponse> getAllAddressActivated() {
-        return addressService.findAllByActivated();
+    @GetMapping("/all-active/{status}")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public List<AddressResponse> getAllAddressActivated(@PathVariable Status status) {
+        return addressService.findAllByActivated(status);
     }
 
     @PutMapping()
     @PreAuthorize("hasAuthority('USER')")
-    public ResponseEntity<String> updateAddress(@AuthenticationPrincipal Customer customer,
-                                                 @RequestBody AddressRequest request) {
+    public ResponseDetail updateAddress(@AuthenticationPrincipal Customer customer,
+                                        @RequestBody AddressRequest request) {
         addressService.update(customer.getAddress().getId(), request);
-        return MessageUtils.getResponseEntity(ResponseMessage.UPDATE_SUCCESSFULLY, HttpStatus.OK);
+        return ResponseDetail.builder()
+                .message(ResponseMessage.UPDATE_SUCCESSFULLY)
+                .status(HttpStatus.OK.getReasonPhrase())
+                .statusCode(HttpStatus.OK.value())
+                .build();
     }
 
-//    @RequestMapping(value = "/delete/{id}", method = {RequestMethod.GET, RequestMethod.PUT})
-@DeleteMapping("/delete/{id}")
-    public ResponseEntity<String> deletedAddress(@PathVariable Long id) {
+    @DeleteMapping("/delete/{id}")
+    public ResponseDetail deletedAddress(@PathVariable Long id) {
         addressService.deleteById(id);
-        return MessageUtils.getResponseEntity(ResponseMessage.DELETE_SUCCESSFULLY, HttpStatus.OK);
+        return ResponseDetail.builder()
+                .message(ResponseMessage.DELETE_SUCCESSFULLY)
+                .status(HttpStatus.NO_CONTENT.getReasonPhrase())
+                .statusCode(HttpStatus.NO_CONTENT.value())
+                .build();
     }
 
-    @RequestMapping(value = "/enable/{id}", method = {RequestMethod.GET, RequestMethod.PUT})
-    public ResponseEntity<String> enabledAddress(@PathVariable Long id) {
+    @PutMapping(value = "/enable/{id}")
+    public ResponseDetail enabledAddress(@PathVariable Long id) {
         addressService.enableById(id);
-        return MessageUtils.getResponseEntity(ResponseMessage.ENABLED_SUCCESSFULLY, HttpStatus.OK);
+        return ResponseDetail.builder()
+                .message(ResponseMessage.ENABLED_SUCCESSFULLY)
+                .status(HttpStatus.OK.getReasonPhrase())
+                .statusCode(HttpStatus.OK.value())
+                .build();
     }
 
-    @RequestMapping(value = "/findById/{id}", method = {RequestMethod.PUT, RequestMethod.GET})
+    @GetMapping(value = "/findById/{id}")
     @PreAuthorize("hasAuthority('ADMIN')")
     public AddressResponse findById(@PathVariable Long id) {
         return addressService.findById(id);

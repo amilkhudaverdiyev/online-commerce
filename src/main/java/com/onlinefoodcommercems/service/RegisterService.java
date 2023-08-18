@@ -12,9 +12,9 @@ public interface RegisterService {
     void registerAdmin(CustomerRequest registrationRequest);
      String confirmToken(String token);
      AuthenticationResponse login(AuthenticationRequest request);
-    String changePassword(String email, PasswordResetRequest request);
+    void changePassword(String email, PasswordResetRequest request);
 
-    String forgotPassword(String username);
+    String forgotPassword(String username) ;
 
-    String setPassword(String username,Integer code, String newPassword);
+    void setPassword(String username,Integer code, String newPassword);
 }

@@ -27,7 +27,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Query(value = "select * from products where products.category_id=:id and status = 'DEACTIVE' ", nativeQuery = true)
     List<Product> findProductStatusInDeactiveByCategoryId(Long id);
 
-    @Query("SELECT u FROM Product u WHERE  u.name  LIKE %?1% AND u.status='ACTIVE'")
+    @Query("SELECT u FROM Product u WHERE  u.name  LIKE %?1% or u.description LIKE %?1% AND u.status='ACTIVE'")
     List<Product> searchProducts(String keyword);
 
     @Query(value = "select * from products where status = 'ACTIVE'", nativeQuery = true)
@@ -42,5 +42,12 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Transactional
     @Query(value = "update products set unit_price=unit_price-(unit_price*:percent/100) where  product_id in (select product_id from products) and status='ACTIVE'", nativeQuery = true)
     void decreaseAll(Double percent);
+    @Query(value = "select count(*)from products where status = 'ACTIVE'", nativeQuery = true)
+    int countActiveAllBy();
 
+    @Query(value = "select count(*)from products where status = 'DEACTIVE'", nativeQuery = true)
+    int countDeactiveAllBy();
+
+    @Query(value = "select count(*)from products", nativeQuery = true)
+    int countAllBy();
 }

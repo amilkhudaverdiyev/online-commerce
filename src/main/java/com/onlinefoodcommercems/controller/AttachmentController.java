@@ -41,7 +41,6 @@ public class AttachmentController {
     public ResponseEntity<Resource> retrieve(@PathVariable String filename) throws IOException {
         var image = attachmentService.getImage(filename);
         var body = new ByteArrayResource(image.getData());
-
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_TYPE, image.getFileType())
                 .cacheControl(CacheControl.maxAge(Duration.ofSeconds(60)).cachePrivate().mustRevalidate())

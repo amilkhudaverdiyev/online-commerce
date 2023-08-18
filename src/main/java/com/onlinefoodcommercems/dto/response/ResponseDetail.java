@@ -12,4 +12,5 @@ public class ResponseDetail {
     private String message;
     private String status;
     private Integer statusCode;
+
 }

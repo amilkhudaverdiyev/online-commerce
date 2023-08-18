@@ -1,5 +1,6 @@
 package com.onlinefoodcommercems.config;
 
+import com.onlinefoodcommercems.constants.ResponseMessage;
 import com.onlinefoodcommercems.exception.AuthenticationException;
 import com.onlinefoodcommercems.repository.CustomerRepository;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +24,7 @@ public class ApplicationConfig {
     @Bean
     public UserDetailsService userDetailsService(){
    return username -> userRepository.findByUsername(username)
-           .orElseThrow(() -> new AuthenticationException(HttpStatus.UNAUTHORIZED,401,"UNAUTHORIZED"));
+           .orElseThrow(() -> new AuthenticationException(ResponseMessage.USER_NOT_FOUND,HttpStatus.NOT_FOUND.getReasonPhrase(),HttpStatus.NOT_FOUND.value()));
     }
 
     @Bean

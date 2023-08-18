@@ -29,5 +29,4 @@ public class CustomerResponse {
     private LocalDate birthDate;
     private String phoneNumber;
     private AddressResponse address;
-    private Status status;
 }

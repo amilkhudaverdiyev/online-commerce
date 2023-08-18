@@ -1,7 +1,13 @@
 package com.onlinefoodcommercems.jwt;
 
+import com.onlinefoodcommercems.constants.ResponseMessage;
+import com.onlinefoodcommercems.entity.Customer;
+import com.onlinefoodcommercems.enums.Status;
+import com.onlinefoodcommercems.exception.NotDataFound;
 import com.onlinefoodcommercems.property.JwtProperty;
+import com.onlinefoodcommercems.repository.CustomerRepository;
 import com.onlinefoodcommercems.service.jwt.JwtService;
+import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -13,6 +19,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -30,6 +37,7 @@ public class JwtFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
+
         log.info("Request {}", request);
         log.info("Our JWT is in action ");
         log.info("request.getServletPath() {}", request.getServletPath());
@@ -41,25 +49,30 @@ public class JwtFilter extends OncePerRequestFilter {
             return;
         }
         log.info("Header {}", header);
-         token = header.substring(7);
+        token = header.substring(7);
         log.info("Token ===={}", token);
-        userEmail = jwtService.extractUsername(token);
-        if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = userDetailsService.loadUserByUsername(userEmail);
-            if (jwtService.isTokenValid(token, userDetails)) {
-                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                        userDetails,
-                        null,
-                        userDetails.getAuthorities()
-                );
-                authToken.setDetails(
-                        new WebAuthenticationDetailsSource().buildDetails(request)
-                );
-                SecurityContextHolder.getContext().setAuthentication(authToken);
-            }
-        }
-        filterChain.doFilter(request, response);
+        try {
+            userEmail = jwtService.extractUsername(token);
+            if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                var userDetails =userDetailsService.loadUserByUsername(userEmail);
+                if (jwtService.isTokenValid(token, userDetails)) {
 
+                    UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                            userDetails,
+                            null,
+                            userDetails.getAuthorities()
+                    );
+                    authToken.setDetails(
+                            new WebAuthenticationDetailsSource().buildDetails(request)
+                    );
+                    SecurityContextHolder.getContext().setAuthentication(authToken);
+
+                }
+                filterChain.doFilter(request, response);
+            }
+        } catch (JwtException e) {
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, ResponseMessage.TOKEN_EXPIRED);
+        }
 
     }
 }

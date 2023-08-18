@@ -24,7 +24,8 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public void update(String username, CustomerUpdateReqeust customerRequest) {
-        var customer = customerRepository.findByUsername(username).orElseThrow(() -> new NotDataFound(ResponseMessage.CUSTOMER_NOT_FOUND));
+        var customer = customerRepository.findByUsername(username)
+                .orElseThrow(() -> new NotDataFound(ResponseMessage.CUSTOMER_NOT_FOUND));
         customerMapper.toDTOmap(customer, customerRequest);
         customerRepository.save(customer);
     }
@@ -56,7 +57,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public void deleteById(Long id) {
         var customer = customerRepository.getById(id);
-        customer.setStatus(Status.DEACTIVE);
+        customer.setEnabled(false);
         customerRepository.save(customer);
 
     }
@@ -64,7 +65,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public void enableById(Long id) {
         var customer = customerRepository.getById(id);
-        customer.setStatus(Status.ACTIVE);
+        customer.setEnabled(true);
         customerRepository.save(customer);
     }
 

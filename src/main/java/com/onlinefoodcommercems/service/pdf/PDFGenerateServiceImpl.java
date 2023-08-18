@@ -48,6 +48,9 @@ public class PDFGenerateServiceImpl implements PDFGenerateService {
         Paragraph paragraph3 = new Paragraph("Order Date:  " + order.getOrderDate(), fontTitle);
         paragraph3.setAlignment(Paragraph.ALIGN_LEFT);
         document.add(paragraph3);
+        Paragraph paragraph4 = new Paragraph("Delivery Date:  " + order.getDeliveryDate(), fontTitle);
+        paragraph4.setAlignment(Paragraph.ALIGN_LEFT);
+        document.add(paragraph4);
         PdfPTable table = new PdfPTable(5);
         table.setWidthPercentage(100f);
         table.setWidths(new int[]{3, 3, 3, 3, 3});

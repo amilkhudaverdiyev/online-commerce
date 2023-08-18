@@ -1,5 +1,6 @@
 package com.onlinefoodcommercems.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.onlinefoodcommercems.enums.Status;
 import jakarta.persistence.*;
 import lombok.*;
@@ -20,7 +21,6 @@ public class Category {
     private Long id;
 
     private String name;
-
     @Enumerated(EnumType.STRING)
     private Status status;
 

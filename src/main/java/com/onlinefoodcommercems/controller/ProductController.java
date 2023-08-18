@@ -1,7 +1,11 @@
 package com.onlinefoodcommercems.controller;
 
 import com.onlinefoodcommercems.constants.ResponseMessage;
+import com.onlinefoodcommercems.dto.CategoryDto;
+import com.onlinefoodcommercems.dto.ProductDto;
 import com.onlinefoodcommercems.dto.request.ProductRequest;
+import com.onlinefoodcommercems.dto.response.CategoryResponse;
+import com.onlinefoodcommercems.dto.response.ProductResponse;
 import com.onlinefoodcommercems.dto.response.ResponseDetail;
 import com.onlinefoodcommercems.service.ProductService;
 import jakarta.validation.Valid;
@@ -13,6 +17,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/products")
 @RequiredArgsConstructor
@@ -20,6 +26,17 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 public class ProductController {
     private final ProductService productService;
+
+    @GetMapping("/count")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public String getAllProductCount() {
+        return productService.getAllProductCount();
+    }
+    @GetMapping("/all")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public List<ProductResponse> getAllProducts() {
+        return productService.findAll();
+    }
 
     @PostMapping("/create")
     @PreAuthorize("hasAuthority('ADMIN')")
@@ -41,8 +58,8 @@ public class ProductController {
         log.error("product  {}", id);
         return ResponseDetail.builder()
                 .message(ResponseMessage.DELETE_SUCCESSFULLY)
-                .status(HttpStatus.ACCEPTED.getReasonPhrase())
-                .statusCode(HttpStatus.ACCEPTED.value())
+                .status(HttpStatus.NO_CONTENT.getReasonPhrase())
+                .statusCode(HttpStatus.NO_CONTENT.value())
                 .build();
     }
 

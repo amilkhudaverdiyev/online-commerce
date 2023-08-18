@@ -10,8 +10,8 @@ import java.util.List;
 import java.util.Optional;
 
 public interface DiscountRepository extends JpaRepository<Discount,Long> {
-    @Query(value = "select * from discount where status = 'ACTIVE'", nativeQuery = true)
-    List<Discount> findAllByActivated();
+    //@Query(value = "select * from discount where status = 'ACTIVE'", nativeQuery = true)
+    List<Discount> findByStatus(Status status);
     @Query(value = "select * from discount where status = 'ACTIVE'", nativeQuery = true)
     List<Discount> findByActiveStatus();
     @Query(value = "select * from discount where status = 'DEACTIVE'", nativeQuery = true)

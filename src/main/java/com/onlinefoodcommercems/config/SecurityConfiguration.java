@@ -10,18 +10,13 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.logout.LogoutHandler;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @RequiredArgsConstructor
 public class SecurityConfiguration {
 
-
     private final FilterConfig filterConfig;
-
-
     private final AuthenticationProvider authenticationProvider;
 
     @Bean
@@ -37,11 +32,13 @@ public class SecurityConfiguration {
                 .csrf()
                 .disable()
                 .authorizeHttpRequests()
-                .requestMatchers(SecurityConfigConstants.API_AUTH,SecurityConfigConstants.API_ADMIN,SecurityConfigConstants.API_HOME,SecurityConfigConstants.PDF_GENERATE,/*"/swagger-ui.html"*/ "/")
+                .requestMatchers(SecurityConfigConstants.API_AUTH, SecurityConfigConstants.API_ADMIN, SecurityConfigConstants.API_HOME, SecurityConfigConstants.PDF_GENERATE,/*"/swagger-ui.html"*/ "/")
                 .permitAll()
                 .requestMatchers(SecurityConfigConstants.AUTH_WHITE_LIST).permitAll()
                 .anyRequest()
                 .authenticated()
+                .and()
+                .exceptionHandling()
                 .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)

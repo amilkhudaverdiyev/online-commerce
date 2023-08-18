@@ -7,6 +7,7 @@ import com.onlinefoodcommercems.service.jwt.JwtService;
 import com.onlinefoodcommercems.repository.CustomerRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -29,7 +30,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         log.info("username {}", username);
-        return userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException(ResponseMessage.EMAIL_NOT_FOUND));
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException(ResponseMessage.ACCESS_DENIED));
     }
     public String signUpUser(Customer user) {
         boolean userExists = userRepository.findByUsername(user.getUsername()).isPresent();

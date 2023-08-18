@@ -9,20 +9,20 @@ import com.onlinefoodcommercems.entity.ConfirmationToken;
 import com.onlinefoodcommercems.entity.UserAuthority;
 import com.onlinefoodcommercems.enums.Roles;
 import com.onlinefoodcommercems.enums.Status;
-import com.onlinefoodcommercems.exception.ApiRequestException;
 import com.onlinefoodcommercems.exception.NotDataFound;
-import com.onlinefoodcommercems.service.jwt.JwtService;
+import com.onlinefoodcommercems.exception.PasswordRequestException;
 import com.onlinefoodcommercems.mapper.AddressMapper;
 import com.onlinefoodcommercems.mapper.CustomerMapper;
+import com.onlinefoodcommercems.repository.ConfirmationTokenRepository;
 import com.onlinefoodcommercems.repository.CustomerRepository;
 import com.onlinefoodcommercems.service.RegisterService;
 import com.onlinefoodcommercems.service.email.EmailSender;
 import com.onlinefoodcommercems.service.email.EmailValidator;
+import com.onlinefoodcommercems.service.jwt.JwtService;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -33,6 +33,7 @@ import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class RegisterServiceImpl implements RegisterService {
     private final UserDetailsServiceImpl userDetailsServiceImp;
     private final EmailValidator emailValidator;
@@ -42,64 +43,74 @@ public class RegisterServiceImpl implements RegisterService {
     private final CustomerRepository customerRepository;
     private final AddressMapper addressMapper;
     private final AuthenticationManager authenticationManager;
+    private final ConfirmationTokenRepository confirmationTokenRepository;
     private final JwtService jwtService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final UserDetailsServiceImpl userDetailsService;
 
     @Override
-    public String changePassword(String email, PasswordResetRequest request) {
-        if (request.getPassword() != null && !request.getPassword().equals(request.getRepeatPassword())) {
-            throw new NotDataFound(ResponseMessage.PASSWORDS_DO_NOT_MATCH);
+    public void changePassword(String email, PasswordResetRequest request) {
+        if (request.getNewPassword() != null && !request.getNewPassword().equals(request.getRepeatPassword())) {
+            throw new PasswordRequestException(ResponseMessage.PASSWORDS_DO_NOT_MATCH);
         }
 
         var user = customerRepository.findByUsername(email)
-                .orElseThrow(() -> new ApiRequestException(ResponseMessage.EMAIL_NOT_FOUND, HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new UsernameNotFoundException(ResponseMessage.USER_NOT_FOUND));
         if (bCryptPasswordEncoder.matches(request.getOldPassword(), user.getPassword())) {
-            user.setPassword(bCryptPasswordEncoder.encode(request.getPassword()));
+            user.setPassword(bCryptPasswordEncoder.encode(request.getNewPassword()));
             customerRepository.save(user);
-            return ResponseMessage.PASSWORD_SUCCESSFULLY_CHANGED;
         } else {
-            return ResponseMessage.WRONG_OLD_PASSWORD;
+            throw new PasswordRequestException(ResponseMessage.WRONG_OLD_PASSWORD);
         }
     }
 
     @Override
     public String forgotPassword(String username) {
-        customerRepository.findByUsername(username).orElseThrow(() -> new NotDataFound(ResponseMessage.USER_NOT_FOUND));
+        var user = customerRepository.findByUsername(username).orElseThrow(() -> new NotDataFound(ResponseMessage.USER_NOT_FOUND));
+        log.error("username" + username);
         try {
+            user.setPassword(null);
             emailSender.sendOtpEmail(username);
+            log.error("email" + emailSender);
         } catch (MessagingException e) {
-            throw new RuntimeException("Error");
+            return ResponseMessage.MESSAGE_DONT_SEND;
         }
-        return "Please";
-
-
+        return username;
     }
 
     @Override
-    public String setPassword(String username, Integer code, String newPassword) {
+    public void setPassword(String username, Integer code, String newPassword) {
         var user = customerRepository.findByUsername(username).orElseThrow(() -> new NotDataFound(ResponseMessage.USER_NOT_FOUND));
+        log.error("activation code in database " + user.getActivationCode());
+        log.error("activation code from request " + code);
         if (Objects.equals(code, user.getActivationCode())) {
             user.setPassword(bCryptPasswordEncoder.encode(newPassword));
             user.setActivationCode(null);
             customerRepository.save(user);
-
-            return ResponseMessage.PASSWORD_SUCCESSFULLY_CHANGED;
         } else {
-            return ResponseMessage.ERROR;
+            throw new NotDataFound(ResponseMessage.ACTIVATION_CODE_WRONG);
         }
 
     }
 
+
     @Override
     public AuthenticationResponse login(AuthenticationRequest request) {
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
-        var user = customerRepository.findByUsername(request.getUsername()).orElseThrow(() -> new UsernameNotFoundException(ResponseMessage.USER_NOT_FOUND));
-        var token = jwtService.generateToken(user);
-        user.setStatus(Status.ACTIVE);
-        customerRepository.save(user);
-        return AuthenticationResponse.builder().username(request.getUsername()).token(token).build();
+        var user = customerRepository.findByUsername(request.getUsername())
+                .orElseThrow(() -> new UsernameNotFoundException(ResponseMessage.ACCESS_DENIED));
+        if (user.isEnabled()) {
+            if (bCryptPasswordEncoder.matches(request.getPassword(), user.getPassword())) {
+                var token = jwtService.generateToken(user);
+                log.error("token === " + token);
+                return AuthenticationResponse.builder().username(request.getUsername()).token(token).build();
+            } else {
+                throw new PasswordRequestException(ResponseMessage.PASSWORD_IS_WRONG);
+            }
+        } else {
+            throw new UsernameNotFoundException(ResponseMessage.NOT_CONFIRMED);
+        }
     }
+
     @Override
     public void registerAdmin(CustomerRequest request) {
         boolean isValidEmail = emailValidator.test(request.getUsername());
@@ -178,7 +189,6 @@ public class RegisterServiceImpl implements RegisterService {
         if (expiredAt.isBefore(LocalDateTime.now())) {
             throw new IllegalStateException(ResponseMessage.TOKEN_EXPIRED);
         }
-
         confirmationTokenService.setConfirmedAt(token);
         userDetailsServiceImp.enableUser(
                 confirmationToken.getCustomer().getUsername());

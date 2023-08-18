@@ -3,17 +3,17 @@ package com.onlinefoodcommercems.controller.auth;
 import com.onlinefoodcommercems.constants.ResponseMessage;
 import com.onlinefoodcommercems.dto.request.CustomerRequest;
 import com.onlinefoodcommercems.dto.request.PasswordResetRequest;
+import com.onlinefoodcommercems.dto.request.PasswordSetRequest;
 import com.onlinefoodcommercems.dto.response.ResponseDetail;
 import com.onlinefoodcommercems.dto.user.AuthenticationRequest;
-import com.onlinefoodcommercems.dto.user.AuthenticationResponse;
 import com.onlinefoodcommercems.entity.Customer;
-import com.onlinefoodcommercems.exception.InputFieldException;
 import com.onlinefoodcommercems.service.RegisterService;
-import com.onlinefoodcommercems.utils.MessageUtils;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Email;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1/auth")
 @Validated
 public class AuthenticationController {
+
     private final RegisterService registerService;
 
     @PostMapping("/register")
@@ -35,37 +36,50 @@ public class AuthenticationController {
                 .status(HttpStatus.CREATED.getReasonPhrase())
                 .statusCode(HttpStatus.CREATED.value()).build();
     }
+
     @GetMapping("/confirm")
     public String confirm(@RequestParam("token") String token) {
         return registerService.confirmToken(token);
     }
 
-    @PostMapping(path = "/login")
-    public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request) {
-        return ResponseEntity.ok(registerService.login(request));
+    @GetMapping(path = "/login")
+    public ResponseDetail authenticate(@RequestBody @Valid AuthenticationRequest request) {
+        registerService.login(request);
+        return ResponseDetail.builder()
+                .message(ResponseMessage.LOGIN_SUCCESSFULLY + registerService.login(request))
+                .status(HttpStatus.OK.getReasonPhrase())
+                .statusCode(HttpStatus.OK.value())
+                .build();
     }
 
     @PutMapping("/change-password")
-    public ResponseEntity<String> changePassword(@AuthenticationPrincipal Customer customer,
-                                                 @Valid @RequestBody PasswordResetRequest passwordReset,
-                                                 BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            throw new InputFieldException(bindingResult);
-        } else {
-            return ResponseEntity.ok(registerService.changePassword(customer.getUsername(), passwordReset));
-        }
+    public ResponseDetail changePassword(@AuthenticationPrincipal Customer customer,
+                                                 @Valid @RequestBody PasswordResetRequest passwordReset
+                                                 ) {
+            registerService.changePassword(customer.getUsername(), passwordReset);
+        return ResponseDetail.builder()
+                .message(ResponseMessage.PASSWORD_SUCCESSFULLY_CHANGED)
+                .status(HttpStatus.OK.getReasonPhrase())
+                .statusCode(HttpStatus.OK.value()).build();
+
     }
 
     @PutMapping("/forgot-password")
-    public ResponseEntity<String> changePassword(@RequestParam String username) {
-        return new ResponseEntity<>(registerService.forgotPassword(username), HttpStatus.OK);
+    public ResponseDetail forgotPassword(@RequestParam String username) {
+         registerService.forgotPassword(username);
+        return ResponseDetail.builder()
+                .message(ResponseMessage.MESSAGE_SEND_SUCCESFULLY)
+                .status(HttpStatus.OK.getReasonPhrase())
+                .statusCode(HttpStatus.OK.value()).build();
     }
 
     @PutMapping("/set-password")
-    public ResponseEntity<String> setPassword(@RequestParam String username,
-                                              @RequestParam Integer code,
-                                              @RequestParam String newPassword) {
-        return new ResponseEntity<>(registerService.setPassword(username, code, newPassword), HttpStatus.OK);
+    public ResponseDetail setPassword(@RequestBody @Valid PasswordSetRequest request) {
+        registerService.setPassword(request.getEmail(), request.getOtp(), request.getPassword());
+        return ResponseDetail.builder()
+                .message(ResponseMessage.PASSWORD_SUCCESSFULLY_CHANGED)
+                .status(HttpStatus.OK.getReasonPhrase())
+                .statusCode(HttpStatus.OK.value()).build();
 
     }
 }

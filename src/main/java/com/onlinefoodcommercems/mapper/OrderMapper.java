@@ -1,7 +1,6 @@
 package com.onlinefoodcommercems.mapper;
 
 import com.onlinefoodcommercems.dto.request.AddressRequest;
-import com.onlinefoodcommercems.dto.request.OrderRequest;
 import com.onlinefoodcommercems.dto.response.AddressResponse;
 import com.onlinefoodcommercems.dto.response.OrderResponse;
 import com.onlinefoodcommercems.entity.Address;
@@ -17,7 +16,6 @@ import java.util.List;
         unmappedTargetPolicy = ReportingPolicy.IGNORE,
 nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface OrderMapper {
-    Order fromDTO (OrderRequest orderRequest);
 
     OrderResponse toDTO(Order order);
 

@@ -2,6 +2,7 @@ package com.onlinefoodcommercems.service;
 
 import com.onlinefoodcommercems.dto.request.AddressRequest;
 import com.onlinefoodcommercems.dto.response.AddressResponse;
+import com.onlinefoodcommercems.enums.Status;
 
 import java.util.List;
 
@@ -10,7 +11,7 @@ public interface AddressService {
 
     void update(Long id, AddressRequest addressRequest);
 
-    List<AddressResponse> findAllByActivated();
+    List<AddressResponse> findAllByActivated(Status status);
 
     List<AddressResponse> findAll();
     AddressResponse findById(Long id);

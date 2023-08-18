@@ -15,6 +15,7 @@ import java.util.Set;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "customer")
 public class Customer implements UserDetails {
@@ -44,8 +45,6 @@ public class Customer implements UserDetails {
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "address_id", referencedColumnName = "id")
     private Address address;
-    @Enumerated(EnumType.STRING)
-    private Status status;
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
     private Set<UserAuthority> authorities = new HashSet<>();
     private boolean accountNonExpired;
@@ -55,13 +54,7 @@ public class Customer implements UserDetails {
     private boolean credentialsNonExpired;
 
     private boolean enabled = false;
-    public Customer(Customer user) {
-        this.name = user.getName();
-        this.surname = user.getSurname();
-        this.username = user.getUsername();
-        this.password = user.getPassword();
-        this.authorities = user.getAuthorities();
-    }
+
 
     public void addAuthority(UserAuthority authority) {
         this.authorities.add(authority);

@@ -1,6 +1,7 @@
 package com.onlinefoodcommercems.dto.request;
 
 import com.onlinefoodcommercems.enums.Status;
+import jakarta.validation.constraints.Positive;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -14,6 +15,4 @@ public class CartItemRequest {
     Integer quantity;
     Double price;
    Double totalPrice;
-//    CustomerRequest customerRequest;
-//    ProductRequest productRequest;
 }

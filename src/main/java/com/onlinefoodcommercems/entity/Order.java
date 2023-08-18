@@ -25,6 +25,7 @@ public class Order {
     private Long orderId;
    @UpdateTimestamp
     private LocalDateTime orderDate;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
    private LocalDateTime deliveryDate;
 
     private Double totalAmount;

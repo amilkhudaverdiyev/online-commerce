@@ -2,17 +2,18 @@ package com.onlinefoodcommercems.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
-import org.springframework.http.HttpStatus;
+
 
 @Getter
-@Setter
-@AllArgsConstructor
 public class AuthenticationException extends RuntimeException{
-    private HttpStatus status;
+    private final String code;
+    private final String message;
+    private final Integer status;
 
-    private Integer code;
-
-    private String message;
-
+    public AuthenticationException(String message, String code, Integer status) {
+        super(message);
+        this.message = message;
+        this.code = code;
+        this.status = status;
+    }
 }

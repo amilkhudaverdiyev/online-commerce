@@ -7,6 +7,8 @@ import org.springframework.http.ResponseEntity;
 @Data
 @Builder
 public class CartDetails {
-    private ResponseEntity<String> message;
+    private String message;
+    private String status;
+    private Integer statusCode;
     private String link;
 }

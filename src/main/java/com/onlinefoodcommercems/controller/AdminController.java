@@ -3,13 +3,12 @@ package com.onlinefoodcommercems.controller;
 import com.onlinefoodcommercems.constants.ResponseMessage;
 import com.onlinefoodcommercems.dto.request.CustomerRequest;
 import com.onlinefoodcommercems.dto.response.CustomerResponse;
+import com.onlinefoodcommercems.dto.response.ResponseDetail;
 import com.onlinefoodcommercems.service.CustomerService;
 import com.onlinefoodcommercems.service.RegisterService;
-import com.onlinefoodcommercems.utils.MessageUtils;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -24,9 +23,12 @@ public class AdminController {
     private final RegisterService registerService;
     private final CustomerService customerService;
     @PostMapping("/register")
-    public ResponseEntity<String> registerAdmin(@RequestBody @Valid CustomerRequest request) {
+    public ResponseDetail registerAdmin(@RequestBody @Valid CustomerRequest request) {
         registerService.registerAdmin(request);
-        return MessageUtils.getResponseEntity(ResponseMessage.ADD_SUCCESSFULLY, HttpStatus.CREATED);
+        return ResponseDetail.builder()
+                .message(ResponseMessage.ADD_SUCCESSFULLY)
+                .status(HttpStatus.CREATED.getReasonPhrase())
+                .statusCode(HttpStatus.CREATED.value()).build();
     }
     @GetMapping("/all")
     @PreAuthorize("hasAuthority('ADMIN')")
@@ -46,23 +48,29 @@ public class AdminController {
         return customerService.findAllByActivated();
     }
 
-    @RequestMapping(value = "/id/{id}", method = {RequestMethod.PUT, RequestMethod.GET})
+    @GetMapping(value = "/id/{id}")
     @PreAuthorize("hasAuthority('ADMIN')")
     public CustomerResponse findById(@PathVariable Long id) {
         return customerService.findById(id);
     }
 
-    @RequestMapping(value = "/delete/{id}", method = {RequestMethod.GET, RequestMethod.PUT})
+    @DeleteMapping(value = "/delete/{id}")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<String> deletedCustomer(@PathVariable Long id) {
+    public ResponseDetail deletedCustomer(@PathVariable Long id) {
         customerService.deleteById(id);
-        return MessageUtils.getResponseEntity(ResponseMessage.DELETE_SUCCESSFULLY, HttpStatus.OK);
+        return ResponseDetail.builder()
+                .message(ResponseMessage.DELETE_SUCCESSFULLY)
+                .status(HttpStatus.NO_CONTENT.getReasonPhrase())
+                .statusCode(HttpStatus.NO_CONTENT.value()).build();
     }
 
-    @RequestMapping(value = "/enable/{id}", method = {RequestMethod.GET, RequestMethod.PUT})
+    @PutMapping(value = "/enable/{id}")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<String> enabledCustomer(@PathVariable Long id) {
+    public ResponseDetail enabledCustomer(@PathVariable Long id) {
         customerService.enableById(id);
-        return MessageUtils.getResponseEntity(ResponseMessage.ENABLED_SUCCESSFULLY, HttpStatus.OK);
+        return ResponseDetail.builder()
+                .message(ResponseMessage.UPDATE_SUCCESSFULLY)
+                .status(HttpStatus.OK.getReasonPhrase())
+                .statusCode(HttpStatus.OK.value()).build();
     }
 }

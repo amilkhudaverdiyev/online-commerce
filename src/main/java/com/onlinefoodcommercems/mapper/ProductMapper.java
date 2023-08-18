@@ -24,7 +24,8 @@ public interface ProductMapper {
     ProductResponse toDTO(Product products);
 
     List<ProductDto> toDTOList(List<Product> products);
-    List<ItemResponse> toDTOs(List<Product> products);
+    List<ItemResponse> productToItemResponse(List<Product> products);
+    List<ProductResponse> toDTOs(List<Product> products);
     Product toDTOmap(@MappingTarget Product product, ProductRequest productRequest);
 
 }
