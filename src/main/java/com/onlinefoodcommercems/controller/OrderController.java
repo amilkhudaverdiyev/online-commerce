@@ -28,10 +28,11 @@ public class OrderController {
     private final OrderService orderService;
     private final EmailSender emailSender;
 
-    @PutMapping("/place-order/{id}")
+    @GetMapping ("/place-order/{id}")
     @PreAuthorize("hasAuthority('USER')")
-    public ResponseDetail placeOrder(@PathVariable Long id) throws MessagingException {
-        orderService.save(id);
+    public ResponseDetail placeOrder(@PathVariable Long id,
+                                     @RequestParam LocalDateTime deliveryDate) throws MessagingException {
+        orderService.save(id,deliveryDate);
         return ResponseDetail.builder()
                 .message(ResponseMessage.ADD_SUCCESSFULLY)
                 .status(HttpStatus.CREATED.getReasonPhrase())

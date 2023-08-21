@@ -50,13 +50,16 @@ public class RegisterServiceImpl implements RegisterService {
 
     @Override
     public void changePassword(String email, PasswordResetRequest request) {
+        log.error("request " + request,email);
         if (request.getNewPassword() != null && !request.getNewPassword().equals(request.getRepeatPassword())) {
             throw new PasswordRequestException(ResponseMessage.PASSWORDS_DO_NOT_MATCH);
         }
 
         var user = customerRepository.findByUsername(email)
                 .orElseThrow(() -> new UsernameNotFoundException(ResponseMessage.USER_NOT_FOUND));
+        log.error("user" + user);
         if (bCryptPasswordEncoder.matches(request.getOldPassword(), user.getPassword())) {
+            log.error("passwords" + user.getPassword(),request.getOldPassword());
             user.setPassword(bCryptPasswordEncoder.encode(request.getNewPassword()));
             customerRepository.save(user);
         } else {
@@ -96,8 +99,10 @@ public class RegisterServiceImpl implements RegisterService {
 
     @Override
     public AuthenticationResponse login(AuthenticationRequest request) {
+        log.error("request" + request);
         var user = customerRepository.findByUsername(request.getUsername())
                 .orElseThrow(() -> new UsernameNotFoundException(ResponseMessage.ACCESS_DENIED));
+        log.error("user" + user);
         if (user.isEnabled()) {
             if (bCryptPasswordEncoder.matches(request.getPassword(), user.getPassword())) {
                 var token = jwtService.generateToken(user);
@@ -114,11 +119,13 @@ public class RegisterServiceImpl implements RegisterService {
     @Override
     public void registerAdmin(CustomerRequest request) {
         boolean isValidEmail = emailValidator.test(request.getUsername());
+        log.error("is valid " + isValidEmail);
         if (!isValidEmail) {
             throw new IllegalStateException(ResponseMessage.EMAIL_NOT_VALID);
         }
         var customer = customerMapper.fromDTO(request);
         var address = addressMapper.fromDTO(request.getAddress());
+        log.error("address {}" + address);
         customer.setAddress(address);
         customer.setName(request.getName());
         customer.setSurname(request.getSurname());
@@ -128,15 +135,15 @@ public class RegisterServiceImpl implements RegisterService {
         customer.setAccountNonExpired(true);
         customer.setAccountNonLocked(true);
         customer.setCredentialsNonExpired(true);
-
+        log.error("customer {}" + customer);
         var authority = new UserAuthority();
         authority.setAuthority(Roles.ADMIN);
         authority.setCustomer(customer);
+        log.error("authority {}" + authority);
         customer.addAuthority(authority);
 
-
         String token = userDetailsServiceImp.signUpUser(customer);
-
+        log.error("token " + token);
         String link = "http://localhost:2020/api/v1/auth/confirm?token=" + token;
         emailSender.send(request.getUsername(), buildEmail(request.getName() + " " + request.getSurname(), link));
 
@@ -145,11 +152,13 @@ public class RegisterServiceImpl implements RegisterService {
     @Override
     public void register(CustomerRequest request) {
         boolean isValidEmail = emailValidator.test(request.getUsername());
+        log.error("is valid" + isValidEmail);
         if (!isValidEmail) {
             throw new IllegalStateException(ResponseMessage.EMAIL_NOT_VALID);
         }
         var customer = customerMapper.fromDTO(request);
         var address = addressMapper.fromDTO(request.getAddress());
+        log.error("address" + address);
         customer.setAddress(address);
         customer.setName(request.getName());
         customer.setSurname(request.getSurname());
@@ -159,15 +168,17 @@ public class RegisterServiceImpl implements RegisterService {
         customer.setAccountNonExpired(true);
         customer.setAccountNonLocked(true);
         customer.setCredentialsNonExpired(true);
-
+        log.error("customer" + customer);
         var authority = new UserAuthority();
         authority.setAuthority(Roles.USER);
         authority.setCustomer(customer);
+        log.error("authority" + authority);
         customer.addAuthority(authority);
 
 
-        String token = userDetailsServiceImp.signUpUser(customer);
 
+        String token = userDetailsServiceImp.signUpUser(customer);
+        log.error("token" + token);
         String link = "http://localhost:2020/api/v1/auth/confirm?token=" + token;
         emailSender.send(request.getUsername(), buildEmail(request.getName() + " " + request.getSurname(), link));
 
@@ -179,13 +190,13 @@ public class RegisterServiceImpl implements RegisterService {
                 .getToken(token)
                 .orElseThrow(() ->
                         new IllegalStateException(ResponseMessage.TOKEN_NOT_FOUND));
-
+        log.error("confirm token" + confirmationToken);
         if (confirmationToken.getConfirmedAt() != null) {
             throw new IllegalStateException(ResponseMessage.EMAIL_ALREADY_CONFIRMED);
         }
 
         LocalDateTime expiredAt = confirmationToken.getExpiresAt();
-
+        log.error("expiredAt" + expiredAt);
         if (expiredAt.isBefore(LocalDateTime.now())) {
             throw new IllegalStateException(ResponseMessage.TOKEN_EXPIRED);
         }

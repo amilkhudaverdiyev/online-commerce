@@ -1,6 +1,8 @@
 package com.onlinefoodcommercems.repository;
 
 import com.onlinefoodcommercems.entity.Customer;
+import com.onlinefoodcommercems.enums.Roles;
+import com.onlinefoodcommercems.enums.Status;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -23,35 +25,35 @@ public interface CustomerRepository extends JpaRepository<Customer,Long> {
     @Query(value = "SELECT c\n" +
             "FROM Customer c\n" +
             "         LEFT JOIN UserAuthority r\n" +
-            "                   ON c.id = r.customer.id where c.enabled=true and r.authority='USER'")
-    List<Customer> findAllByActivated();
+            "                   ON c.id = r.customer.id where c.enabled=:enabled and r.authority=:role")
+    List<Customer> findAllByActivated(Boolean enabled,Roles role);
     @Query(value = "SELECT c\n" +
             "FROM Customer c\n" +
             "         LEFT JOIN UserAuthority r\n" +
-            "                   ON c.id = r.customer.id where c.id=:id and r.authority='USER'")
-    Optional<Customer> findById(Long id);
+            "                   ON c.id = r.customer.id where c.id=:id and r.authority=:role")
+    Optional<Customer> findByIdAndAuthority(Long id,Roles role);
     @Query(value = "SELECT c\n" +
             "FROM Customer c\n" +
             "         LEFT JOIN UserAuthority r\n" +
-            "                   ON c.id = r.customer.id where  r.authority='USER'")
-    List<Customer> findAll();
+            "                   ON c.id = r.customer.id where  r.authority=:role")
+    List<Customer> findAllByUser(Roles role);
 
+    @Query(value = "SELECT count(c)\n" +
+            "FROM Customer c\n" +
+            "         LEFT JOIN UserAuthority r\n" +
+            "                   ON c.id = r.customer.id where c.enabled=:enabled and r.authority=:role")
+    int countAllBy(Boolean enabled,Roles role);
+    @Query(value = "SELECT count(c)\n" +
+            "FROM Customer c\n" +
+            "         LEFT JOIN UserAuthority r\n" +
+            "                   ON c.id = r.customer.id where r.authority=:role")
+    int countAll(Roles role);
 
-    @Query(value = "SELECT count(c)\n" +
+    @Query(value = "SELECT c\n" +
             "FROM Customer c\n" +
             "         LEFT JOIN UserAuthority r\n" +
-            "                   ON c.id = r.customer.id where c.enabled=true and r.authority='USER'")
-    int countActiveAllBy();
-    @Query(value = "SELECT count(c)\n" +
-            "FROM Customer c\n" +
-            "         LEFT JOIN UserAuthority r\n" +
-            "                   ON c.id = r.customer.id where c.enabled=false and r.authority='USER'")
-    int countDeactiveAllBy();
-    @Query(value = "SELECT count(c)\n" +
-            "FROM Customer c\n" +
-            "         LEFT JOIN UserAuthority r\n" +
-            "                   ON c.id = r.customer.id where r.authority='USER'")
-    int countAllBy();
+            "                   ON c.id = r.customer.id where c.accountStatus=:status and r.authority=:role")
+    List<Customer> findByAccountStatusAndAuthorities(Status status, Roles role);
 
 
 }

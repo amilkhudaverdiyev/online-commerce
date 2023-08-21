@@ -37,7 +37,7 @@ public class EmailSenderService implements EmailSender {
         mimeMessageHelper.setTo(customer.getUsername());
         mimeMessageHelper.addAttachment(attachment.getOriginalFilename(), attachment);
         javaMailSender.send(mimeMessage);
-        var orders = orderRepository.findCustomerInOrder(customer.getId());
+        var orders = orderRepository.findCustomerInOrder(customer.getId(),OrderStatus.LOADING);
         for (Order order : orders
         ) {
             order.setStatus(OrderStatus.ACCEPTED);

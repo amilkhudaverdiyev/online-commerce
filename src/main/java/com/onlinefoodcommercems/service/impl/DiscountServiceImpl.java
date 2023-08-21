@@ -53,7 +53,7 @@ public class DiscountServiceImpl implements DiscountService {
     }
 
     @Override
-    public List<DiscountDto> findAllByActivated(Status status) {
+    public List<DiscountDto> findAllByActivated(DiscountStatus status) {
         var active = discountRepository.findByStatus(status);
         return discountMapper.toDTOList(active);
     }

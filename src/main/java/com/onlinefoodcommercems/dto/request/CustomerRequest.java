@@ -35,6 +35,6 @@ public class CustomerRequest {
     @Size(min = 10, max = 15, message = "Phone number contains 10-15 characters")
     private String phoneNumber;
     private AddressRequest address;
-//    private Roles roles=Roles.USER;
+    private Status accountStatus = Status.DEACTIVE;
 
 }

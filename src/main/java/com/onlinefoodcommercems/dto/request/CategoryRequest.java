@@ -2,6 +2,7 @@ package com.onlinefoodcommercems.dto.request;
 
 import com.onlinefoodcommercems.enums.Status;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -12,7 +13,7 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CategoryRequest {
     Long id;
-    @NotBlank(message = "Name is not empty")
+    @NotEmpty(message = "Name is not empty")
     String name;
     Status status=Status.ACTIVE;
 

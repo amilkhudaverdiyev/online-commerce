@@ -81,22 +81,25 @@ public class ProductServiceImpl implements ProductService {
     public void enableById(Long id) {
         var product = productRepository.findProductStatusDeactivity(id).orElseThrow(()
                 -> new NotDataFound(ResponseMessage.PRODUCT_NOT_FOUND));
+        log.error("product " + product);
         product.setStatus(Status.ACTIVE);
         productRepository.save(product);
     }
 
     @Override
     public void increaseAllPrice(Double percent) {
+        log.error("percent " + percent);
         productRepository.increaseAll(percent);
     }
 
     @Override
     public void decreaseAllPrice(Double percent) {
+        log.error("percent " + percent);
         productRepository.decreaseAll(percent);
     }
 
     public List<ItemResponse> findByCategoryId(Long id) {
-        log.error("id" + id);
+        log.error("id " + id);
         var category = categoryRepository.findById(id).orElseThrow(()
                 -> new NotDataFound(ResponseMessage.CATEGORY_NOT_FOUND));
         log.error("category " + category);

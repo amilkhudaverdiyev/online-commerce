@@ -5,6 +5,8 @@ public class ResponseMessage {
     public static final String SOMETHING_WENT_WRONG = "error,Duplicate name, please check again!";
     public static final String PASSWORD_IS_WRONG = "The password is incorrect!";
     public static final String ACTIVATION_CODE_WRONG = "The activation code is incorrect!";
+    public static final String AMOUNT_SEND_SUCCESSFULLY = "The amount has been paid successfully";
+    public static final String SMALL_AMOUNT_IN_ACCOUNT = "There is a small amount in the account";
     public static final String ERROR = "ERROR";
     public static final String FORBIDDEN = "Access is forbidden, only admin";
     public static final String MESSAGE_DONT_SEND = "Message could not be sent";
@@ -34,11 +36,14 @@ public class ResponseMessage {
     public static final String CUSTOMER_NOT_FOUND = "Customer not found!";
     public static final String ADDRESS_NOT_FOUND = "Address not found!";
     public static final String ORDER_NOT_FOUND = "Order not found!";
+    public static final String NO_ORDER_FOR_AMOUNT = "No order found for this amount";
+    public static final String ACCOUNT_NOT_FOUND = "Account not found!";
     public static final String USER_NOT_FOUND = "User not found!";
     public static final String ACTIVE_COUNT = "Active Count: ";
     public static final String DEACTIVE_COUNT = "Deactive Count: ";
     public static final String ALL_COUNT = "All Count: ";
     public static final String PERCENT_VALID = "percent: must be greater than 0: ";
+    public static final String PAYMENT_VALID = "payment: must be greater than 0: ";
 
 
 }

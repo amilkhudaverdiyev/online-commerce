@@ -1,16 +1,11 @@
 package com.onlinefoodcommercems.dto.request;
 
-import com.onlinefoodcommercems.dto.response.DiscountResponse;
-import com.onlinefoodcommercems.entity.Category;
 import com.onlinefoodcommercems.enums.Status;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
-import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -24,8 +19,10 @@ public class ProductRequest {
     String description;
     @Positive(message = "The current quantity must be positive")
     Integer currentQuantity;
-   @Positive(message = "The unit-price must be positive")
-   Double unitPrice;
+    @Positive(message = "The unit-price must be positive")
+    @NotNull(message = "Unit price must not empty")
+    Double unitPrice;
+    @NotNull(message = "Category is not empty")
     Long categoryId;
-    Status status=Status.ACTIVE;
+    Status status = Status.ACTIVE;
 }

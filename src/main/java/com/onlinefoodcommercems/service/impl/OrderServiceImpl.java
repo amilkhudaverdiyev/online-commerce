@@ -6,6 +6,7 @@ import com.onlinefoodcommercems.entity.CartItem;
 import com.onlinefoodcommercems.entity.Order;
 import com.onlinefoodcommercems.entity.OrderDetail;
 import com.onlinefoodcommercems.enums.OrderStatus;
+import com.onlinefoodcommercems.enums.Roles;
 import com.onlinefoodcommercems.exception.NotDataFound;
 import com.onlinefoodcommercems.mapper.OrderDetailMapper;
 import com.onlinefoodcommercems.mapper.OrderMapper;
@@ -17,9 +18,11 @@ import com.onlinefoodcommercems.service.OrderService;
 import com.onlinefoodcommercems.service.email.EmailSender;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -27,6 +30,7 @@ import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class OrderServiceImpl implements OrderService {
     private Integer availableQuantity;
     private final OrderDetailMapper orderDetailMapper;
@@ -45,37 +49,45 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public List<OrderResponse> findOrderByStatus(String status) {
         var order = orderRepository.findOrderByStatus(status);
+        log.error("order {}" + order);
         return orderMapper.toDTOs(order);
     }
 
     @Override
     public List<OrderResponse> findAllOrdersByCustomer(String username) {
         var customer = customerRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException(ResponseMessage.USER_NOT_FOUND));
+        log.error("orders {}" + customer);
         var orders = customer.getOrders();
+        log.error("orders {}" + orders);
         return orderMapper.toDTOs(orders);
     }
 
     @Override
     public void deleteById(Long id) {
         var order = orderRepository.findById(id).orElseThrow(() -> new NotDataFound(ResponseMessage.ORDER_NOT_FOUND));
+        log.error("order {}" + order);
         order.setStatus(OrderStatus.CANCELED);
         orderRepository.save(order);
     }
 
     @Override
-    public void save(Long id) throws MessagingException {
+    public void save(Long id,LocalDateTime deliveryDate) throws MessagingException {
         var orderDetailId=  new DecimalFormat("000000")
                 .format(new Random().nextLong(999999));
-        var customer = customerRepository.findById(id).orElseThrow(() -> new UsernameNotFoundException(ResponseMessage.USER_NOT_FOUND));
+        var customer = customerRepository.findByIdAndAuthority(id, Roles.USER).orElseThrow(() -> new UsernameNotFoundException(ResponseMessage.USER_NOT_FOUND));
+        log.error("customer {}" + customer);
         var carts = customer.getCartItems();
+        log.error("carts {}" + carts);
         var order = Order.builder()
-                .deliveryDate(LocalDateTime.now().plusMinutes(15))
-                .totalAmount(totalPrice(carts))
+                .deliveryDate(deliveryDate)
+                .totalAmount(BigDecimal.valueOf(totalPrice(carts)))
                 .customer(customer)
                 .status(OrderStatus.LOADING)
                 .build();
         orderRepository.save(order);
+        log.error("order {}" + order);
         var orderEntity = orderDetailMapper.cartToOrderDetail(carts);
+        log.error("orderEntity {}" + orderEntity);
         for (OrderDetail orderDetail : orderEntity
         ) {
             orderDetail.setId(Long.valueOf(orderDetailId));
@@ -84,14 +96,17 @@ public class OrderServiceImpl implements OrderService {
             orderDetail.getProduct().setCurrentQuantity(availableQuantity);
             orderDetailRepository.save(orderDetail);
             cartItemRepository.deleteCartItemByCustomer(id);
+            log.error("order detail {}" + orderDetail);
         }
         emailSender.sendMailToAdmin(customer.getUsername());
     }
     private double totalPrice(List<CartItem> cartItemsList) {
         double totalPrice = 0.0;
+        log.error("cart item {}" + cartItemsList);
         for (CartItem item : cartItemsList) {
             totalPrice += item.getPrice() * item.getQuantity();
         }
+        log.error("total price " + totalPrice);
         return totalPrice;
     }
 }

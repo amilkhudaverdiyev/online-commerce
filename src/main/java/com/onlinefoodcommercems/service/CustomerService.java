@@ -24,4 +24,7 @@ public interface CustomerService {
     void enableById(Long id);
 
     String getAllCustomerCount();
+    List<Customer> getCustomerByEnabledAdmin();
+    List<Customer> getCustomerByEnabledUser();
+    void updateCustomerStatus(Customer customer);
 }

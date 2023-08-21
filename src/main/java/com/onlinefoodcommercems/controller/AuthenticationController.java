@@ -1,4 +1,4 @@
-package com.onlinefoodcommercems.controller.auth;
+package com.onlinefoodcommercems.controller;
 
 import com.onlinefoodcommercems.constants.ResponseMessage;
 import com.onlinefoodcommercems.dto.request.CustomerRequest;
@@ -9,13 +9,9 @@ import com.onlinefoodcommercems.dto.user.AuthenticationRequest;
 import com.onlinefoodcommercems.entity.Customer;
 import com.onlinefoodcommercems.service.RegisterService;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Email;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -46,7 +42,7 @@ public class AuthenticationController {
     public ResponseDetail authenticate(@RequestBody @Valid AuthenticationRequest request) {
         registerService.login(request);
         return ResponseDetail.builder()
-                .message(ResponseMessage.LOGIN_SUCCESSFULLY + registerService.login(request))
+                .message(ResponseMessage.LOGIN_SUCCESSFULLY)
                 .status(HttpStatus.OK.getReasonPhrase())
                 .statusCode(HttpStatus.OK.value())
                 .build();

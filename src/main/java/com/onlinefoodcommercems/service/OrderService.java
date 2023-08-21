@@ -15,6 +15,6 @@ public interface OrderService {
 
     void deleteById(Long id);
 
-    void save(Long id) throws MessagingException;
+    void save(Long id,LocalDateTime deliveryDate) throws MessagingException;
 
 }

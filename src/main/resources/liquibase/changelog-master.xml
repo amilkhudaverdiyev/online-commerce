@@ -18,8 +18,8 @@
   <include file="/liquibase/7.0/order-7.0.sql"/>
   <include file="/liquibase/8.0/orderDetail-8.0.sql"/>
   <include file="/liquibase/token/confirmationToken-12.0.sql"/>
-
-<!--  <include file="/liquibase/user/user-10.0.sql"/>-->
+  <include file="/liquibase/10.0/account-10.0.sql"/>
+  <include file="/liquibase/11.0/payment-11.0.sql"/>
 
 
 

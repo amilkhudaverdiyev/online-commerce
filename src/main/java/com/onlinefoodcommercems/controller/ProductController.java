@@ -1,10 +1,7 @@
 package com.onlinefoodcommercems.controller;
 
 import com.onlinefoodcommercems.constants.ResponseMessage;
-import com.onlinefoodcommercems.dto.CategoryDto;
-import com.onlinefoodcommercems.dto.ProductDto;
 import com.onlinefoodcommercems.dto.request.ProductRequest;
-import com.onlinefoodcommercems.dto.response.CategoryResponse;
 import com.onlinefoodcommercems.dto.response.ProductResponse;
 import com.onlinefoodcommercems.dto.response.ResponseDetail;
 import com.onlinefoodcommercems.service.ProductService;
@@ -30,8 +27,10 @@ public class ProductController {
     @GetMapping("/count")
     @PreAuthorize("hasAuthority('ADMIN')")
     public String getAllProductCount() {
+        log.error("count " + productService.getAllProductCount());
         return productService.getAllProductCount();
     }
+
     @GetMapping("/all")
     @PreAuthorize("hasAuthority('ADMIN')")
     public List<ProductResponse> getAllProducts() {
@@ -92,10 +91,11 @@ public class ProductController {
 
     @PutMapping(value = "/update-increaseAll")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseDetail increaseAllPriceWithPercentage(@RequestParam @Positive Double percent) {
-        log.error("id  {}, product {}", percent);
+    public ResponseDetail increaseAllPriceWithPercentage(@RequestParam
+                                                         @Positive(message = ResponseMessage.PERCENT_VALID)
+                                                         Double percent) {
         productService.increaseAllPrice(percent);
-        log.error("id  {}, product {}", percent);
+        log.error("id  {}, percent {}", percent);
         return ResponseDetail.builder()
                 .message(ResponseMessage.UPDATE_SUCCESSFULLY)
                 .status(HttpStatus.OK.getReasonPhrase())
@@ -105,7 +105,9 @@ public class ProductController {
 
     @PutMapping(value = "/update-decreaseAll")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseDetail decreaseAllPriceWithPercentage(@RequestParam @Positive Double percent) {
+    public ResponseDetail decreaseAllPriceWithPercentage(@RequestParam
+                                                         @Positive(message = ResponseMessage.PERCENT_VALID)
+                                                         Double percent) {
         log.error("id  {}, product {}", percent);
         productService.decreaseAllPrice(percent);
         log.error("id  {}, product {}", percent);

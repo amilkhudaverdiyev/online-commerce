@@ -30,31 +30,31 @@ public class AdminController {
                 .status(HttpStatus.CREATED.getReasonPhrase())
                 .statusCode(HttpStatus.CREATED.value()).build();
     }
-    @GetMapping("/all")
+    @GetMapping("/customer/all")
     @PreAuthorize("hasAuthority('ADMIN')")
     public List<CustomerResponse> getAllCustomer() {
         return customerService.findAll();
     }
 
-    @GetMapping("/count")
+    @GetMapping("/customer/count")
     @PreAuthorize("hasAuthority('ADMIN')")
     public String getAllCustomerCount() {
         return customerService.getAllCustomerCount();
     }
 
-    @GetMapping("/all-active")
+    @GetMapping("/customer/all-active")
     @PreAuthorize("hasAuthority('ADMIN')")
     public List<CustomerResponse> getAllCustomerActivated() {
         return customerService.findAllByActivated();
     }
 
-    @GetMapping(value = "/id/{id}")
+    @GetMapping(value = "/customer/find/{id}")
     @PreAuthorize("hasAuthority('ADMIN')")
     public CustomerResponse findById(@PathVariable Long id) {
         return customerService.findById(id);
     }
 
-    @DeleteMapping(value = "/delete/{id}")
+    @DeleteMapping(value = "/customer/delete/{id}")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseDetail deletedCustomer(@PathVariable Long id) {
         customerService.deleteById(id);
@@ -64,7 +64,7 @@ public class AdminController {
                 .statusCode(HttpStatus.NO_CONTENT.value()).build();
     }
 
-    @PutMapping(value = "/enable/{id}")
+    @PutMapping(value = "/customer/enable/{id}")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseDetail enabledCustomer(@PathVariable Long id) {
         customerService.enableById(id);

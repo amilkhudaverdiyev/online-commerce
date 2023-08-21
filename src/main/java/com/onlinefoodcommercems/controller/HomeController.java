@@ -25,7 +25,7 @@ public class HomeController {
         return productService.getAllProducts(pageable);
     }
 
-    @GetMapping("/id/{id}")
+    @GetMapping("/category-id/{id}")
     public List<ItemResponse> findProductsByCategory(@PathVariable Long id) {
         return productService.findByCategoryId(id);
     }

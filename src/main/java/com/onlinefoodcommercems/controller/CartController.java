@@ -24,6 +24,7 @@ public class CartController {
     private final CartItemService cartItemService;
 
     @GetMapping("/all")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public List<CartItemResponse> getAllCart() {
         return cartItemService.findAll();
     }
@@ -76,11 +77,6 @@ public class CartController {
                     .message(ResponseMessage.PRODUCT_NOT_FOUND)
                     .status(HttpStatus.NOT_FOUND.getReasonPhrase())
                     .statusCode(HttpStatus.NOT_FOUND.value()).build();
-        } catch (Exception e) {
-            return CartDetails.builder()
-                    .message(ResponseMessage.ERROR)
-                    .status(HttpStatus.BAD_REQUEST.getReasonPhrase())
-                    .statusCode(HttpStatus.BAD_REQUEST.value()).build();
         }
     }
 }

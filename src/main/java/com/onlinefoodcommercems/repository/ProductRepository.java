@@ -42,7 +42,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Transactional
     @Query(value = "update products set unit_price=unit_price-(unit_price*:percent/100) where  product_id in (select product_id from products) and status='ACTIVE'", nativeQuery = true)
     void decreaseAll(Double percent);
-    @Query(value = "select count(*)from products where status = 'ACTIVE'", nativeQuery = true)
+    @Query(value = "select count(*)from products where status ='ACTIVE'", nativeQuery = true)
     int countActiveAllBy();
 
     @Query(value = "select count(*)from products where status = 'DEACTIVE'", nativeQuery = true)

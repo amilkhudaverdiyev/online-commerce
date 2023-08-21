@@ -4,6 +4,7 @@ import com.onlinefoodcommercems.constants.ResponseMessage;
 import com.onlinefoodcommercems.dto.DiscountDto;
 import com.onlinefoodcommercems.dto.request.DiscountRequest;
 import com.onlinefoodcommercems.dto.response.ResponseDetail;
+import com.onlinefoodcommercems.enums.DiscountStatus;
 import com.onlinefoodcommercems.enums.Status;
 import com.onlinefoodcommercems.service.DiscountService;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +34,7 @@ public class DiscountController {
 
     @GetMapping("/all-active/{status}")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public List<DiscountDto> getAllProductActivated (@PathVariable Status status) {
+    public List<DiscountDto> getAllProductActivated (@PathVariable DiscountStatus status) {
         return discountService.findAllByActivated(status);
     }
 }

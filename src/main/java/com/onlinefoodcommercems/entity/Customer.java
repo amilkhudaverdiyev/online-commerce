@@ -1,10 +1,8 @@
 package com.onlinefoodcommercems.entity;
 
-import com.onlinefoodcommercems.enums.Roles;
 import com.onlinefoodcommercems.enums.Status;
 import jakarta.persistence.*;
 import lombok.*;
-
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDate;
@@ -12,11 +10,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+@Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
 @Table(name = "customer")
 public class Customer implements UserDetails {
     @ToString.Exclude
@@ -31,6 +29,10 @@ public class Customer implements UserDetails {
     @EqualsAndHashCode.Exclude
     @OneToMany(mappedBy = "customer")
     List<ConfirmationToken> token;
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    @OneToOne(mappedBy = "customer")
+    Account accounts;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -54,7 +56,8 @@ public class Customer implements UserDetails {
     private boolean credentialsNonExpired;
 
     private boolean enabled = false;
-
+    @Enumerated(EnumType.STRING)
+    private Status accountStatus;
 
     public void addAuthority(UserAuthority authority) {
         this.authorities.add(authority);

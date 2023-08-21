@@ -6,6 +6,7 @@ import com.onlinefoodcommercems.exception.AuthenticationException;
 import com.onlinefoodcommercems.exception.PasswordRequestException;
 import com.onlinefoodcommercems.exception.NotDataFound;
 import jakarta.mail.MessagingException;
+import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.InvalidDataAccessResourceUsageException;
@@ -14,15 +15,18 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.AuthorizationServiceException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.validation.BindException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.context.request.WebRequest;
 
+import java.io.FileNotFoundException;
 import java.nio.file.attribute.UserPrincipalNotFoundException;
 import java.sql.SQLException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.springframework.http.HttpStatus.*;
 
@@ -80,13 +84,13 @@ public class CustomGlobalHandler {
         return new ResponseEntity<>(errorDetails, UNAUTHORIZED);
     }
     @ExceptionHandler(MethodArgumentNotValidException.class)
-public ResponseEntity<ErrorDetails> MethodArgumentNotValidException(MethodArgumentNotValidException ex, WebRequest request) {
+    public ResponseEntity<ErrorDetails> MethodArgumentNotValidException(MethodArgumentNotValidException ex, WebRequest request) {
         log.error("Validation" + ex);
-    List<String> errors = new LinkedList<>();
-    ex.getBindingResult().getAllErrors().forEach((error) -> {
-        String errorMessage = error.getDefaultMessage();
-        errors.add(errorMessage);
-    });
+        List<String> errors = new LinkedList<>();
+        ex.getBindingResult().getAllErrors().forEach((error) -> {
+            String errorMessage = error.getDefaultMessage();
+            errors.add(errorMessage);
+        });
         var errorDetails = ErrorDetails.builder()
                 .timestamp(new Date())
                 .status(BAD_REQUEST.value())
@@ -95,22 +99,44 @@ public ResponseEntity<ErrorDetails> MethodArgumentNotValidException(MethodArgume
                 .path(request.getDescription(false))
                 .build();
         return new ResponseEntity<>(errorDetails, BAD_REQUEST);
-}
-    @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<ErrorDetails>  ConstraintViolationException(ConstraintViolationException ex, WebRequest webRequest){
-       log.error("ConstraintViolationException" + ex);
+    }
+    @ExceptionHandler(BindException.class)
+    public ResponseEntity<ErrorDetails> MethodArgumentNotValidException(BindException ex, WebRequest request) {
+        log.error("bind" + ex);
+        List<String> errors = new LinkedList<>();
+        ex.getBindingResult().getAllErrors().forEach((error) -> {
+            String errorMessage = error.getDefaultMessage();
+            errors.add(errorMessage);
+        });
         var errorDetails = ErrorDetails.builder()
                 .timestamp(new Date())
                 .status(BAD_REQUEST.value())
                 .error(BAD_REQUEST.getReasonPhrase())
-                .message(ResponseMessage.PERCENT_VALID)
+                .message(errors.toString())
+                .path(request.getDescription(false))
+                .build();
+        return new ResponseEntity<>(errorDetails, BAD_REQUEST);
+    }
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<ErrorDetails>  ConstraintViolationException(ConstraintViolationException ex, WebRequest webRequest){
+        log.error("ConstraintViolationException" + ex);
+        Set<ConstraintViolation<?>> constraintViolations = ex.getConstraintViolations();
+        Set<String> messages = new HashSet<>(constraintViolations.size());
+        messages.addAll(constraintViolations.stream()
+                .map(constraintViolation -> String.format(constraintViolation.getMessage()))
+                .collect(Collectors.toList()));
+        var errorDetails = ErrorDetails.builder()
+                .timestamp(new Date())
+                .status(BAD_REQUEST.value())
+                .error(BAD_REQUEST.getReasonPhrase())
+                .message(messages.toString())
                 .path(webRequest.getDescription(false))
                 .build();
         return new ResponseEntity<>(errorDetails, BAD_REQUEST);
     }
 
     @ExceptionHandler(InvalidDataAccessResourceUsageException.class)
-    public ResponseEntity<ErrorDetails>  customerNull(InvalidDataAccessResourceUsageException ex, WebRequest webRequest){
+    public ResponseEntity<ErrorDetails>  InvalidDataAccessResourceUsageException(InvalidDataAccessResourceUsageException ex, WebRequest webRequest){
         System.out.println("InvalidDataAccessResourceUsageException");
         var errorDetails = ErrorDetails.builder()
                 .timestamp(new Date())
@@ -144,9 +170,19 @@ public ResponseEntity<ErrorDetails> MethodArgumentNotValidException(MethodArgume
                 .build();
         return new ResponseEntity<>(errorDetails, INTERNAL_SERVER_ERROR);
     }
+    @ExceptionHandler(FileNotFoundException.class)
+    public ResponseEntity<ErrorDetails> FileNotException(FileNotFoundException ex,WebRequest request) {
+        var errorDetails = ErrorDetails.builder()
+                .timestamp(new Date())
+                .status(FORBIDDEN.value())
+                .error(FORBIDDEN.getReasonPhrase())
+                .message(ex.getMessage())
+                .path(request.getDescription(false))
+                .build();
+        return new ResponseEntity<>(errorDetails, FORBIDDEN);
+    }
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<ErrorDetails> ForbiddenException(WebRequest request) {
-        System.out.println("fotbii");
         var errorDetails = ErrorDetails.builder()
                 .timestamp(new Date())
                 .status(FORBIDDEN.value())
@@ -156,10 +192,4 @@ public ResponseEntity<ErrorDetails> MethodArgumentNotValidException(MethodArgume
                 .build();
         return new ResponseEntity<>(errorDetails, FORBIDDEN);
     }
-
-
-
-
-
-
 }
