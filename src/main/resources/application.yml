@@ -55,6 +55,5 @@ jwt:
 shedLock:
   shedTableName: food_schedule
   checkTime: 0 00 13 * * *
-admin:
-  card-number: 5112751234120456
-  expiry-date: 2030-01-09
+mail:
+  username: amil.xudaverdiyev30@gmail.com

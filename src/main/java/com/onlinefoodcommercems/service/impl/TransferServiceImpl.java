@@ -33,17 +33,24 @@ public class TransferServiceImpl implements TransferService {
     public String transfer(String sendAccount, String recieveAccount, BigDecimal payment) {
         var customer = customerRepository.findByUsername(sendAccount).orElseThrow(() -> new UsernameNotFoundException(ResponseMessage.USER_NOT_FOUND));
         var account = customer.getAccounts();
+        log.error("customer {}",customer);
+        log.error("account {}",account);
         var orders = customer.getOrders();
+        log.error("orders {}",orders);
         if (account.getAmount().compareTo(payment) < 0) {
+            log.error("amount {}",account.getAmount());
             throw new NotDataFound(ResponseMessage.SMALL_AMOUNT_IN_ACCOUNT);
         } else {
             for (Order order : orders
             ) {
                 if (payment.equals(order.getTotalAmount()) && order.getStatus().equals(OrderStatus.ACCEPTED)) {
+                    log.error("total amount {}",order.getTotalAmount());
                     account.setAmount(customer.getAccounts().getAmount().subtract(payment));
+                    log.error("accountSet {}",account);
                     accountRepository.save(account);
                     var receiveAccountEntity = accountRepository.findByCardNumber(recieveAccount).orElseThrow(
                             () -> new NotDataFound(ResponseMessage.ACCOUNT_NOT_FOUND));
+                    log.error("receiveAccountEntity {}",receiveAccountEntity);
                     receiveAccountEntity.setAmount(receiveAccountEntity.getAmount().add(payment));
                     accountRepository.save(receiveAccountEntity);
                     var transactionLogRequest = TransactionLogRequest.builder()
@@ -53,13 +60,15 @@ public class TransferServiceImpl implements TransferService {
                             .payment(payment)
                             .status(PaymentStatus.SUCCESSFULLY)
                             .build();
+                    log.error("transactionLogRequest {}",transactionLogRequest);
                     transactionLogService.createTransactionLog(transactionLogRequest);
                     order.setStatus(OrderStatus.SENDING);
+                    log.error("orderSet {}",order);
                     return ResponseMessage.AMOUNT_SEND_SUCCESSFULLY;
                 }
             }
         }
-        return "YES";
+        throw new NotDataFound(ResponseMessage.ORDER_NOT_FOUND);
     }
 }
 

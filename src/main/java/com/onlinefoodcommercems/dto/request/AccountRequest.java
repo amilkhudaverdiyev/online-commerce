@@ -20,7 +20,7 @@ public class AccountRequest {
 
     private String accountId;
 
-    private String name;
+    private String fullname;
 
     private Long id;
 

@@ -11,12 +11,14 @@ import com.onlinefoodcommercems.mapper.CustomerMapper;
 import com.onlinefoodcommercems.repository.CustomerRepository;
 import com.onlinefoodcommercems.service.CustomerService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class CustomerServiceImpl implements CustomerService {
     private final CustomerMapper customerMapper;
     private final CustomerRepository customerRepository;
@@ -24,49 +26,61 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public void update(String username, CustomerUpdateReqeust customerRequest) {
+        log.error("customerRequest {}",customerRequest);
         var customer = customerRepository.findByUsername(username)
                 .orElseThrow(() -> new NotDataFound(ResponseMessage.CUSTOMER_NOT_FOUND));
         customerMapper.toDTOmap(customer, customerRequest);
+        log.error("customer {}",customer);
         customerRepository.save(customer);
     }
 
     @Override
     public List<CustomerResponse> findAllByActivated() {
-        var active = customerRepository.findAllByActivated(true,Roles.USER);
-        return customerMapper.toDTOs(active);
+        var activeCustomer = customerRepository.findAllByActivated(true,Roles.USER);
+        log.error("activeCustomer {}",activeCustomer);
+        return customerMapper.toDTOs(activeCustomer);
     }
 
     @Override
     public List<CustomerResponse> findAll() {
-        var active = customerRepository.findAllByUser(Roles.USER);
-        return customerMapper.toDTOs(active);
+        var user = customerRepository.findAllByUser(Roles.USER);
+        log.error("user {}",user);
+        return customerMapper.toDTOs(user);
     }
 
     @Override
     public CustomerResponse findById(Long id) {
-        var customer = customerRepository.findByIdAndAuthority(id,Roles.USER).
+        log.error("id {}",id);
+        var customer = customerRepository.findByIdAndAuthority(id).
                 orElseThrow(() -> new NotDataFound(ResponseMessage.CUSTOMER_NOT_FOUND));
+        log.error("customer {}",customer);
         return customerMapper.toDTO(customer);
     }
 
     @Override
     public CustomerResponse findByUsername(String username) {
+        log.error("username {}",username);
         var customer = customerRepository.findByUsername(username).orElseThrow(() -> new NotDataFound(ResponseMessage.ALL_COUNT));
+        log.error("customer {}",customer);
         return customerMapper.toDTO(customer);
     }
 
     @Override
     public void deleteById(Long id) {
+        log.error("id {}",id);
         var customer = customerRepository.findById(id).orElseThrow(() -> new NotDataFound(ResponseMessage.CUSTOMER_NOT_FOUND));
         customer.setEnabled(false);
+        log.error("customer {}",customer);
         customerRepository.save(customer);
 
     }
 
     @Override
     public void enableById(Long id) {
+        log.error("id {}",id);
         var customer = customerRepository.findById(id).orElseThrow(() -> new NotDataFound(ResponseMessage.CUSTOMER_NOT_FOUND));
         customer.setEnabled(true);
+        log.error("customer {}",customer);
         customerRepository.save(customer);
     }
 
@@ -99,7 +113,9 @@ public class CustomerServiceImpl implements CustomerService {
     }
     @Override
     public void updateCustomerStatus(Customer customer) {
+        log.error("customer {}",customer);
         customer.setAccountStatus(Status.ACTIVE);
+        log.error("customer {}",customer);
         customerRepository.save(customer);
 
     }

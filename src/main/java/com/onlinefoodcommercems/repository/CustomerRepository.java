@@ -30,8 +30,8 @@ public interface CustomerRepository extends JpaRepository<Customer,Long> {
     @Query(value = "SELECT c\n" +
             "FROM Customer c\n" +
             "         LEFT JOIN UserAuthority r\n" +
-            "                   ON c.id = r.customer.id where c.id=:id and r.authority=:role")
-    Optional<Customer> findByIdAndAuthority(Long id,Roles role);
+            "                   ON c.id = r.customer.id where c.id=:id and r.authority='USER'")
+    Optional<Customer> findByIdAndAuthority(Long id);
     @Query(value = "SELECT c\n" +
             "FROM Customer c\n" +
             "         LEFT JOIN UserAuthority r\n" +

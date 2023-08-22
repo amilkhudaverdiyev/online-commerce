@@ -23,14 +23,17 @@ public class TransactionLogServiceImpl implements TransactionLogService {
     @Override
     public List<TransactionLogResponse> getAllTransactionLogs() {
         var transactionLogEntity = paymentRepository.findAll();
+        log.error("transaction {}",transactionLogEntity);
         return transactionLogMapper.toDTOs(transactionLogEntity);
     }
 
     @Transactional(propagation =Propagation.REQUIRES_NEW)
     @Override
     public TransactionLogResponse createTransactionLog(TransactionLogRequest transactionLogRequest) {
+        log.error("transactionLog {}",transactionLogRequest);
         var transactionLogEntity = transactionLogMapper.fromDTO(transactionLogRequest);
         transactionLogEntity=paymentRepository.save(transactionLogEntity);
+        log.error("transactionEntity {}",transactionLogEntity);
         return transactionLogMapper.toDTO(transactionLogEntity);
     }
 }

@@ -10,9 +10,12 @@ import java.util.List;
 import java.util.Optional;
 
 public interface OrderRepository extends JpaRepository<Order,Long> {
-    @Query(value = "select * from orders where customer_id=:id and status=:status", nativeQuery = true)
-    List<Order> findCustomerInOrder(Long id,OrderStatus status);
+    @Query(value = "select * from orders where customer_id=:id and status='LOADING'", nativeQuery = true)
+    List<Order> findCustomerInOrder(Long id);
 
     @Query(value = "select * from orders where status=:status", nativeQuery = true)
     List<Order> findOrderByStatus(String status);
+
+    //@Query(value = "select * from orders where status=:status", nativeQuery = true)
+    List<Order> findOrdersByStatus(OrderStatus status);
 }

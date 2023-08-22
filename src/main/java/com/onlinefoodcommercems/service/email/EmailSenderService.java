@@ -2,6 +2,7 @@ package com.onlinefoodcommercems.service.email;
 
 import com.onlinefoodcommercems.entity.Order;
 import com.onlinefoodcommercems.enums.OrderStatus;
+import com.onlinefoodcommercems.property.MailProperty;
 import com.onlinefoodcommercems.repository.CustomerRepository;
 import com.onlinefoodcommercems.repository.OrderRepository;
 import com.onlinefoodcommercems.utils.LinkUtils;
@@ -25,19 +26,20 @@ public class EmailSenderService implements EmailSender {
     private final JavaMailSender javaMailSender;
     private final CustomerRepository customerRepository;
     private final OrderRepository orderRepository;
+    private final MailProperty mailProperty;
 
     @Override
     public void sendMailToUser(String username, MultipartFile attachment) throws MessagingException {
         var customer = customerRepository.findByUsername(username).orElseThrow();
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
-        mimeMessageHelper.setFrom("amil.xudaverdiyev30@gmail.com");
+        mimeMessageHelper.setFrom(mailProperty.getUsername());
         mimeMessageHelper.setText("<html> <body> <p><h1> Dear," + customer.getName() + " " + customer.getSurname() + ",</p><p>Your order has been accepted"
                 + "</body></html>", true);
         mimeMessageHelper.setTo(customer.getUsername());
         mimeMessageHelper.addAttachment(attachment.getOriginalFilename(), attachment);
         javaMailSender.send(mimeMessage);
-        var orders = orderRepository.findCustomerInOrder(customer.getId(),OrderStatus.LOADING);
+        var orders = orderRepository.findCustomerInOrder(customer.getId());
         for (Order order : orders
         ) {
             order.setStatus(OrderStatus.ACCEPTED);
@@ -51,7 +53,7 @@ public class EmailSenderService implements EmailSender {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
         mimeMessageHelper.setFrom(customer.getUsername());
-        mimeMessageHelper.setTo("amil.xudaverdiyev30@gmail.com");
+        mimeMessageHelper.setTo(mailProperty.getUsername());
         mimeMessageHelper.setText("<html> <body> <p><h1> Order came from a user named " + customer.getUsername()
                 + "<br>" + link + "</body></html>", true);
         javaMailSender.send(mimeMessage);
@@ -63,7 +65,7 @@ public class EmailSenderService implements EmailSender {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
         mimeMessageHelper.setFrom(customer.getUsername());
-        mimeMessageHelper.setTo("amil.xudaverdiyev30@gmail.com");
+        mimeMessageHelper.setTo(mailProperty.getUsername());
         mimeMessageHelper.setText(customer.getUsername() + " wants to cancel the order"
                 + " " + "</body></html>", true);
         javaMailSender.send(mimeMessage);
@@ -78,7 +80,7 @@ public class EmailSenderService implements EmailSender {
             helper.setText(email, true);
             helper.setTo(to);
             helper.setSubject("Confirm your email");
-            helper.setFrom("amil.xudaverdiyev30@gmail.com");
+            helper.setFrom(mailProperty.getUsername());
             javaMailSender.send(mimeMessage);
         } catch (MessagingException e) {
             throw new IllegalStateException("failed to send email");

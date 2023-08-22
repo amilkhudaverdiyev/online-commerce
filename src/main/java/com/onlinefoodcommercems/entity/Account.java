@@ -14,7 +14,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Setter
 @Getter
-@Table(name = "account", uniqueConstraints = @UniqueConstraint(columnNames = "cardNumber"))
+@Table(name = "account")
 @ToString
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -25,7 +25,7 @@ public class Account {
     @Column(name = "account_id")
     String accountId;
 
-    String name;
+    String fullname;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "customer_id", referencedColumnName = "id")

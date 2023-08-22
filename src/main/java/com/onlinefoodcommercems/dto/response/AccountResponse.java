@@ -17,7 +17,7 @@ import java.time.LocalDate;
 public class AccountResponse {
     private String accountId;
 
-    private String name;
+    private String fullname;
 
     private Long id;
 

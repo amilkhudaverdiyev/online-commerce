@@ -8,7 +8,6 @@ import com.onlinefoodcommercems.dto.user.AuthenticationResponse;
 import com.onlinefoodcommercems.entity.ConfirmationToken;
 import com.onlinefoodcommercems.entity.UserAuthority;
 import com.onlinefoodcommercems.enums.Roles;
-import com.onlinefoodcommercems.enums.Status;
 import com.onlinefoodcommercems.exception.NotDataFound;
 import com.onlinefoodcommercems.exception.PasswordRequestException;
 import com.onlinefoodcommercems.mapper.AddressMapper;
@@ -50,7 +49,7 @@ public class RegisterServiceImpl implements RegisterService {
 
     @Override
     public void changePassword(String email, PasswordResetRequest request) {
-        log.error("request " + request,email);
+        log.error("request " + request, email);
         if (request.getNewPassword() != null && !request.getNewPassword().equals(request.getRepeatPassword())) {
             throw new PasswordRequestException(ResponseMessage.PASSWORDS_DO_NOT_MATCH);
         }
@@ -59,7 +58,7 @@ public class RegisterServiceImpl implements RegisterService {
                 .orElseThrow(() -> new UsernameNotFoundException(ResponseMessage.USER_NOT_FOUND));
         log.error("user" + user);
         if (bCryptPasswordEncoder.matches(request.getOldPassword(), user.getPassword())) {
-            log.error("passwords" + user.getPassword(),request.getOldPassword());
+            log.error("passwords" + user.getPassword(), request.getOldPassword());
             user.setPassword(bCryptPasswordEncoder.encode(request.getNewPassword()));
             customerRepository.save(user);
         } else {
@@ -99,10 +98,10 @@ public class RegisterServiceImpl implements RegisterService {
 
     @Override
     public AuthenticationResponse login(AuthenticationRequest request) {
-        log.error("request" + request);
+        log.error("request {}", request);
         var user = customerRepository.findByUsername(request.getUsername())
                 .orElseThrow(() -> new UsernameNotFoundException(ResponseMessage.ACCESS_DENIED));
-        log.error("user" + user);
+        log.error("user{}", user);
         if (user.isEnabled()) {
             if (bCryptPasswordEncoder.matches(request.getPassword(), user.getPassword())) {
                 var token = jwtService.generateToken(user);
@@ -125,7 +124,7 @@ public class RegisterServiceImpl implements RegisterService {
         }
         var customer = customerMapper.fromDTO(request);
         var address = addressMapper.fromDTO(request.getAddress());
-        log.error("address {}" + address);
+        log.error("address {}", address);
         customer.setAddress(address);
         customer.setName(request.getName());
         customer.setSurname(request.getSurname());
@@ -135,11 +134,11 @@ public class RegisterServiceImpl implements RegisterService {
         customer.setAccountNonExpired(true);
         customer.setAccountNonLocked(true);
         customer.setCredentialsNonExpired(true);
-        log.error("customer {}" + customer);
+        log.error("customer {}", customer);
         var authority = new UserAuthority();
         authority.setAuthority(Roles.ADMIN);
         authority.setCustomer(customer);
-        log.error("authority {}" + authority);
+        log.error("authority {}", authority);
         customer.addAuthority(authority);
 
         String token = userDetailsServiceImp.signUpUser(customer);
@@ -158,7 +157,7 @@ public class RegisterServiceImpl implements RegisterService {
         }
         var customer = customerMapper.fromDTO(request);
         var address = addressMapper.fromDTO(request.getAddress());
-        log.error("address" + address);
+        log.error("address {}" ,address);
         customer.setAddress(address);
         customer.setName(request.getName());
         customer.setSurname(request.getSurname());
@@ -168,13 +167,12 @@ public class RegisterServiceImpl implements RegisterService {
         customer.setAccountNonExpired(true);
         customer.setAccountNonLocked(true);
         customer.setCredentialsNonExpired(true);
-        log.error("customer" + customer);
+        log.error("customer {}",customer);
         var authority = new UserAuthority();
         authority.setAuthority(Roles.USER);
         authority.setCustomer(customer);
-        log.error("authority" + authority);
+        log.error("authority {}",authority);
         customer.addAuthority(authority);
-
 
 
         String token = userDetailsServiceImp.signUpUser(customer);

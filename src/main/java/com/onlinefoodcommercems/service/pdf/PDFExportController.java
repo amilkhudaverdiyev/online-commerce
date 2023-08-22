@@ -30,7 +30,7 @@ public class PDFExportController {
 
     @GetMapping("/pdf/generate/{id}")
     public void generatePDF(@PathVariable Long id, HttpServletResponse httpServletResponse) throws DocumentException, IOException {
-        var customer = customerRepository.findByIdAndAuthority(id, Roles.USER)
+        var customer = customerRepository.findByIdAndAuthority(id)
                 .orElseThrow(() -> new NotDataFound(ResponseMessage.CUSTOMER_NOT_FOUND));
         httpServletResponse.setContentType("application/pdf");
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd:hh:mm:ss");
@@ -38,7 +38,7 @@ public class PDFExportController {
         String headerKey = "Content-Disposition";
         String headerValue = "attachment; filename=" + customer.getUsername() + ".pdf";
         httpServletResponse.setHeader(headerKey, headerValue);
-        var orderList = orderRepository.findCustomerInOrder(id, OrderStatus.LOADING);
+        var orderList = orderRepository.findCustomerInOrder(id);
         for (Order order : orderList
         ) {
             this.pdfGenerateService.generate(order, httpServletResponse);

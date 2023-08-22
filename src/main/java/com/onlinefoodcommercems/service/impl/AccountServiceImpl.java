@@ -36,7 +36,7 @@ public class AccountServiceImpl implements AccountService {
         var customer = customerRepository.findById(accountRequest.getId())
                 .orElseThrow(() -> new NotDataFound(ResponseMessage.CUSTOMER_NOT_FOUND));
         account.setCustomer(customer);
-        log.error("account created {}" + account);
+        log.error("account created {}",account);
         return accountMapper.toDTO(accountRepository.save(account));
     }
     @Override

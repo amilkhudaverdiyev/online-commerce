@@ -13,6 +13,7 @@ import com.onlinefoodcommercems.repository.DiscountRepository;
 import com.onlinefoodcommercems.repository.ProductRepository;
 import com.onlinefoodcommercems.service.DiscountService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -20,6 +21,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class DiscountServiceImpl implements DiscountService {
     private final DiscountRepository discountRepository;
     private final ProductRepository productRepository;
@@ -28,34 +30,41 @@ public class DiscountServiceImpl implements DiscountService {
 
     @Override
     public DiscountResponse addDiscount(DiscountRequest discountRequest) {
+        log.error("discountRequest {}",discountRequest);
         var discountEntity = discountMapper.fromDTO(discountRequest);
         var product = productRepository.findProductStatusActivity(discountRequest.getProduct().getId())
                 .orElseThrow(() -> new NotDataFound(ResponseMessage.PRODUCT_NOT_FOUND));
         discountEntity.setProduct(product);
+        log.error("discount {}",discountEntity);
         return discountMapper.toDTO(discountRepository.save(discountEntity));
     }
     @Override
     public void terminatedDiscount(Discount discount) {
-
+        log.error("discount {}",discount);
         if (LocalDateTime.now().isAfter(discount.getEndDate())) {
             discount.setStatus(DiscountStatus.DEACTIVE);
         }
+        log.error("discountSet {}",discount);
         discountRepository.save(discount);
 
     }
 
     @Override
     public void activatedDiscount(Discount discount) {
+        log.error("discount {}",discount);
         if (LocalDateTime.now().isAfter(discount.getDiscountDate()) && LocalDateTime.now().isBefore(discount.getEndDate())) {
             discount.setStatus(DiscountStatus.ACTIVE);
         }
+        log.error("discountSet {}",discount);
         discountRepository.save(discount);
     }
 
     @Override
     public List<DiscountDto> findAllByActivated(DiscountStatus status) {
-        var active = discountRepository.findByStatus(status);
-        return discountMapper.toDTOList(active);
+        log.error("status {}",status);
+        var activeDiscount = discountRepository.findByStatus(status);
+        log.error("activeDiscount {}",activeDiscount);
+        return discountMapper.toDTOList(activeDiscount);
     }
 }
 

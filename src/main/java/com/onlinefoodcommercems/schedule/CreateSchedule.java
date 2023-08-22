@@ -1,16 +1,16 @@
 package com.onlinefoodcommercems.schedule;
 
 import com.onlinefoodcommercems.dto.request.AccountRequest;
-import com.onlinefoodcommercems.entity.Account;
 import com.onlinefoodcommercems.entity.Customer;
 import com.onlinefoodcommercems.entity.Discount;
+import com.onlinefoodcommercems.entity.Order;
 import com.onlinefoodcommercems.enums.DiscountStatus;
 import com.onlinefoodcommercems.enums.Status;
-import com.onlinefoodcommercems.property.AdminCardProperty;
 import com.onlinefoodcommercems.repository.DiscountRepository;
 import com.onlinefoodcommercems.service.AccountService;
 import com.onlinefoodcommercems.service.CustomerService;
 import com.onlinefoodcommercems.service.DiscountService;
+import com.onlinefoodcommercems.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
@@ -28,10 +28,10 @@ import java.util.UUID;
 public class CreateSchedule {
 
     private final DiscountRepository discountRepository;
-    private final AdminCardProperty adminCardProperty;
     private final DiscountService discountService;
     private final CustomerService customerService;
     private final AccountService accountService;
+    private final OrderService orderService;
 
     @SchedulerLock(name = "updateDiscountLoadingStatus")
     @Scheduled(cron = "${spring.quartz.scheduler-name.cron}")
@@ -69,48 +69,57 @@ public class CreateSchedule {
     }
 
     @SchedulerLock(name = "checkTimes")
-    //@Scheduled(cron = "* 58 15 * * *")
     @Scheduled(fixedDelay = 50000)
-    public void checkCustomerAdminStatus(){
+    public void checkCustomerAdminStatus() {
 
         System.out.println("schedule start");
-        var customers=  customerService.getCustomerByEnabledAdmin();
-        for (Customer customer:customers ){
+        var customers = customerService.getCustomerByEnabledAdmin();
+        for (Customer customer : customers) {
             customerService.updateCustomerStatus(customer);
-            var account= AccountRequest
+            var account = AccountRequest
                     .builder()
                     .accountId(UUID.randomUUID().toString())
-                    .name(customer.getName())
+                    .fullname(customer.getName() + " " + customer.getSurname())
                     .id(customer.getId())
-                    .cardNumber(adminCardProperty.getCardNumber().toString())
-                    .expiryDate(adminCardProperty.getExpiryDate())
                     .amount(new BigDecimal(0))
-                    .status(Status.ACTIVE)
+                    .status(Status.DEACTIVE)
                     .build();
             log.error("account {}" + account);
             accountService.createAccount(account);
         }
         System.out.println("schedule END");
     }
+
     @SchedulerLock(name = "checkTime")
-    //@Scheduled(cron = "* 58 15 * * *")
     @Scheduled(fixedDelay = 50000)
-    public void checkCustomerUserStatus(){
+    public void checkCustomerUserStatus() {
 
         System.out.println("schedule start");
-        var customers=  customerService.getCustomerByEnabledUser();
-        for (Customer customer:customers ){
+        var customers = customerService.getCustomerByEnabledUser();
+        for (Customer customer : customers) {
             customerService.updateCustomerStatus(customer);
-            var account= AccountRequest
+            var account = AccountRequest
                     .builder()
                     .accountId(UUID.randomUUID().toString())
-                    .name(customer.getName())
+                    .fullname(customer.getName() + " " + customer.getSurname())
                     .id(customer.getId())
                     .amount(new BigDecimal(0))
                     .status(Status.DEACTIVE)
                     .build();
-            log.error("user {}" + account);
+            log.error("account {}", account);
             accountService.createAccount(account);
+        }
+
+        System.out.println("schedule END");
+    }
+
+    @SchedulerLock(name = "checkOrderStatus")
+    @Scheduled(fixedDelay = 50000)
+    public void checkOrderStatus() {
+        System.out.println("schedule begin");
+        var orders = orderService.findByStatus();
+        for (Order order : orders) {
+            orderService.updateOrderStatus(order);
         }
 
         System.out.println("schedule END");

@@ -1,6 +1,7 @@
 package com.onlinefoodcommercems.service;
 
 import com.onlinefoodcommercems.dto.response.OrderResponse;
+import com.onlinefoodcommercems.entity.Order;
 import com.onlinefoodcommercems.enums.OrderStatus;
 import jakarta.mail.MessagingException;
 
@@ -12,6 +13,8 @@ public interface OrderService {
     List<OrderResponse> findOrderByStatus(String status);
 
     List<OrderResponse> findAllOrdersByCustomer(String  username);
+     List<Order> findByStatus();
+     void updateOrderStatus(Order order);
 
     void deleteById(Long id);
 

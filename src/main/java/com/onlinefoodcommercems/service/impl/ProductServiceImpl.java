@@ -39,12 +39,12 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<ProductResponse> findAll() {
         var product = productRepository.findAll();
-        log.error("product {}" + product);
+        log.error("product {}",product);
         return productMapper.toDTOs(product);
     }
 
     public ProductResponse createProduct(ProductRequest productRequest) {
-        log.error("productRequest {}" + productRequest);
+        log.error("productRequest {}",productRequest);
         if (productRequest.getCurrentQuantity() == 0) {
             productRequest.setStatus(Status.DEACTIVE);
         }
