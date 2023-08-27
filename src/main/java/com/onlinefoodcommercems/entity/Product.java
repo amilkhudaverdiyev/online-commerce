@@ -12,7 +12,7 @@ import java.util.List;
 @Entity
 @Table(name = "products", uniqueConstraints = @UniqueConstraint(columnNames = "name"))
 @Builder
-public class Product  {
+public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,9 +23,9 @@ public class Product  {
 
     private String description;
 
-    private int currentQuantity;
+    private Integer currentQuantity;
 
-    private double unitPrice;
+    private Double unitPrice;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "category_id", referencedColumnName = "category_id")

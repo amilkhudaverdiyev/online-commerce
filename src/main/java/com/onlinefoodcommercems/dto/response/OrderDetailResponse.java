@@ -4,8 +4,6 @@ import com.onlinefoodcommercems.dto.ProductDto;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.util.List;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -14,7 +12,6 @@ import java.util.List;
 public class OrderDetailResponse {
     private Long id;
     ProductDto product;
-    //CustomerResponse customer;
     Integer quantity;
     Double price;
     Double totalPrice;

@@ -46,6 +46,7 @@ public class EmailSenderService implements EmailSender {
             orderRepository.save(order);
         }
     }
+
     @Override
     public void sendMailToAdmin(String username) throws MessagingException {
         var customer = customerRepository.findByUsername(username).orElseThrow();
@@ -70,6 +71,7 @@ public class EmailSenderService implements EmailSender {
                 + " " + "</body></html>", true);
         javaMailSender.send(mimeMessage);
     }
+
     @Override
     @Async
     public void send(String to, String email) {
@@ -89,7 +91,7 @@ public class EmailSenderService implements EmailSender {
 
     @Override
     public void sendOtpEmail(String email) throws MessagingException {
-        var otp=  new DecimalFormat("000000")
+        var otp = new DecimalFormat("000000")
                 .format(new Random().nextInt(999999));
         var customer = customerRepository.findByUsername(email).orElseThrow();
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
@@ -97,9 +99,8 @@ public class EmailSenderService implements EmailSender {
                 new MimeMessageHelper(mimeMessage, "utf-8");
         helper.setTo(email);
         helper.setSubject("Verify OTP");
-        helper.setText(" wants to cancel the order"
-                +otp+ "</body></html>", true);
-        customer.setActivationCode(Integer.valueOf(otp));
+        helper.setText(otp + "</body></html>", true);
+        customer.setActivationCode(otp);
         customerRepository.save(customer);
         javaMailSender.send(mimeMessage);
     }

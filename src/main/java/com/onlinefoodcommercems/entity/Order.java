@@ -5,12 +5,9 @@ import com.onlinefoodcommercems.enums.OrderStatus;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
-import java.util.Date;
 import java.util.List;
 
 @Data
@@ -24,10 +21,10 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "order_id")
     private Long orderId;
-   @UpdateTimestamp
+    @UpdateTimestamp
     private LocalDateTime orderDate;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
-   private LocalDateTime deliveryDate;
+    private LocalDateTime deliveryDate;
 
     private BigDecimal totalAmount;
 

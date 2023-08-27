@@ -12,9 +12,9 @@ public class RegistrationRequest {
     private String name;
     @NotBlank(message = "Surname can't be empty")
     private String surname;
-    @Size(min = 6,max = 16,message = "The password be between 6 and 16 characters long")
+    @Size(min = 6, max = 16, message = "The password be between 6 and 16 characters long")
     private String password;
-    @Size(min = 6,max = 16,message = "The password be between 6 and 16 characters long")
+    @Size(min = 6, max = 16, message = "The password be between 6 and 16 characters long")
     private String passwordResetCode;
 
     @Email(message = "Incorrect email")

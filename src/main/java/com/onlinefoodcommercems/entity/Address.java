@@ -3,7 +3,6 @@ package com.onlinefoodcommercems.entity;
 import com.onlinefoodcommercems.enums.Status;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.DynamicInsert;
 
 @Data
 @AllArgsConstructor

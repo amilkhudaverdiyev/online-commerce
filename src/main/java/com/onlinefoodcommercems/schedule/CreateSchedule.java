@@ -5,8 +5,10 @@ import com.onlinefoodcommercems.entity.Customer;
 import com.onlinefoodcommercems.entity.Discount;
 import com.onlinefoodcommercems.entity.Order;
 import com.onlinefoodcommercems.enums.DiscountStatus;
+import com.onlinefoodcommercems.enums.OrderStatus;
 import com.onlinefoodcommercems.enums.Status;
 import com.onlinefoodcommercems.repository.DiscountRepository;
+import com.onlinefoodcommercems.repository.OrderRepository;
 import com.onlinefoodcommercems.service.AccountService;
 import com.onlinefoodcommercems.service.CustomerService;
 import com.onlinefoodcommercems.service.DiscountService;
@@ -20,6 +22,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Component
@@ -32,12 +35,13 @@ public class CreateSchedule {
     private final CustomerService customerService;
     private final AccountService accountService;
     private final OrderService orderService;
+    private final OrderRepository orderRepository;
 
     @SchedulerLock(name = "updateDiscountLoadingStatus")
     @Scheduled(cron = "${spring.quartz.scheduler-name.cron}")
     @Transactional(propagation = Propagation.REQUIRED)
     public void updateDiscountLoadingStatus() {
-        System.out.println("active");
+        log.info("start");
         var discount = discountRepository.findByStatus(DiscountStatus.LOADING);
         for (Discount discounts : discount) {
             discountService.activatedDiscount(discounts);
@@ -49,13 +53,13 @@ public class CreateSchedule {
             discounts.setDiscountPrice(costPrice);
             discountRepository.save(discounts);
         }
-        System.out.println("schedule END");
+        log.info("end");
     }
 
     @SchedulerLock(name = "updateDiscountActiveStatus")
     @Scheduled(fixedDelay = 10000)
     public void updateDiscountActiveStatus() {
-        System.out.println("schedule start");
+        log.info("updateDiscountActiveStatus START");
         var discount = discountRepository.findByStatus(DiscountStatus.ACTIVE);
         for (Discount discounts : discount) {
             discountService.terminatedDiscount(discounts);
@@ -65,14 +69,15 @@ public class CreateSchedule {
             discounts.setDiscountPrice(0.0);
             discountRepository.save(discounts);
         }
-        System.out.println("schedule END");
+        log.info("updateDiscountActiveStatus END");
+
     }
 
     @SchedulerLock(name = "checkTimes")
     @Scheduled(fixedDelay = 50000)
     public void checkCustomerAdminStatus() {
 
-        System.out.println("schedule start");
+        log.info("checkCustomerAdminStatus START");
         var customers = customerService.getCustomerByEnabledAdmin();
         for (Customer customer : customers) {
             customerService.updateCustomerStatus(customer);
@@ -84,17 +89,17 @@ public class CreateSchedule {
                     .amount(new BigDecimal(0))
                     .status(Status.DEACTIVE)
                     .build();
-            log.error("account {}" + account);
+            log.error("account {}", account);
             accountService.createAccount(account);
         }
-        System.out.println("schedule END");
+        log.info("checkCustomerAdminStatus END");
     }
 
     @SchedulerLock(name = "checkTime")
     @Scheduled(fixedDelay = 50000)
     public void checkCustomerUserStatus() {
 
-        System.out.println("schedule start");
+        log.info("checkCustomerUserStatus START");
         var customers = customerService.getCustomerByEnabledUser();
         for (Customer customer : customers) {
             customerService.updateCustomerStatus(customer);
@@ -110,18 +115,32 @@ public class CreateSchedule {
             accountService.createAccount(account);
         }
 
-        System.out.println("schedule END");
+        log.info("checkCustomerUserStatus END");
     }
 
     @SchedulerLock(name = "checkOrderStatus")
     @Scheduled(fixedDelay = 50000)
     public void checkOrderStatus() {
-        System.out.println("schedule begin");
+        log.info("checkOrderStatus START");
         var orders = orderService.findByStatus();
         for (Order order : orders) {
             orderService.updateOrderStatus(order);
         }
 
         System.out.println("schedule END");
+    }
+
+    @SchedulerLock(name = "checkOrderStatuss")
+    @Scheduled(fixedDelay = 50000)
+    public void checkOrderStatuss() {
+        System.out.println("schedule begin");
+        var orders = orderService.findByStatuss(OrderStatus.LOADING);
+        for (Order order : orders) {
+            if (order.getDeliveryDate().isBefore(LocalDateTime.now())) {
+                order.setStatus(OrderStatus.CANCELED);
+                orderRepository.save(order);
+            }
+        }
+        log.info("checkOrderStatus END");
     }
 }

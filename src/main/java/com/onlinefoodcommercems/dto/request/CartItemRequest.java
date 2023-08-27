@@ -1,6 +1,5 @@
 package com.onlinefoodcommercems.dto.request;
 
-import com.onlinefoodcommercems.enums.Status;
 import jakarta.validation.constraints.Positive;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -11,8 +10,16 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CartItemRequest {
-   Long id;
+    Long cartId;
+
+    Long id;
+
+    @Positive(message = "Quantity must be positive")
     Integer quantity;
+
+    @Positive(message = "Quantity must be positive")
     Double price;
-   Double totalPrice;
+
+    @Positive(message = "Quantity must be positive")
+    Double totalPrice;
 }

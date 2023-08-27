@@ -27,19 +27,19 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public CategoryResponse save(CategoryRequest category) {
-        log.error("category {}",category);
+        log.error("category {}", category);
         var categoryEntity = categoryMapper.fromDTO(category);
         var createdCategory = categoryRepository.save(categoryEntity);
-        log.error("createdCategory {}",createdCategory);
+        log.error("createdCategory {}", createdCategory);
         return categoryMapper.toDTO(createdCategory);
     }
 
     @Override
     public void update(Long id, CategoryRequest categoryRequest) {
-        log.error("categoryRequest {}",categoryRequest);
-        var category=categoryRepository.findById(id).orElseThrow(() -> new NotDataFound(ResponseMessage.CATEGORY_NOT_FOUND));
-        categoryMapper.toDTOmap(category,categoryRequest);
-        log.error("category {}",category);
+        log.error("categoryRequest {}", categoryRequest);
+        var category = categoryRepository.findById(id).orElseThrow(() -> new NotDataFound(ResponseMessage.CATEGORY_NOT_FOUND));
+        categoryMapper.toDTOmap(category, categoryRequest);
+        log.error("category {}", category);
         categoryRepository.save(category);
 
     }
@@ -47,51 +47,51 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public List<CategoryDto> findAllByActivated() {
         var activeCategory = categoryRepository.findAllByActivated();
-        log.error("active {}",activeCategory);
+        log.error("active {}", activeCategory);
         return categoryMapper.toDTOList(activeCategory);
     }
 
     @Override
     public List<CategoryResponse> findAll() {
         var category = categoryRepository.findAll();
-        log.error("category {}",category);
+        log.error("category {}", category);
         return categoryMapper.toDTOs(category);
     }
 
     @Override
     public CategoryDto findById(Long id) {
-        log.error("id {}",id);
+        log.error("id {}", id);
         var category = categoryRepository.findById(id).orElseThrow(() -> new NotDataFound(ResponseMessage.CATEGORY_NOT_FOUND));
-        log.error("category {}",category);
+        log.error("category {}", category);
         return categoryMapper.toDTOId(category);
     }
 
     @Override
     public void deleteById(Long id) {
-        log.error("id {}",id);
+        log.error("id {}", id);
         var category = categoryRepository.getById(id);
         category.setStatus(Status.DEACTIVE);
-        log.error("category {}",category);
+        log.error("category {}", category);
         categoryRepository.save(category);
         List<Product> deletedProducts = productRepository.findProductStatusInActiveByCategoryId(category.getId());
         deletedProducts.forEach((product) ->
                 product.setStatus(Status.DEACTIVE));
-        log.error("deletedProducts {}",deletedProducts);
+        log.error("deletedProducts {}", deletedProducts);
         productRepository.saveAll(deletedProducts);
     }
 
     @Override
     public void enableById(Long id) {
-        log.error("id {}",id);
+        log.error("id {}", id);
         var category = categoryRepository.getById(id);
         category.setStatus(Status.ACTIVE);
-        log.error("category {}",category);
+        log.error("category {}", category);
         categoryRepository.save(category);
         List<Product> enabledProducts = productRepository.findProductStatusInDeactiveByCategoryId(category.getId());
         enabledProducts.forEach((product) -> {
             product.setStatus(Status.ACTIVE);
         });
-        log.error("enabledProducts {}",enabledProducts);
+        log.error("enabledProducts {}", enabledProducts);
         productRepository.saveAll(enabledProducts);
     }
 

@@ -1,7 +1,5 @@
 package com.onlinefoodcommercems.dto.request;
 
-import com.onlinefoodcommercems.dto.response.CustomerResponse;
-import com.onlinefoodcommercems.dto.response.ProductResponse;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 

@@ -1,6 +1,5 @@
 package com.onlinefoodcommercems.dto;
 
-import com.onlinefoodcommercems.dto.response.CategoryResponse;
 import lombok.Builder;
 
 @Builder

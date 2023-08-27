@@ -1,7 +1,6 @@
 package com.onlinefoodcommercems.repository;
 
 import com.onlinefoodcommercems.entity.Product;
-import com.onlinefoodcommercems.enums.Status;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -42,6 +41,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Transactional
     @Query(value = "update products set unit_price=unit_price-(unit_price*:percent/100) where  product_id in (select product_id from products) and status='ACTIVE'", nativeQuery = true)
     void decreaseAll(Double percent);
+
     @Query(value = "select count(*)from products where status ='ACTIVE'", nativeQuery = true)
     int countActiveAllBy();
 

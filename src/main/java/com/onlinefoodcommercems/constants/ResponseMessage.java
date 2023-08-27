@@ -8,7 +8,7 @@ public class ResponseMessage {
     public static final String AMOUNT_SEND_SUCCESSFULLY = "The amount has been paid successfully";
     public static final String SMALL_AMOUNT_IN_ACCOUNT = "There is a small amount in the account";
     public static final String ERROR = "ERROR";
-    public static final String FORBIDDEN = "Access is forbidden, only admin";
+    public static final String FORBIDDEN = "Forbidden";
     public static final String MESSAGE_DONT_SEND = "Message could not be sent";
     public static final String MESSAGE_SEND_SUCCESFULLY = "Message sent successfully";
     public static final String ADD_SUCCESSFULLY = "Add successfully!";
@@ -21,7 +21,6 @@ public class ResponseMessage {
     public static final String TOKEN_EXPIRED = "Token expired";
     public static final String CONFIRMED = "Confirmed";
     public static final String NOT_CONFIRMED = "User not confirmed";
-
     public static final String PASSWORD_SUCCESSFULLY_CHANGED = "Your password is successfully changed";
     public static final String WRONG_OLD_PASSWORD = "Wrong old password!";
     public static final String PASSWORDS_DO_NOT_MATCH = "Passwords do not match.";
@@ -34,6 +33,7 @@ public class ResponseMessage {
     public static final String CATEGORY_NOT_FOUND = "Category not found!";
     public static final String DISCOUNT_NOT_FOUND = "Discount not found!";
     public static final String CUSTOMER_NOT_FOUND = "Customer not found!";
+    public static final String CART_NOT_FOUND = "Cart not found!";
     public static final String ADDRESS_NOT_FOUND = "Address not found!";
     public static final String ORDER_NOT_FOUND = "Order not found!";
     public static final String NO_ORDER_FOR_AMOUNT = "No order found for this amount";

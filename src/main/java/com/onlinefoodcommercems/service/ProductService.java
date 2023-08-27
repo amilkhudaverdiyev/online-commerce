@@ -4,6 +4,7 @@ import com.onlinefoodcommercems.dto.ItemResponse;
 import com.onlinefoodcommercems.dto.ProductDto;
 import com.onlinefoodcommercems.dto.request.ProductRequest;
 import com.onlinefoodcommercems.dto.response.ProductResponse;
+import com.onlinefoodcommercems.dto.update.ProductUpdateRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -11,10 +12,12 @@ import java.util.List;
 
 public interface ProductService {
     List<ProductResponse> findAll();
+
     String getAllProductCount();
+
     ProductResponse createProduct(ProductRequest productRequest);
 
-    void update(Long id, ProductRequest productRequest);
+    void update(Long id, ProductUpdateRequest productRequest);
 
     Page<ProductDto> getAllProducts(Pageable pageable);
 

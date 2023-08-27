@@ -15,12 +15,14 @@ import java.util.List;
         injectionStrategy = InjectionStrategy.CONSTRUCTOR,
         unmappedTargetPolicy = ReportingPolicy.IGNORE,
         nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE
-      )
+)
 public interface AccountMapper {
-    Account fromDTO (AccountRequest accountRequest);
+    Account fromDTO(AccountRequest accountRequest);
 
     AccountResponse toDTO(Account account);
+
     List<AccountResponse> toDTOs(List<Account> accounts);
+
     Account toDtoUpdate(@MappingTarget Account account, AccountUpdateRequest accountUpdateRequest);
 
 }

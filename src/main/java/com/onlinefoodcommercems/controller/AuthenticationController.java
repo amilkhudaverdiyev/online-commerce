@@ -6,20 +6,18 @@ import com.onlinefoodcommercems.dto.request.PasswordResetRequest;
 import com.onlinefoodcommercems.dto.request.PasswordSetRequest;
 import com.onlinefoodcommercems.dto.response.ResponseDetail;
 import com.onlinefoodcommercems.dto.user.AuthenticationRequest;
-import com.onlinefoodcommercems.entity.Customer;
 import com.onlinefoodcommercems.service.RegisterService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.security.Principal;
 
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/auth")
-@Validated
 public class AuthenticationController {
 
     private final RegisterService registerService;
@@ -49,10 +47,10 @@ public class AuthenticationController {
     }
 
     @PutMapping("/change-password")
-    public ResponseDetail changePassword(@AuthenticationPrincipal Customer customer,
-                                                 @Valid @RequestBody PasswordResetRequest passwordReset
-                                                 ) {
-            registerService.changePassword(customer.getUsername(), passwordReset);
+    public ResponseDetail changePassword(Principal principal,
+                                         @Valid @RequestBody PasswordResetRequest passwordReset
+    ) {
+        registerService.changePassword(principal.getName(), passwordReset);
         return ResponseDetail.builder()
                 .message(ResponseMessage.PASSWORD_SUCCESSFULLY_CHANGED)
                 .status(HttpStatus.OK.getReasonPhrase())
@@ -62,7 +60,7 @@ public class AuthenticationController {
 
     @PutMapping("/forgot-password")
     public ResponseDetail forgotPassword(@RequestParam String username) {
-         registerService.forgotPassword(username);
+        registerService.forgotPassword(username);
         return ResponseDetail.builder()
                 .message(ResponseMessage.MESSAGE_SEND_SUCCESFULLY)
                 .status(HttpStatus.OK.getReasonPhrase())

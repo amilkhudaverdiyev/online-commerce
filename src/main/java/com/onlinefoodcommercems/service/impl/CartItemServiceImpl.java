@@ -28,24 +28,22 @@ public class CartItemServiceImpl implements CartItemService {
     private final CartItemRepository cartRepository;
     private final CartItemMapper cartItemMapper;
     private final CustomerRepository customerRepository;
-    private final CustomerService customerService;
-    private final CustomerMapper customerMapper;
     private final ProductRepository productRepository;
 
     @Override
     public CartItemResponse save(int quantity, Long id, String username) {
-        var customer = customerMapper.customerResponseToCustomer(customerService.findByUsername(username));
-        log.error("customer {}",customer);
+        var customer = customerRepository.findByUsername(username).orElseThrow(() -> new NotDataFound(ResponseMessage.CUSTOMER_NOT_FOUND));
+        log.error("customer {}", customer);
         var product = productRepository.findProductStatusActivity(id)
                 .orElseThrow(() -> new NotDataFound(ResponseMessage.PRODUCT_NOT_FOUND));
-        log.error("product {}",product);
+        log.error("product {}", product);
         if (product.getCurrentQuantity() == 0) {
             product.setStatus(Status.DEACTIVE);
             productRepository.save(product);
             throw new NotDataFound(ResponseMessage.PRODUCT_NOT_FOUND);
         } else {
             List<Discount> discounts = product.getDiscount();
-            log.error("discounts {}",discounts);
+            log.error("discounts {}", discounts);
             for (Discount discount : discounts
             ) {
                 if (discount.getStatus() == DiscountStatus.ACTIVE) {
@@ -63,7 +61,7 @@ public class CartItemServiceImpl implements CartItemService {
                     } else {
                         cartItem.setTotalPrice(quantity * unitPrice);
                     }
-                    log.error("discount {}",discount);
+                    log.error("discount {}", discount);
                     return cartItemMapper.toDTO(cartRepository.save(cartItem));
                 }
             }
@@ -81,43 +79,45 @@ public class CartItemServiceImpl implements CartItemService {
             } else {
                 cartItem.setTotalPrice(quantity * product.getUnitPrice());
             }
-            log.error("cart item {}",cartItem);
+            log.error("cart item {}", cartItem);
             return cartItemMapper.toDTO(cartRepository.save(cartItem));
         }
     }
 
 
     @Override
-    public void update(Long id, CartItemRequest cartItemRequest) {
-        var cart = cartRepository.findByIdAndActivated(cartItemRequest.getId(), id).orElseThrow();
-        log.error("cart {}",cart);
+    public void update(CartItemRequest cartItemRequest, String username) {
+        var cart = cartRepository.findById(cartItemRequest.getCartId()).orElseThrow(() -> new NotDataFound(ResponseMessage.CART_NOT_FOUND));
+        var customer = customerRepository.findByUsername(username)
+                .orElseThrow(() -> new NotDataFound(ResponseMessage.CUSTOMER_NOT_FOUND));
+        log.error("cart {}", customer);
         cart.setQuantity(cartItemRequest.getQuantity());
         cart.setTotalPrice(cart.getQuantity() * cart.getPrice());
-        log.error("cart {}",cart);
+        log.error("cart {}", cart);
         cartRepository.save(cart);
-
     }
+
 
     @Override
     public List<CartItemResponse> findAll() {
         var carts = cartRepository.findAll();
-        log.error("carts {} ",carts);
+        log.error("carts {} ", carts);
         return cartItemMapper.toDTOs(carts);
     }
 
     @Override
     public List<CartItemResponse> getCart(String username) {
         var customer = customerRepository.findByUsername(username)
-                 .orElseThrow(() -> new NotDataFound(ResponseMessage.CUSTOMER_NOT_FOUND));
-        log.error("customer {}",customer);
+                .orElseThrow(() -> new NotDataFound(ResponseMessage.CUSTOMER_NOT_FOUND));
+        log.error("customer {}", customer);
         var carts = customer.getCartItems();
-        log.error("carts {} ",carts);
+        log.error("carts {} ", carts);
         return cartItemMapper.toDTOs(carts);
     }
 
     @Override
     public void deleteCart(Long id) {
-        log.error("id {}",id);
+        log.error("id {}", id);
         cartRepository.deleteById(id);
     }
 

@@ -1,7 +1,7 @@
 package com.onlinefoodcommercems.dto.request;
 
-import com.onlinefoodcommercems.constraints.CardNumberValidation;
 import com.onlinefoodcommercems.enums.Status;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,16 +19,16 @@ import java.time.LocalDate;
 public class AccountRequest {
 
     private String accountId;
-
+    @NotBlank(message = "Fullname is not empty")
     private String fullname;
 
     private Long id;
-
+    @NotBlank(message = "Amount is not empty")
     private BigDecimal amount;
-//   @CardNumberValidation
+    //   @CardNumberValidation
     private String cardNumber;
     private LocalDate expiryDate;
-    private Status status;
+    private Status status = Status.DEACTIVE;
 
 
 }

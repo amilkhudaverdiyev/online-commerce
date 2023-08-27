@@ -26,5 +26,5 @@ public class AccountUpdateRequest {
     private String cardNumber;
     @NotNull(message = "Expiry date must not empty")
     private LocalDate expiryDate;
-    private Status status=Status.ACTIVE;
+    private Status status = Status.ACTIVE;
 }

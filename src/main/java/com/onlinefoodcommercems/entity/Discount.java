@@ -2,15 +2,11 @@ package com.onlinefoodcommercems.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.onlinefoodcommercems.enums.DiscountStatus;
-import com.onlinefoodcommercems.enums.Status;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 

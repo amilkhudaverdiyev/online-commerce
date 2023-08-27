@@ -1,6 +1,9 @@
 package com.onlinefoodcommercems.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,14 +19,14 @@ import org.hibernate.annotations.GenericGenerator;
 public class Attachment {
     @Id
     @GeneratedValue(generator = "uuid")
-   @GenericGenerator(name = "uuid", strategy = "uuid2")
+    @GenericGenerator(name = "uuid", strategy = "uuid2")
     private String id;
 
     private String fileName;
     private String fileType;
-    private byte[]   data;
+    private byte[] data;
 
-    }
+}
 
 
 

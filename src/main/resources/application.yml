@@ -20,17 +20,17 @@ spring:
     properties:
       mail:
         smtp:
-            ssl:
-                trust: "*"
-            auth: true
-            starttls.enable: true
-            connectiontimeout: 5000
-            timeout: 3000
-            writetimeout: 5000
+          ssl:
+            trust: "*"
+          auth: true
+          starttls.enable: true
+          connectiontimeout: 5000
+          timeout: 3000
+          writetimeout: 5000
   datasource:
-   url: jdbc:postgresql://localhost:5432/online_food_commerce_ms
-   username: postgres
-   password: amil4477
+    url: jdbc:postgresql://localhost:5432/online_food_commerce_ms
+    username: postgres
+    password: amil4477
   jpa:
     show-sql: true
     hibernate:

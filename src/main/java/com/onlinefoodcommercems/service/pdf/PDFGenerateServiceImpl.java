@@ -1,6 +1,5 @@
 package com.onlinefoodcommercems.service.pdf;
 
-import com.lowagie.text.Font;
 import com.lowagie.text.*;
 import com.lowagie.text.pdf.CMYKColor;
 import com.lowagie.text.pdf.PdfPCell;

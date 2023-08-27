@@ -8,7 +8,6 @@ import com.onlinefoodcommercems.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -34,6 +33,7 @@ public class HomeController {
     public List<ProductDto> searchProduct(@RequestParam String keyword) {
         return productService.searchProducts(keyword);
     }
+
     @GetMapping("/category-all")
     public List<CategoryDto> getAllCategoryActivated() {
         return categoryService.findAllByActivated();

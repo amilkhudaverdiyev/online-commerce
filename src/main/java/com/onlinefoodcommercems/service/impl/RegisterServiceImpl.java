@@ -6,6 +6,7 @@ import com.onlinefoodcommercems.dto.request.PasswordResetRequest;
 import com.onlinefoodcommercems.dto.user.AuthenticationRequest;
 import com.onlinefoodcommercems.dto.user.AuthenticationResponse;
 import com.onlinefoodcommercems.entity.ConfirmationToken;
+import com.onlinefoodcommercems.entity.Customer;
 import com.onlinefoodcommercems.entity.UserAuthority;
 import com.onlinefoodcommercems.enums.Roles;
 import com.onlinefoodcommercems.exception.NotDataFound;
@@ -14,6 +15,7 @@ import com.onlinefoodcommercems.mapper.AddressMapper;
 import com.onlinefoodcommercems.mapper.CustomerMapper;
 import com.onlinefoodcommercems.repository.ConfirmationTokenRepository;
 import com.onlinefoodcommercems.repository.CustomerRepository;
+import com.onlinefoodcommercems.service.ConfirmationTokenService;
 import com.onlinefoodcommercems.service.RegisterService;
 import com.onlinefoodcommercems.service.email.EmailSender;
 import com.onlinefoodcommercems.service.email.EmailValidator;
@@ -41,15 +43,13 @@ public class RegisterServiceImpl implements RegisterService {
     private final CustomerMapper customerMapper;
     private final CustomerRepository customerRepository;
     private final AddressMapper addressMapper;
-    private final AuthenticationManager authenticationManager;
     private final ConfirmationTokenRepository confirmationTokenRepository;
     private final JwtService jwtService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
-    private final UserDetailsServiceImpl userDetailsService;
 
     @Override
     public void changePassword(String email, PasswordResetRequest request) {
-        log.error("request " + request, email);
+        log.error("request " + request);
         if (request.getNewPassword() != null && !request.getNewPassword().equals(request.getRepeatPassword())) {
             throw new PasswordRequestException(ResponseMessage.PASSWORDS_DO_NOT_MATCH);
         }
@@ -81,7 +81,7 @@ public class RegisterServiceImpl implements RegisterService {
     }
 
     @Override
-    public void setPassword(String username, Integer code, String newPassword) {
+    public void setPassword(String username, String  code, String newPassword) {
         var user = customerRepository.findByUsername(username).orElseThrow(() -> new NotDataFound(ResponseMessage.USER_NOT_FOUND));
         log.error("activation code in database " + user.getActivationCode());
         log.error("activation code from request " + code);
@@ -105,6 +105,7 @@ public class RegisterServiceImpl implements RegisterService {
         if (user.isEnabled()) {
             if (bCryptPasswordEncoder.matches(request.getPassword(), user.getPassword())) {
                 var token = jwtService.generateToken(user);
+                updateToken(user, token);
                 log.error("token === " + token);
                 return AuthenticationResponse.builder().username(request.getUsername()).token(token).build();
             } else {
@@ -157,7 +158,7 @@ public class RegisterServiceImpl implements RegisterService {
         }
         var customer = customerMapper.fromDTO(request);
         var address = addressMapper.fromDTO(request.getAddress());
-        log.error("address {}" ,address);
+        log.error("address {}", address);
         customer.setAddress(address);
         customer.setName(request.getName());
         customer.setSurname(request.getSurname());
@@ -167,11 +168,11 @@ public class RegisterServiceImpl implements RegisterService {
         customer.setAccountNonExpired(true);
         customer.setAccountNonLocked(true);
         customer.setCredentialsNonExpired(true);
-        log.error("customer {}",customer);
+        log.error("customer {}", customer);
         var authority = new UserAuthority();
         authority.setAuthority(Roles.USER);
         authority.setCustomer(customer);
-        log.error("authority {}",authority);
+        log.error("authority {}", authority);
         customer.addAuthority(authority);
 
 
@@ -271,6 +272,17 @@ public class RegisterServiceImpl implements RegisterService {
                 "  </tbody></table><div class=\"yj6qo\"></div><div class=\"adL\">\n" +
                 "\n" +
                 "</div></div>";
+    }
+
+    private void updateToken(Customer customer, String token) {
+        var tokens = customer.getToken();
+        log.error("tokens {}", tokens);
+        for (ConfirmationToken tokenEntity : tokens
+        ) {
+            tokenEntity.setToken(token);
+            log.error("tokenEntity {}", tokenEntity);
+            confirmationTokenRepository.save(tokenEntity);
+        }
     }
 
 }

@@ -1,11 +1,10 @@
 package com.onlinefoodcommercems.exception;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 
 @Getter
-public class AuthenticationException extends RuntimeException{
+public class AuthenticationException extends RuntimeException {
     private final String code;
     private final String message;
     private final Integer status;

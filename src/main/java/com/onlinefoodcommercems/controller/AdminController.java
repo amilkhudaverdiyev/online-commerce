@@ -10,7 +10,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,10 +17,10 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/admin")
-@Validated
 public class AdminController {
     private final RegisterService registerService;
     private final CustomerService customerService;
+
     @PostMapping("/register")
     public ResponseDetail registerAdmin(@RequestBody @Valid CustomerRequest request) {
         registerService.registerAdmin(request);
@@ -30,6 +29,7 @@ public class AdminController {
                 .status(HttpStatus.CREATED.getReasonPhrase())
                 .statusCode(HttpStatus.CREATED.value()).build();
     }
+
     @GetMapping("/customer/all")
     @PreAuthorize("hasAuthority('ADMIN')")
     public List<CustomerResponse> getAllCustomer() {

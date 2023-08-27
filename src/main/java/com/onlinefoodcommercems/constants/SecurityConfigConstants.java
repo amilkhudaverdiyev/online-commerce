@@ -10,12 +10,12 @@ public class SecurityConfigConstants {
             "/swagger-resources/**"
 
     };
-    public static final String API_AUTH="/api/v1/auth/**";
-    public static final String API_ADMIN="/api/v1/admin/**";
-    public static final String API_HOME="/api/home/**";
-    public static final String PDF_GENERATE="/pdf/generate/**";
-    public static final String DELETE_COOKIES="JSESSIONID";
-    public static final String LOGIN="/login";
-    public static final String LOGOUT="/logout";
-    public static final String DO_LOGIN="/do-login";
+    public static final String API_AUTH = "/api/v1/auth/**";
+    public static final String API_ADMIN = "/api/v1/admin/**";
+    public static final String API_HOME = "/api/home/**";
+    public static final String PDF_GENERATE = "/pdf/generate/**";
+    public static final String DELETE_COOKIES = "JSESSIONID";
+    public static final String LOGIN = "/login";
+    public static final String LOGOUT = "/logout";
+    public static final String DO_LOGIN = "/do-login";
 }

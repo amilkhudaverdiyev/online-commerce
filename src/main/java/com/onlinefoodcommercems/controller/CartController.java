@@ -5,21 +5,23 @@ import com.onlinefoodcommercems.dto.CartDetails;
 import com.onlinefoodcommercems.dto.request.CartItemRequest;
 import com.onlinefoodcommercems.dto.response.CartItemResponse;
 import com.onlinefoodcommercems.dto.response.ResponseDetail;
-import com.onlinefoodcommercems.entity.Customer;
 import com.onlinefoodcommercems.exception.NotDataFound;
 import com.onlinefoodcommercems.service.CartItemService;
 import com.onlinefoodcommercems.utils.LinkUtils;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 @RestController
 @RequestMapping("/cart")
 @RequiredArgsConstructor
+@Validated
 public class CartController {
     private final CartItemService cartItemService;
 
@@ -31,15 +33,16 @@ public class CartController {
 
     @GetMapping("/user")
     @PreAuthorize("hasAuthority('USER')")
-    public List<CartItemResponse> getAllCarts(@AuthenticationPrincipal Customer customer) {
-        return cartItemService.getCart(customer.getUsername());
+    public List<CartItemResponse> getAllCarts(Principal principal) {
+        return cartItemService.getCart(principal.getName());
     }
 
     @PutMapping
     @PreAuthorize("hasAuthority('USER')")
-    public ResponseDetail updateCart(@AuthenticationPrincipal Customer customer,
-                                             @RequestBody CartItemRequest request) {
-        cartItemService.update(customer.getId(), request);
+    public ResponseDetail updateCart(@RequestBody @Valid CartItemRequest request,
+                                     Principal principal
+    ) {
+        cartItemService.update(request, principal.getName());
         return ResponseDetail.builder()
                 .message(ResponseMessage.UPDATE_SUCCESSFULLY)
                 .status(HttpStatus.OK.getReasonPhrase())
@@ -47,7 +50,7 @@ public class CartController {
                 .build();
     }
 
-    @DeleteMapping("/delete")
+    @DeleteMapping("/delete/{id}")
     @PreAuthorize("hasAuthority('USER')")
     public ResponseDetail deleteItem(@PathVariable Long id
     ) {
@@ -63,14 +66,14 @@ public class CartController {
     @PreAuthorize("hasAuthority('USER')")
     public CartDetails create(@RequestParam("id") Long id,
                               @RequestParam(value = "quantity", required = false, defaultValue = "1") int quantity,
-                              @AuthenticationPrincipal Customer customer) {
+                              Principal principal) {
         try {
-            cartItemService.save(quantity, id, customer.getUsername());
+            cartItemService.save(quantity, id, principal.getName());
             return CartDetails.builder()
                     .message(ResponseMessage.ADD_SUCCESSFULLY)
                     .status(HttpStatus.CREATED.getReasonPhrase())
                     .statusCode(HttpStatus.CREATED.value())
-                    .link(LinkUtils.createPlaceOrderLink(customer.getId()))
+                    .link(LinkUtils.createPlaceOrderLink(principal.getName()))
                     .build();
         } catch (NotDataFound e) {
             return CartDetails.builder()

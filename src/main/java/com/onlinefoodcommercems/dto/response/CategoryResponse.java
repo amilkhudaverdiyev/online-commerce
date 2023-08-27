@@ -1,9 +1,6 @@
 package com.onlinefoodcommercems.dto.response;
 
-import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.onlinefoodcommercems.enums.Status;
 import lombok.*;
 import lombok.experimental.FieldDefaults;

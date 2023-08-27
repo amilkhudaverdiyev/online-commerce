@@ -2,7 +2,6 @@ package com.onlinefoodcommercems.dto;
 
 import lombok.Builder;
 import lombok.Data;
-import org.springframework.http.ResponseEntity;
 
 @Data
 @Builder

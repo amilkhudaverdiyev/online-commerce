@@ -2,10 +2,9 @@ package com.onlinefoodcommercems.mapper;
 
 import com.onlinefoodcommercems.dto.ItemResponse;
 import com.onlinefoodcommercems.dto.ProductDto;
-import com.onlinefoodcommercems.dto.request.CategoryRequest;
 import com.onlinefoodcommercems.dto.request.ProductRequest;
 import com.onlinefoodcommercems.dto.response.ProductResponse;
-import com.onlinefoodcommercems.entity.Category;
+import com.onlinefoodcommercems.dto.update.ProductUpdateRequest;
 import com.onlinefoodcommercems.entity.Product;
 import org.mapstruct.*;
 import org.springframework.stereotype.Component;
@@ -24,8 +23,11 @@ public interface ProductMapper {
     ProductResponse toDTO(Product products);
 
     List<ProductDto> toDTOList(List<Product> products);
+
     List<ItemResponse> productToItemResponse(List<Product> products);
+
     List<ProductResponse> toDTOs(List<Product> products);
-    Product toDTOmap(@MappingTarget Product product, ProductRequest productRequest);
+
+    Product toDTOmap(@MappingTarget Product product, ProductUpdateRequest productRequest);
 
 }

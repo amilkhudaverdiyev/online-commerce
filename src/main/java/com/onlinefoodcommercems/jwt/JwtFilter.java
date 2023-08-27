@@ -1,11 +1,7 @@
 package com.onlinefoodcommercems.jwt;
 
 import com.onlinefoodcommercems.constants.ResponseMessage;
-import com.onlinefoodcommercems.entity.Customer;
-import com.onlinefoodcommercems.enums.Status;
-import com.onlinefoodcommercems.exception.NotDataFound;
 import com.onlinefoodcommercems.property.JwtProperty;
-import com.onlinefoodcommercems.repository.CustomerRepository;
 import com.onlinefoodcommercems.service.jwt.JwtService;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
@@ -17,12 +13,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.filter.OncePerRequestFilter;
-
 
 import java.io.IOException;
 
@@ -54,7 +47,7 @@ public class JwtFilter extends OncePerRequestFilter {
         try {
             userEmail = jwtService.extractUsername(token);
             if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                var userDetails =userDetailsService.loadUserByUsername(userEmail);
+                var userDetails = userDetailsService.loadUserByUsername(userEmail);
                 if (jwtService.isTokenValid(token, userDetails)) {
 
                     UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(

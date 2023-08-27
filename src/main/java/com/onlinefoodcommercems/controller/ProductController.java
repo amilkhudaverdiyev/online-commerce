@@ -4,6 +4,7 @@ import com.onlinefoodcommercems.constants.ResponseMessage;
 import com.onlinefoodcommercems.dto.request.ProductRequest;
 import com.onlinefoodcommercems.dto.response.ProductResponse;
 import com.onlinefoodcommercems.dto.response.ResponseDetail;
+import com.onlinefoodcommercems.dto.update.ProductUpdateRequest;
 import com.onlinefoodcommercems.service.ProductService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
@@ -78,7 +79,7 @@ public class ProductController {
     @PutMapping("/{id}")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseDetail updateProduct(@PathVariable Long id,
-                                        @RequestBody @Valid ProductRequest request) {
+                                        @RequestBody @Valid ProductUpdateRequest request) {
         log.error("id  {}, product {}", id, request);
         productService.update(id, request);
         log.error("id  {}, product {}", id, request);

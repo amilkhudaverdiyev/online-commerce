@@ -14,6 +14,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
@@ -173,6 +174,19 @@ public class CustomGlobalHandler {
         return new ResponseEntity<>(errorDetails, INTERNAL_SERVER_ERROR);
     }
 
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public ResponseEntity<ErrorDetails> MissingServletRequestParameterException(MissingServletRequestParameterException ex, WebRequest request) {
+        log.error("AccessDeniedException {}", ex.getMessage());
+        var errorDetails = ErrorDetails.builder()
+                .timestamp(new Date())
+                .status(BAD_REQUEST.value())
+                .error(BAD_REQUEST.getReasonPhrase())
+                .message("Delivery date is not empty")
+                .path(request.getDescription(false))
+                .build();
+        return new ResponseEntity<>(errorDetails, BAD_REQUEST);
+    }
+
     @ExceptionHandler(FileNotFoundException.class)
     public ResponseEntity<ErrorDetails> FileNotException(FileNotFoundException ex, WebRequest request) {
         log.error("file not  {}", ex.getMessage());
@@ -198,4 +212,5 @@ public class CustomGlobalHandler {
                 .build();
         return new ResponseEntity<>(errorDetails, FORBIDDEN);
     }
+
 }

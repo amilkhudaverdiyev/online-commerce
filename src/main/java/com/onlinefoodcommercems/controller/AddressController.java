@@ -1,23 +1,24 @@
 package com.onlinefoodcommercems.controller;
 
 import com.onlinefoodcommercems.constants.ResponseMessage;
-import com.onlinefoodcommercems.dto.request.AddressRequest;
 import com.onlinefoodcommercems.dto.response.AddressResponse;
 import com.onlinefoodcommercems.dto.response.ResponseDetail;
-import com.onlinefoodcommercems.entity.Customer;
+import com.onlinefoodcommercems.dto.update.AddressUpdateRequest;
 import com.onlinefoodcommercems.enums.Status;
 import com.onlinefoodcommercems.service.AddressService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 @RestController
 @RequestMapping("/address")
 @RequiredArgsConstructor
+@Validated
 public class AddressController {
     private final AddressService addressService;
 
@@ -27,17 +28,17 @@ public class AddressController {
         return addressService.findAll();
     }
 
-    @GetMapping("/all-active/{status}")
+    @GetMapping("/status/{status}")
     @PreAuthorize("hasAuthority('ADMIN')")
     public List<AddressResponse> getAllAddressActivated(@PathVariable Status status) {
         return addressService.findAllByActivated(status);
     }
 
     @PutMapping()
-    @PreAuthorize("hasAuthority('USER')")
-    public ResponseDetail updateAddress(@AuthenticationPrincipal Customer customer,
-                                        @RequestBody AddressRequest request) {
-        addressService.update(customer.getAddress().getId(), request);
+    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
+    public ResponseDetail updateAddress(Principal principal,
+                                        @RequestBody AddressUpdateRequest request) {
+        addressService.update(principal.getName(), request);
         return ResponseDetail.builder()
                 .message(ResponseMessage.UPDATE_SUCCESSFULLY)
                 .status(HttpStatus.OK.getReasonPhrase())

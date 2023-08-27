@@ -11,6 +11,7 @@ import com.onlinefoodcommercems.repository.CustomerRepository;
 import com.onlinefoodcommercems.service.AccountService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,6 +30,7 @@ public class AccountServiceImpl implements AccountService {
         log.error("account {}", accounts);
         return accountMapper.toDTOs(accounts);
     }
+
     @Override
     public AccountResponse createAccount(AccountRequest accountRequest) {
         var account = accountMapper.fromDTO(accountRequest);
@@ -36,16 +38,20 @@ public class AccountServiceImpl implements AccountService {
         var customer = customerRepository.findById(accountRequest.getId())
                 .orElseThrow(() -> new NotDataFound(ResponseMessage.CUSTOMER_NOT_FOUND));
         account.setCustomer(customer);
-        log.error("account created {}",account);
+        log.error("account created {}", account);
         return accountMapper.toDTO(accountRepository.save(account));
     }
+
     @Override
-    public void update(String id, AccountUpdateRequest accountRequest) {
-        var account = accountRepository.findById(id)
-                .orElseThrow(() -> new NotDataFound(ResponseMessage.ACCOUNT_NOT_FOUND));
-        log.error("account {}", account);
-        accountMapper.toDtoUpdate(account, accountRequest);
-        log.error("account updated {}", account);
-        accountRepository.save(account);
+    public void update(String username, AccountUpdateRequest accountRequest) {
+        var customer = customerRepository.findByUsername(username).orElseThrow(() -> new NotDataFound(ResponseMessage.CUSTOMER_NOT_FOUND));
+        if (customer.isEnabled()) {
+            log.error("account {}", customer);
+            accountMapper.toDtoUpdate(customer.getAccounts(), accountRequest);
+            log.error("account updated {}", customer.getAccounts());
+            accountRepository.save(customer.getAccounts());
+        } else {
+            throw new UsernameNotFoundException(ResponseMessage.ACCESS_DENIED);
+        }
     }
 }

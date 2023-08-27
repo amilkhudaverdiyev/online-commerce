@@ -4,8 +4,6 @@ package com.onlinefoodcommercems.service.pdf;
 import com.lowagie.text.DocumentException;
 import com.onlinefoodcommercems.constants.ResponseMessage;
 import com.onlinefoodcommercems.entity.Order;
-import com.onlinefoodcommercems.enums.OrderStatus;
-import com.onlinefoodcommercems.enums.Roles;
 import com.onlinefoodcommercems.exception.NotDataFound;
 import com.onlinefoodcommercems.repository.CustomerRepository;
 import com.onlinefoodcommercems.repository.OrderRepository;

@@ -8,11 +8,13 @@ public class LinkUtils {
                 .replacePath("/file/db/" + filename)
                 .toUriString();
     }
-    public static String createPlaceOrderLink(Long userId) {
+
+    public static String createPlaceOrderLink(String username) {
         return ServletUriComponentsBuilder.fromCurrentContextPath()
-                .replacePath("order/place-order/" + userId)
+                .replacePath("order/place-order/" + username)
                 .toUriString();
     }
+
     public static String downloadPDFLink(Long userId) {
         return ServletUriComponentsBuilder.fromCurrentContextPath()
                 .replacePath("/pdf/generate/" + userId)

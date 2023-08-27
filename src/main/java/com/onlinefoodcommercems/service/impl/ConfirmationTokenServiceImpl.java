@@ -2,6 +2,7 @@ package com.onlinefoodcommercems.service.impl;
 
 import com.onlinefoodcommercems.entity.ConfirmationToken;
 import com.onlinefoodcommercems.repository.ConfirmationTokenRepository;
+import com.onlinefoodcommercems.service.ConfirmationTokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -10,7 +11,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class ConfirmationTokenService {
+public class ConfirmationTokenServiceImpl implements ConfirmationTokenService {
 
     private final ConfirmationTokenRepository confirmationTokenRepository;
 

@@ -1,6 +1,5 @@
 package com.onlinefoodcommercems.dto.response;
 
-import com.onlinefoodcommercems.dto.response.CustomerResponse;
 import com.onlinefoodcommercems.enums.Status;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

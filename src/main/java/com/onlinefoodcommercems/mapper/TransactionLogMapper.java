@@ -17,10 +17,10 @@ import java.util.List;
         unmappedTargetPolicy = ReportingPolicy.IGNORE
 )
 public interface TransactionLogMapper {
-    Payment fromDTO (TransactionLogRequest transactionLogRequest);
-
+    Payment fromDTO(TransactionLogRequest transactionLogRequest);
 
     TransactionLogResponse toDTO(Payment payment);
+
     List<TransactionLogResponse> toDTOs(List<Payment> payments);
 
 }

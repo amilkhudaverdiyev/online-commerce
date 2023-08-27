@@ -5,6 +5,7 @@ import com.onlinefoodcommercems.dto.ItemResponse;
 import com.onlinefoodcommercems.dto.ProductDto;
 import com.onlinefoodcommercems.dto.request.ProductRequest;
 import com.onlinefoodcommercems.dto.response.ProductResponse;
+import com.onlinefoodcommercems.dto.update.ProductUpdateRequest;
 import com.onlinefoodcommercems.enums.Status;
 import com.onlinefoodcommercems.exception.NotDataFound;
 import com.onlinefoodcommercems.mapper.ProductMapper;
@@ -29,42 +30,39 @@ public class ProductServiceImpl implements ProductService {
     private final ProductMapper productMapper;
 
     public Page<ProductDto> getAllProducts(Pageable pageable) {
-        log.error("product {}" + pageable);
+        log.error("product {}",pageable);
         var productPage = productRepository.findAllPagableData(pageable);
         var productResponses = productMapper.toDTOList(productPage.getContent());
-        log.error("product {}" + productResponses);
+        log.error("product {}",productResponses);
         return new PageImpl<>(productResponses, pageable, productPage.getTotalElements());
     }
 
     @Override
     public List<ProductResponse> findAll() {
         var product = productRepository.findAll();
-        log.error("product {}",product);
+        log.error("product {}", product);
         return productMapper.toDTOs(product);
     }
 
     public ProductResponse createProduct(ProductRequest productRequest) {
-        log.error("productRequest {}",productRequest);
+        log.error("productRequest {}", productRequest);
         if (productRequest.getCurrentQuantity() == 0) {
             productRequest.setStatus(Status.DEACTIVE);
         }
         var product = productMapper.fromDTO(productRequest);
-        log.error("productRequest {}" + product);
+        log.error("productRequest {}",product);
         var category = categoryRepository.findByIdAndActivated(productRequest.getCategoryId())
                 .orElseThrow(()
                         -> new NotDataFound(ResponseMessage.CATEGORY_NOT_FOUND));
-        log.error("productRequest {}" + category);
+        log.error("productRequest {}",category);
         product.setCategory(category);
         return productMapper.toDTO(productRepository.save(product));
     }
 
     @Override
-    public void update(Long id, ProductRequest productRequest) {
+    public void update(Long id, ProductUpdateRequest productRequest) {
         var product = productRepository.findById(id).orElseThrow(()
                 -> new NotDataFound(ResponseMessage.PRODUCT_NOT_FOUND));
-        if (productRequest.getCurrentQuantity() == 0) {
-            productRequest.setStatus(Status.DEACTIVE);
-        }
         productMapper.toDTOmap(product, productRequest);
         productRepository.save(product);
     }

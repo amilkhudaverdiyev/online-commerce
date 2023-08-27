@@ -3,7 +3,6 @@ package com.onlinefoodcommercems.constraints;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 import jakarta.validation.ReportAsSingleViolation;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 
 import java.lang.annotation.*;
@@ -16,7 +15,9 @@ import java.lang.annotation.*;
 @ReportAsSingleViolation
 public @interface CardNumberValidation {
     String message() default "Card number is provided incorrectly";
+
     Class<?>[] groups() default {};
-    Class<? extends Payload> [] payload() default {};
+
+    Class<? extends Payload>[] payload() default {};
 
 }

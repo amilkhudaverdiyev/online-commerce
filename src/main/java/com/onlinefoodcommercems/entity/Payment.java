@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Setter
 @Getter
-@Table(name="payment")
+@Table(name = "payment")
 @ToString
 @Builder
 public class Payment {
@@ -28,7 +28,7 @@ public class Payment {
 
     private BigDecimal payment;
 
-   @UpdateTimestamp
+    @UpdateTimestamp
     private LocalDateTime date;
     @Enumerated(EnumType.STRING)
     private PaymentStatus status;

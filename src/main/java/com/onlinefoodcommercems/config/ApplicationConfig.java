@@ -22,13 +22,13 @@ public class ApplicationConfig {
     private final CustomerRepository userRepository;
 
     @Bean
-    public UserDetailsService userDetailsService(){
-   return username -> userRepository.findByUsername(username)
-           .orElseThrow(() -> new AuthenticationException(ResponseMessage.USER_NOT_FOUND,HttpStatus.NOT_FOUND.getReasonPhrase(),HttpStatus.NOT_FOUND.value()));
+    public UserDetailsService userDetailsService() {
+        return username -> userRepository.findByUsername(username)
+                .orElseThrow(() -> new AuthenticationException(ResponseMessage.USER_NOT_FOUND, HttpStatus.NOT_FOUND.getReasonPhrase(), HttpStatus.NOT_FOUND.value()));
     }
 
     @Bean
-    public AuthenticationProvider authenticationProvider(){
+    public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
         authProvider.setUserDetailsService(userDetailsService());
         authProvider.setPasswordEncoder(passwordEncoder());
@@ -37,7 +37,7 @@ public class ApplicationConfig {
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
-      return config.getAuthenticationManager();
+        return config.getAuthenticationManager();
     }
 
     @Bean

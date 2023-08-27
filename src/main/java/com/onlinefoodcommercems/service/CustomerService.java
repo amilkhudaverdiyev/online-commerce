@@ -1,6 +1,5 @@
 package com.onlinefoodcommercems.service;
 
-import com.onlinefoodcommercems.dto.request.CustomerRequest;
 import com.onlinefoodcommercems.dto.response.CustomerResponse;
 import com.onlinefoodcommercems.dto.update.CustomerUpdateReqeust;
 import com.onlinefoodcommercems.entity.Customer;
@@ -24,7 +23,10 @@ public interface CustomerService {
     void enableById(Long id);
 
     String getAllCustomerCount();
+
     List<Customer> getCustomerByEnabledAdmin();
+
     List<Customer> getCustomerByEnabledUser();
+
     void updateCustomerStatus(Customer customer);
 }

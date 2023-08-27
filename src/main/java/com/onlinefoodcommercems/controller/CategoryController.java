@@ -5,6 +5,7 @@ import com.onlinefoodcommercems.dto.request.CategoryRequest;
 import com.onlinefoodcommercems.dto.response.CategoryResponse;
 import com.onlinefoodcommercems.dto.response.ResponseDetail;
 import com.onlinefoodcommercems.service.CategoryService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -33,10 +34,10 @@ public class CategoryController {
 
     @PostMapping
     @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseDetail createCategory(@RequestBody CategoryRequest request) {
+    public ResponseDetail createCategory(@RequestBody @Valid CategoryRequest request) {
         categoryService.save(request);
-          return ResponseDetail.builder()
-                  .message(ResponseMessage.ADD_SUCCESSFULLY)
+        return ResponseDetail.builder()
+                .message(ResponseMessage.ADD_SUCCESSFULLY)
                 .status(HttpStatus.CREATED.getReasonPhrase())
                 .statusCode(HttpStatus.CREATED.value()).build();
     }
@@ -44,7 +45,7 @@ public class CategoryController {
     @PutMapping("/{id}")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseDetail updateCategory(@PathVariable Long id,
-                                                 @RequestBody CategoryRequest request) {
+                                         @RequestBody @Valid CategoryRequest request) {
         categoryService.update(id, request);
         return ResponseDetail.builder()
                 .message(ResponseMessage.UPDATE_SUCCESSFULLY)
@@ -57,9 +58,9 @@ public class CategoryController {
     public ResponseDetail deletedCategory(@PathVariable Long id) {
         categoryService.deleteById(id);
         return ResponseDetail.builder()
-        .message(ResponseMessage.DELETE_SUCCESSFULLY)
-        .status(HttpStatus.NO_CONTENT.getReasonPhrase())
-        .statusCode(HttpStatus.NO_CONTENT.value()).build();
+                .message(ResponseMessage.DELETE_SUCCESSFULLY)
+                .status(HttpStatus.NO_CONTENT.getReasonPhrase())
+                .statusCode(HttpStatus.NO_CONTENT.value()).build();
     }
 
     @PutMapping(value = "/enabled-category/{id}")

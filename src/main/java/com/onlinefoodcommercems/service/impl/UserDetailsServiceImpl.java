@@ -3,11 +3,11 @@ package com.onlinefoodcommercems.service.impl;
 import com.onlinefoodcommercems.constants.ResponseMessage;
 import com.onlinefoodcommercems.entity.ConfirmationToken;
 import com.onlinefoodcommercems.entity.Customer;
-import com.onlinefoodcommercems.service.jwt.JwtService;
 import com.onlinefoodcommercems.repository.CustomerRepository;
+import com.onlinefoodcommercems.service.ConfirmationTokenService;
+import com.onlinefoodcommercems.service.jwt.JwtService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -33,6 +33,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         return userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException(ResponseMessage.ACCESS_DENIED));
     }
+
     public String signUpUser(Customer user) {
         boolean userExists = userRepository.findByUsername(user.getUsername()).isPresent();
 
@@ -46,7 +47,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         userRepository.save(user);
 
-        String token= jwtService.generateToken(user);
+        String token = jwtService.generateToken(user);
 
         ConfirmationToken confirmationToken = new ConfirmationToken(token, LocalDateTime.now(), LocalDateTime.now().plusMinutes(15), user);
 

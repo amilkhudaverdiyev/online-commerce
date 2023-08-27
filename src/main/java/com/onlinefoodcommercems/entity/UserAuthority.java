@@ -1,11 +1,11 @@
 package com.onlinefoodcommercems.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.onlinefoodcommercems.enums.Roles;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Data;
+import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
 @Data

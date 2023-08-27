@@ -1,9 +1,10 @@
 package com.onlinefoodcommercems.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
-
-import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
@@ -20,7 +21,7 @@ public class OrderDetail {
     @JoinColumn(name = "product_id", referencedColumnName = "product_id")
     private Product product;
 
-//    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    //    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 //    @JoinColumn(name = "customer_id", referencedColumnName = "id")
 //    private Customer customer;
     private Double price;

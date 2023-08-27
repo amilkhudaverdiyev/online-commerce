@@ -7,6 +7,7 @@ import java.io.IOException;
 
 public interface AttachmentService {
     Attachment saves(MultipartFile file) throws IOException;
+
     Attachment getImage(String filename) throws IOException;
 
 }
